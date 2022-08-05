@@ -583,7 +583,7 @@ def test_gradh():
                                 result.",
     )
 
-def test_gradq(self):
+def test_gradq():
         """Test the working of the 'gradq()' function."""
         desired = -9.500024528524474e02
 
