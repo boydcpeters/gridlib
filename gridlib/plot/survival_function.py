@@ -109,22 +109,26 @@ def data_vs_multi_exp(
     key = fit_values_multi_exp.keys()[0]
     n_exp = fit_values_multi_exp[key]["k"].shape[0]
 
-    if kwargs is None:
-        # Set the default settings
-        kwargs = dict()
-        # color: data, data_multi_exp
+    # Set the default settings if they are not provided
+    if "label" not in kwargs:
         kwargs["label"] = ["data", f"{n_exp}-exp"]
+    if "color" not in kwargs:
         kwargs["color"] = ["#007972", "#fe9901"]
+    if "linewidth" not in kwargs:
         kwargs["linewidth"] = 1
+    if "linestyle" not in kwargs:
         kwargs["linestyle"] = ["solid", "dashed"]
-
 
     data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
 
     fig1, ax1 = base_data_sf([data, data_multi_exp], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
 
     # Legend
-    ax1.legend(loc="lower left")
+    # Remove duplicate labels
+    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
+    handles, labels = ax1.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax1.legend(by_label.values(), by_label.keys())  #, loc="lower left")
 
     # Axis limits
     if xlim is not None:
@@ -188,13 +192,14 @@ def data_vs_grid(
     if path_save is not None and isinstance(path_save, str):
         path_save = pathlib.Path(path_save)
 
-    if kwargs is None:
-        # Set the default settings
-        kwargs = dict()
-        # color: data, data_multi_exp
+    # Set the default settings if they are not provided
+    if "label" not in kwargs:
         kwargs["label"] = ["data", "GRID"]
+    if "color" not in kwargs:
         kwargs["color"] = ["#007972", "#fe9901"]
+    if "linewidth" not in kwargs:
         kwargs["linewidth"] = 1
+    if "linestyle" not in kwargs:
         kwargs["linestyle"] = ["solid", "dashed"]
 
     data_grid = compute.compute_grid_curves(fit_values_grid, data)
@@ -202,7 +207,11 @@ def data_vs_grid(
     fig1, ax1 = base_data_sf([data, data_grid], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
 
     # Legend
-    ax1.legend(loc="lower left")
+    # Remove duplicate labels
+    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
+    handles, labels = ax1.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax1.legend(by_label.values(), by_label.keys())  #, loc="lower left")
 
     # Axis limits
     if xlim is not None:
