@@ -32,21 +32,32 @@ def _num_decimal_places(value: str) -> int:
     3
     >>> num_decimal_places("11")
     0
+    >>> num_decimal_places("0.05")
+    2
     """
-    m = re.match(r"^[0-9]*\.([1-9]([0-9]*[1-9])?)0*$", value)
+    # Regex from:
+    # https://stackoverflow.com/questions/28749177/how-to-get-number-of-decimal-places
+    # m = re.match(r"^[0-9]*\.([1-9]([0-9]*[1-9])?)0*$", value)
+    # Regex is adapted such that "0.05" also gets 2 decimal places, regex above
+    # requires the first value after the dot being [1-9]
+    m = re.match(r"^[0-9]*\.([0-9]*[1-9])0*$", value)
     return len(m.group(1)) if m is not None else 0
 
 
-def get_time_sec(t_str: str) -> float:
+def get_time_sec(t_str: str, return_num_decimals: bool = False) -> float:
     """Function retrieves the time in seconds from a time string.
 
     Parameters
     ----------
+    return_num_decimals: bool, optional
+        Specifies whether the number of decimals needs to be returned. (default False)
 
     Returns
     -------
     t_s: float
         Time in seconds
+    d_places: int, optional
+        Number of decimal places. Only provided if `return_num_decimals` is True.
 
     Examples
     --------
@@ -78,9 +89,6 @@ def get_time_sec(t_str: str) -> float:
     t_val_str = m_time.group(0)
     t_val = float(t_val_str)
 
-    d_places = _num_decimal_places(t_val_str)
-    # t_val = round(t_val, d_places)  # round it to the appropriate number of decimals
-
     # get the unit value of the match, eg. ms or s
     t_unit = m_unit.group(0)
 
@@ -88,16 +96,26 @@ def get_time_sec(t_str: str) -> float:
     if t_unit == "ms":
         t_s = t_val / 1000.0
         t_s = round(t_s, len(t_val_str))
+
+        # Store it now as a value in the seconds and now find the number of decimal
+        # positions when it is stored as seconds
+        t_str = f"{t_s:f}s"
+        t_s, d_places = get_time_sec(t_str, return_num_decimals=True)
+    
     elif t_unit == "s":
         t_s = t_val
+        d_places = _num_decimal_places(t_val_str)
         t_s = round(t_s, d_places)
 
-    return t_s
+    if return_num_decimals:
+        return t_s, d_places
+    else:
+        return t_s
 
 
 def _fmt_t_str_key(t_str: str) -> str:
-    t_s = get_time_sec(t_str)
-    return f"{t_s}s"
+    t_s, d_places = get_time_sec(t_str, return_num_decimals=True)
+    return f"{t_s:.{d_places}f}s"
 
 
 def fmt_t_str_data(data: Dict) -> Dict:
