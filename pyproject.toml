@@ -12,7 +12,7 @@ documentation = "https://gridlib.readthedocs.io"
 keywords = ["gridlib"]
 classifiers=[
     "Development Status :: 2 - Pre-Alpha",
-    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     
@@ -22,8 +22,10 @@ classifiers=[
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-]
 
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Physics",
+]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/boydcpeters/gridlib/issues"
@@ -116,7 +118,7 @@ known_third_party = ["invoke", "nox"]
 
 [tool.black]
 line-length = 88
-target-version = ["py37"]
+target-version = ["py37", "py38", "py39","py310"]
 
 [build-system]
 requires = ["poetry>=0.12"]
