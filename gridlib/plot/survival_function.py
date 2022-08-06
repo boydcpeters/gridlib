@@ -74,7 +74,7 @@ def data_vs_multi_exp(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 8),
     path_save: Union[str, pathlib.Path] = None,
-    **kwargs,
+    **kwargs
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -99,6 +99,11 @@ def data_vs_multi_exp(
             }
         }
     """
+
+    # Create a Path() from path_save if not None and it is a str
+    if path_save is not None and isinstance(path_save, str):
+        path_save = pathlib.Path(path_save)
+
     key = fit_values_multi_exp.keys()[0]
     n_exp = fit_values_multi_exp[key]["k"].shape[0]
 
@@ -137,14 +142,16 @@ def data_vs_multi_exp(
 
 # TODO: function beneath here is wrong and should be updated
 
-def plot_sf_data_vs_grid(
+def data_vs_grid(
     data: Dict[str, Dict[str, np.ndarray]],
-    data_grid: Dict[str, Dict[str, np.ndarray]],
-    figsize: Tuple[float, float] = (10, 8),
+    fit_values_grid: Dict[str, Dict[str, np.ndarray]],
+    process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 8),
     path_save: Union[str, pathlib.Path] = None,
-):
+    **kwargs
+    ):
     """Function plots the survival function of the true data and the GRID curves.
 
     Parameters
@@ -175,43 +182,31 @@ def plot_sf_data_vs_grid(
     -------
     None
     """
-
-    print(data.keys())
-
     # Create a Path() from path_save if not None and it is a str
     if path_save is not None and isinstance(path_save, str):
         path_save = pathlib.Path(path_save)
 
-    (
-        fig1,
-        ax1,
-        color_data,
-        color_grid,
-        linewidth_data,
-        linewidth_grid,
-    ) = data_vs_multi_exp(data, data_grid, figsize=figsize)
+    if kwargs is None:
+        # Set the default settings
+        kwargs = dict()
+        # color: data, data_multi_exp
+        kwargs["label"] = ["data", "GRID"]
+        kwargs["color"] = ["#007972", "#fe9901"]
+        kwargs["linewidth"] = 1
+        kwargs["linestyle"] = ["solid", "dashed"]
+
+    data_grid = compute.compute_grid_curves(fit_values_grid, data)
+
+    fig1, ax1 = base_data_sf([data, data_grid], process_data_flag=process_data_flag, figsize=figsize, kwargs=kwargs)
 
     # Legend
-    legend_elements = [
-        Line2D(
-            [0],
-            [0],
-            color=color_grid,
-            linestyle="dashed",
-            linewidth=linewidth_grid,
-            label="fit GRID",
-        ),
-        Line2D([0], [0], color=color_data, linewidth=linewidth_data, label="data"),
-    ]
-    ax1.legend(handles=legend_elements, loc="lower left")
+    ax1.legend(loc="lower left")
 
     # Axis limits
     if xlim is not None:
         ax1.set_xlim(xlim)
     if ylim is not None:
         ax1.set_ylim(ylim)
-    # ax1.set_xlim((10**-1, 10**3))
-    # ax1.set_ylim((10**-5, 10**0))
 
     # Labels
     ax1.set_xlabel("time (s)")
@@ -220,3 +215,5 @@ def plot_sf_data_vs_grid(
     if path_save is not None:
         fig1.savefig(path_save, bbox_inches="tight", dpi=200)
         plt.close(fig1)
+    
+    return fig1, ax1
