@@ -49,6 +49,8 @@ def get_time_sec(t_str: str, return_num_decimals: bool = False) -> float:
 
     Parameters
     ----------
+    t_str: str
+        A value string from which the time in units of seconds needs to be retrieved.
     return_num_decimals: bool, optional
         Specifies whether the number of decimals needs to be returned. (default False)
 
