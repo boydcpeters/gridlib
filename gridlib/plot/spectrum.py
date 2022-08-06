@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
 
 
+# TODO: use kwargs structure here as well
+
 def _base_spectrum(
     k: np.ndarray,
     weight: np.ndarray,
