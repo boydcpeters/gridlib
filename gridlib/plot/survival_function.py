@@ -14,6 +14,7 @@ from .. import data_utils
 from . import _plot_utils
 from .. import compute
 
+# TODO: UPDATE DOCSTRING
 def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, float] = (10, 8), **kwargs):
     """Function plots """
     
@@ -65,6 +66,7 @@ def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, flo
 
     return fig1, ax1
 
+# TODO: UPDATE DOCSTRING
 
 def data_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]],
@@ -140,7 +142,7 @@ def data_vs_multi_exp(
     
     return fig1, ax1
 
-# TODO: function beneath here is wrong and should be updated
+# TODO: UPDATE DOCSTRING
 
 def data_vs_grid(
     data: Dict[str, Dict[str, np.ndarray]],
