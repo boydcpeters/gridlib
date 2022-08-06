@@ -43,7 +43,7 @@ def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, flo
             time = d[t_tl]["time"]
             value = d[t_tl]["value"]
 
-            ax1.loglog(time, value, kwargs_d)
+            ax1.loglog(time, value, **kwargs_d)
 
             if i == 0:
                 # Create the new point position for the text
@@ -121,7 +121,7 @@ def data_vs_multi_exp(
 
     data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
 
-    fig1, ax1 = base_data_sf([data, data_multi_exp], process_data_flag=process_data_flag, figsize=figsize, kwargs=kwargs)
+    fig1, ax1 = base_data_sf([data, data_multi_exp], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
 
     # Legend
     ax1.legend(loc="lower left")
@@ -199,7 +199,7 @@ def data_vs_grid(
 
     data_grid = compute.compute_grid_curves(fit_values_grid, data)
 
-    fig1, ax1 = base_data_sf([data, data_grid], process_data_flag=process_data_flag, figsize=figsize, kwargs=kwargs)
+    fig1, ax1 = base_data_sf([data, data_grid], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
 
     # Legend
     ax1.legend(loc="lower left")
