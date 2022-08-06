@@ -1,9 +1,10 @@
 from typing import Tuple
+
 import numpy as np
 import scipy.optimize
 
-import gridlib.data_utils as data_utils
 import gridlib.calc as calc
+import gridlib.data_utils as data_utils
 
 # TODO: I think t_int should not be set but should be inferred, discuss with Ihor?
 

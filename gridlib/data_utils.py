@@ -2,9 +2,9 @@
 #  valid
 # and for reformatting the t_tls arguments
 
-from typing import Dict
-import re
 import math
+import re
+from typing import Dict
 
 
 def _num_decimal_places(value: str) -> int:
@@ -103,7 +103,7 @@ def get_time_sec(t_str: str, return_num_decimals: bool = False) -> float:
         # positions when it is stored as seconds
         t_str = f"{t_s:f}s"
         t_s, d_places = get_time_sec(t_str, return_num_decimals=True)
-    
+
     elif t_unit == "s":
         t_s = t_val
         d_places = _num_decimal_places(t_val_str)

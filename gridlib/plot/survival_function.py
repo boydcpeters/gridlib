@@ -1,23 +1,26 @@
 """
 Module with functions to plot survival functions.
 """
-import enum
-from typing import Tuple, Dict, Union
-import pathlib
-import re
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.offsetbox import AnchoredText
-from matplotlib.lines import Line2D
 
-from .. import data_utils
+import pathlib
+from typing import Dict, Tuple, Union
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from .. import compute, data_utils
 from . import _plot_utils
-from .. import compute
+
 
 # TODO: UPDATE DOCSTRING and add a _ before the function name??
-def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, float] = (10, 8), **kwargs):
-    """Function plots """
-    
+def base_data_sf(
+    data,
+    process_data_flag: bool = True,
+    figsize: Tuple[float, float] = (10, 8),
+    **kwargs,
+):
+    """Function plots"""
+
     # Check if it is a single dict or a sequence
     # if it is a single dict, make it a sequence so it works with the rest of the
     # function
@@ -66,7 +69,9 @@ def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, flo
 
     return fig1, ax1
 
+
 # TODO: UPDATE DOCSTRING
+
 
 def data_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]],
@@ -76,7 +81,7 @@ def data_vs_multi_exp(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 8),
     path_save: Union[str, pathlib.Path] = None,
-    **kwargs
+    **kwargs,
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -121,14 +126,19 @@ def data_vs_multi_exp(
 
     data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
 
-    fig1, ax1 = base_data_sf([data, data_multi_exp], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
+    fig1, ax1 = base_data_sf(
+        [data, data_multi_exp],
+        process_data_flag=process_data_flag,
+        figsize=figsize,
+        **kwargs,
+    )
 
     # Legend
     # Remove duplicate labels
     # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
     handles, labels = ax1.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    ax1.legend(by_label.values(), by_label.keys())  #, loc="lower left")
+    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
 
     # Axis limits
     if xlim is not None:
@@ -143,10 +153,12 @@ def data_vs_multi_exp(
     if path_save is not None:
         fig1.savefig(path_save, bbox_inches="tight", dpi=200)
         plt.close(fig1)
-    
+
     return fig1, ax1
 
+
 # TODO: UPDATE DOCSTRING
+
 
 def data_vs_grid(
     data: Dict[str, Dict[str, np.ndarray]],
@@ -156,8 +168,8 @@ def data_vs_grid(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 8),
     path_save: Union[str, pathlib.Path] = None,
-    **kwargs
-    ):
+    **kwargs,
+):
     """Function plots the survival function of the true data and the GRID curves.
 
     Parameters
@@ -204,14 +216,19 @@ def data_vs_grid(
 
     data_grid = compute.compute_grid_curves(fit_values_grid, data)
 
-    fig1, ax1 = base_data_sf([data, data_grid], process_data_flag=process_data_flag, figsize=figsize, **kwargs)
+    fig1, ax1 = base_data_sf(
+        [data, data_grid],
+        process_data_flag=process_data_flag,
+        figsize=figsize,
+        **kwargs,
+    )
 
     # Legend
     # Remove duplicate labels
     # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
     handles, labels = ax1.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    ax1.legend(by_label.values(), by_label.keys())  #, loc="lower left")
+    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
 
     # Axis limits
     if xlim is not None:
@@ -226,5 +243,5 @@ def data_vs_grid(
     if path_save is not None:
         fig1.savefig(path_save, bbox_inches="tight", dpi=200)
         plt.close(fig1)
-    
+
     return fig1, ax1

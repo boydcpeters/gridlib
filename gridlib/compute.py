@@ -1,13 +1,18 @@
 """
 Module with functions to compute curves or survival functions.
 """
-from typing import Tuple, List, Dict, Union
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
+
 from . import calc
 
 
-def compute_survival_function(track_lifes: Union[List, np.ndarray], t_tl: Union[int, float], min_track_length: int = None) -> Tuple[np.ndarray, np.ndarray]:
+def compute_survival_function(
+    track_lifes: Union[List, np.ndarray],
+    t_tl: Union[int, float],
+    min_track_length: int = None,
+) -> Tuple[np.ndarray, np.ndarray]:
     """Function creates the time and value arrays describing the survival function distribution from
     a set of track lifes.
 
@@ -45,7 +50,7 @@ def compute_survival_function(track_lifes: Union[List, np.ndarray], t_tl: Union[
     cur_track_lengths, count = np.unique(track_lifes, return_counts=True)
 
     # Array to store the number of occurences of each lifetime.
-    amount = np.zeros(max_track_length+1, dtype=np.int64)
+    amount = np.zeros(max_track_length + 1, dtype=np.int64)
 
     # Fill the array at the indices of the the unique track lengths with their respective count
     amount[cur_track_lengths] = count
@@ -54,8 +59,12 @@ def compute_survival_function(track_lifes: Union[List, np.ndarray], t_tl: Union[
     amount = amount[min_track_length:]
 
     # Create the time vector
-    time = np.linspace(min_track_length*t_tl, max_track_length *
-                       t_tl, num=(max_track_length-min_track_length+1), dtype=np.float64)
+    time = np.linspace(
+        min_track_length * t_tl,
+        max_track_length * t_tl,
+        num=(max_track_length - min_track_length + 1),
+        dtype=np.float64,
+    )
 
     # Calculate the survival function values
     value = np.cumsum(amount[::-1])[::-1]

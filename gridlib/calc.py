@@ -3,8 +3,8 @@ Module with all the functions required for the GRID and multi-exponential
 calculations.
 """
 from typing import Dict, Tuple, Union
-import numpy as np
 
+import numpy as np
 
 # TODO: change names from calc_multi_exp() -> compute_multi_exp()
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)
@@ -241,4 +241,3 @@ def lsqobj_grid(
     grad = gradceq + reg_weight * gradreg
 
     return d, grad
-

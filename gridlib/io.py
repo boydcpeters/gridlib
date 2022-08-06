@@ -1,10 +1,10 @@
-from typing import List, Tuple, Union, Dict
-import re
-import pathlib
 import csv
+import pathlib
+import re
+from typing import Dict, List, Tuple, Union
+
 import numpy as np
 import scipy.io as sio
-
 
 # Initially only allow .csv files?
 # TODO: function to read track files and determine the track lifes (.csv/.txt?)

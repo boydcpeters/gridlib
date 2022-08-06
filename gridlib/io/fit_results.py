@@ -1,8 +1,9 @@
 """
 Module with functions to read and write fit results.
 """
-from typing import Tuple, Union, Dict
 import pathlib
+from typing import Dict, Tuple, Union
+
 import numpy as np
 import scipy.io as sio
 

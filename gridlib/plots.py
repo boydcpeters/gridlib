@@ -1,10 +1,11 @@
-from typing import Tuple, Dict, Union
 import pathlib
 import re
-import numpy as np
+from typing import Dict, Tuple, Union
+
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import AnchoredText
+import numpy as np
 from matplotlib.lines import Line2D
+from matplotlib.offsetbox import AnchoredText
 
 import gridlib.data_utils as data_utils
 

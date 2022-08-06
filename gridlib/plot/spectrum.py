@@ -1,14 +1,15 @@
 """
 Module with functions to plot event spectrum and state spectrum.
 """
-from typing import Tuple, Union
 import pathlib
-import numpy as np
+from typing import Tuple, Union
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.offsetbox import AnchoredText
 
-
 # TODO: use kwargs structure here as well
+
 
 def _base_spectrum(
     k: np.ndarray,

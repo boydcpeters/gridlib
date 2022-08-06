@@ -2,6 +2,7 @@
 Module with utility functions required for the plotting.
 """
 from typing import Dict
+
 from .. import data_utils
 
 
@@ -13,14 +14,14 @@ def _fmt_t_str_plot(t_str):
 
 def _get_key_to_value_i(i: int, key_to_value: Dict):
     """Function gets the key_to_value at position i.
-    
+
     Parameters
     ----------
     i: int
         Index from which to take the key_to_value.
     key_to_value: Dict
         Dictionary with keys and values, which can either be sequences or a single value
-    
+
     Example
     -------
     >>> key_to_value = {"color": ["r", "b", "g"], "linestyle": ["-", "--", "-."],
@@ -38,11 +39,12 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
             value_len.add(len(value))
         else:
             value_len.add(1)
-    
-    if len(value_len) > 2:
-        raise ValueError(f"`key_to_value` is not valid, it contains {len(value_len)} " \
-                            "different sequence lengths.")
 
+    if len(value_len) > 2:
+        raise ValueError(
+            f"`key_to_value` is not valid, it contains {len(value_len)} "
+            "different sequence lengths."
+        )
 
     key_to_value_i = dict()
     for key, value in key_to_value.items():
@@ -53,6 +55,5 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
                 key_to_value_i[key] = value[0]
         else:
             key_to_value_i[key] = value
-    
+
     return key_to_value_i
-    

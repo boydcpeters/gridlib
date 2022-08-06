@@ -90,7 +90,10 @@ def hooks(c):
     _run(c, "poetry run pre-commit run --all-files")
 
 
-@task(name="format", help={"check": "Checks if source is formatted without applying changes"})
+@task(
+    name="format",
+    help={"check": "Checks if source is formatted without applying changes"},
+)
 def format_(c, check=False):
     # type: (Context, bool) -> None
     """Format code."""
@@ -170,7 +173,10 @@ def docs(c, serve=False, open_browser=False):
     if open_browser:
         webbrowser.open(DOCS_INDEX.absolute().as_uri())
     if serve:
-        _run(c, f"poetry run watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
+        _run(
+            c,
+            f"poetry run watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .",
+        )
 
 
 @task(

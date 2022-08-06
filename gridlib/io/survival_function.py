@@ -1,6 +1,7 @@
-from typing import Union, Dict
-import pathlib
 import csv
+import pathlib
+from typing import Dict, Union
+
 import numpy as np
 
 from .. import data_utils
