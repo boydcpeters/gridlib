@@ -33,7 +33,7 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
     # They can be either 1 or one other value, for example either 1 or 3, but it cannot
     # be 1, 3 and 5
     value_len = set()
-    for key, value in key_to_value:
+    for key, value in key_to_value.items():
         value_len.add(len(value))
     
     if len(value_len) > 2:
