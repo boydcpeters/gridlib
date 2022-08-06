@@ -34,7 +34,10 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
     # be 1, 3 and 5
     value_len = set()
     for key, value in key_to_value.items():
-        value_len.add(len(value))
+        if hasattr(value, "__len__"):
+            value_len.add(len(value))
+        else:
+            value_len.add(1)
     
     if len(value_len) > 2:
         raise ValueError(f"`key_to_value` is not valid, it contains {len(value_len)} " \
@@ -43,9 +46,13 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
 
     key_to_value_i = dict()
     for key, value in key_to_value.items():
-        if len(value) > 1:
-            key_to_value_i[key] = value[i]
+        if hasattr(value, "__len__"):
+            if len(value) > 1:
+                key_to_value_i[key] = value[i]
+            else:
+                key_to_value_i[key] = value[0]
         else:
             key_to_value_i[key] = value
     
     return key_to_value_i
+    
