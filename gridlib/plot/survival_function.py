@@ -14,7 +14,7 @@ from .. import data_utils
 from . import _plot_utils
 from .. import compute
 
-# TODO: UPDATE DOCSTRING
+# TODO: UPDATE DOCSTRING and add a _ before the function name??
 def base_data_sf(data, process_data_flag: bool = True, figsize: Tuple[float, float] = (10, 8), **kwargs):
     """Function plots """
     
