@@ -42,7 +42,7 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
 
 
     key_to_value_i = dict()
-    for key, value in key_to_value:
+    for key, value in key_to_value.items():
         if len(value) > 1:
             key_to_value_i[key] = value[i]
         else:
