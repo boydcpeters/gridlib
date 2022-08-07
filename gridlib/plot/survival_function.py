@@ -148,6 +148,9 @@ def data_multiple(
 
 
 # TODO: UPDATE DOCSTRING
+# TODO: check how .plot() function shows kwargs, it puts it under "Other parameters"
+# although we know have it as a keyword argument with a default value, so we should
+# likely just put it under "Parameters"
 
 
 def data_vs_multi_exp(
