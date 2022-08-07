@@ -45,7 +45,7 @@ def fmt_t_tl(t_tl):
 def create_base_spectrum(
     k: np.ndarray,
     weight: np.ndarray,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
 ):
@@ -76,7 +76,7 @@ def create_base_spectrum(
 
 def plot_event_spectrum(
     fit_values_grid,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     path_save: Union[str, pathlib.Path] = None,
@@ -110,7 +110,7 @@ def plot_event_spectrum(
 
 def plot_state_spectrum(
     fit_values_grid,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     path_save: Union[str, pathlib.Path] = None,
@@ -148,7 +148,7 @@ def plot_state_spectrum(
 def create_base_sf_data_vs_multi_exp(
     data_sf: Dict[str, Dict[str, np.ndarray]],
     data_sf_multi_exp: Dict[str, Dict[str, np.ndarray]],
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -232,7 +232,7 @@ def create_base_sf_data_vs_multi_exp(
 def plot_sf_data_vs_grid(
     data_sf: Dict[str, Dict[str, np.ndarray]],
     data_sf_grid: Dict[str, Dict[str, np.ndarray]],
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     path_save: Union[str, pathlib.Path] = None,

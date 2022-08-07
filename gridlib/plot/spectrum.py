@@ -14,7 +14,7 @@ from matplotlib.offsetbox import AnchoredText
 def _base_spectrum(
     k: np.ndarray,
     weight: np.ndarray,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
 ):
@@ -45,7 +45,7 @@ def _base_spectrum(
 
 def event_spectrum(
     fit_results_grid,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     path_save: Union[str, pathlib.Path] = None,
@@ -79,7 +79,7 @@ def event_spectrum(
 
 def state_spectrum(
     fit_results_grid,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     path_save: Union[str, pathlib.Path] = None,

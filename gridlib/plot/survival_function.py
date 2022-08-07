@@ -16,7 +16,7 @@ from . import _plot_utils
 def base_data_sf(
     data,
     process_data_flag: bool = True,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     **kwargs,
 ):
     """Function plots"""
@@ -79,7 +79,7 @@ def data_vs_multi_exp(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     path_save: Union[str, pathlib.Path] = None,
     **kwargs,
 ):
@@ -166,7 +166,7 @@ def data_vs_grid(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 8),
+    figsize: Tuple[float, float] = (10, 6),
     path_save: Union[str, pathlib.Path] = None,
     **kwargs,
 ):
