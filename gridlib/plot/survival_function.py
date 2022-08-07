@@ -13,13 +13,26 @@ from . import _plot_utils
 
 
 # TODO: UPDATE DOCSTRING and add a _ before the function name??
-def base_data_sf(
+def _base_data_multiple(
     data,
     process_data_flag: bool = True,
+    xlim: Tuple[float, float] = None,
+    ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
-    **kwargs,
+    kwargs_plot: Dict = None,
+    kwargs_text: Dict = None,
 ):
     """Function plots"""
+
+    # Create empty dictionaries for the kwargs_... if they are None.
+    # Mutable default values leads to dangerous behaviour
+    # (https://stackoverflow.com/questions/1132941/least-astonishment-and-the-mutable-default-argument)
+    # Hence, it is done this way.
+
+    if kwargs_plot is None:
+        kwargs_plot = dict()
+    if kwargs_text is None:
+        kwargs_text = dict()
 
     # Check if it is a single dict or a sequence
     # if it is a single dict, make it a sequence so it works with the rest of the
@@ -40,7 +53,8 @@ def base_data_sf(
     # text positions
     for i, d in enumerate(data):
 
-        kwargs_d = _plot_utils._get_key_to_value_i(i, kwargs)
+        # Plotting kwargs
+        kwargs_d = _plot_utils._get_key_to_value_i(i, kwargs_plot)
 
         for t_tl in sorted(data[i].keys()):
             time = d[t_tl]["time"]
@@ -63,9 +77,72 @@ def base_data_sf(
                     text_point = (time[0] * 1.1, value[0] * 1.1)
 
                 ax1.text(
-                    text_point[0], text_point[1], _plot_utils._fmt_t_str_plot(t_tl)
+                    text_point[0],
+                    text_point[1],
+                    _plot_utils._fmt_t_str_plot(t_tl),
+                    **kwargs_text,
                 )
                 text_points.add(text_point)
+
+    # Legend
+    # Remove duplicate labels
+    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
+    handles, labels = ax1.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
+
+    # Axis limits
+    if xlim is not None:
+        ax1.set_xlim(xlim)
+    if ylim is not None:
+        ax1.set_ylim(ylim)
+
+    # Labels
+    ax1.set_xlabel("time (s)")
+    ax1.set_ylabel("survival function")
+
+    return fig1, ax1
+
+
+def data_multiple(
+    data: Dict[str, Dict[str, np.ndarray]],
+    process_data_flag: bool = True,
+    xlim: Tuple[float, float] = None,
+    ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
+    path_save: Union[str, pathlib.Path] = None,
+    kwargs_plot: Dict = None,
+    kwargs_text: Dict = None,
+):
+    """Function plots a single or multiple data dictionaries"""
+
+    # Create empty dictionaries for the kwargs_... if they are None.
+    # Mutable default values leads to dangerous behaviour
+    # (https://stackoverflow.com/questions/1132941/least-astonishment-and-the-mutable-default-argument)
+    # Hence, it is done this way.
+
+    if kwargs_plot is None:
+        kwargs_plot = dict()
+    if kwargs_text is None:
+        kwargs_text = dict()
+
+    # Create a Path() from path_save if not None and it is a str
+    if path_save is not None and isinstance(path_save, str):
+        path_save = pathlib.Path(path_save)
+
+    fig1, ax1 = _base_data_multiple(
+        data,
+        process_data_flag=process_data_flag,
+        xlim=xlim,
+        ylim=ylim,
+        figsize=figsize,
+        kwargs_plot=kwargs_plot,
+        kwargs_text=kwargs_text,
+    )
+
+    if path_save is not None:
+        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig1)
 
     return fig1, ax1
 
@@ -81,7 +158,8 @@ def data_vs_multi_exp(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     path_save: Union[str, pathlib.Path] = None,
-    **kwargs,
+    kwargs_plot: Dict = None,
+    kwargs_text: Dict = None,
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -107,6 +185,16 @@ def data_vs_multi_exp(
         }
     """
 
+    # Create empty dictionaries for the kwargs_... if they are None.
+    # Mutable default values leads to dangerous behaviour
+    # (https://stackoverflow.com/questions/1132941/least-astonishment-and-the-mutable-default-argument)
+    # Hence, it is done this way.
+
+    if kwargs_plot is None:
+        kwargs_plot = dict()
+    if kwargs_text is None:
+        kwargs_text = dict()
+
     # Create a Path() from path_save if not None and it is a str
     if path_save is not None and isinstance(path_save, str):
         path_save = pathlib.Path(path_save)
@@ -115,40 +203,26 @@ def data_vs_multi_exp(
     n_exp = fit_values_multi_exp[key]["k"].shape[0]
 
     # Set the default settings if they are not provided
-    if "label" not in kwargs:
-        kwargs["label"] = ["data", f"{n_exp}-exp"]
-    if "color" not in kwargs:
-        kwargs["color"] = ["#007972", "#fe9901"]
-    if "linewidth" not in kwargs:
-        kwargs["linewidth"] = 1
-    if "linestyle" not in kwargs:
-        kwargs["linestyle"] = ["solid", "dashed"]
+    if "label" not in kwargs_plot:
+        kwargs_plot["label"] = ["data", f"{n_exp}-exp"]
+    if "color" not in kwargs_plot:
+        kwargs_plot["color"] = ["#007972", "#fe9901"]
+    if "linewidth" not in kwargs_plot:
+        kwargs_plot["linewidth"] = 1
+    if "linestyle" not in kwargs_plot:
+        kwargs_plot["linestyle"] = ["solid", "dashed"]
 
     data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
 
-    fig1, ax1 = base_data_sf(
+    fig1, ax1 = _base_data_multiple(
         [data, data_multi_exp],
         process_data_flag=process_data_flag,
+        xlim=xlim,
+        ylim=ylim,
         figsize=figsize,
-        **kwargs,
+        kwargs_plot=kwargs_plot,
+        kwargs_text=kwargs_text,
     )
-
-    # Legend
-    # Remove duplicate labels
-    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
-    handles, labels = ax1.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
-    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
-
-    # Axis limits
-    if xlim is not None:
-        ax1.set_xlim(xlim)
-    if ylim is not None:
-        ax1.set_ylim(ylim)
-
-    # Labels
-    ax1.set_xlabel("time (s)")
-    ax1.set_ylabel("survival function")
 
     if path_save is not None:
         fig1.savefig(path_save, bbox_inches="tight", dpi=200)
@@ -168,7 +242,8 @@ def data_vs_grid(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     path_save: Union[str, pathlib.Path] = None,
-    **kwargs,
+    kwargs_plot: Dict = None,
+    kwargs_text: Dict = None,
 ):
     """Function plots the survival function of the true data and the GRID curves.
 
@@ -200,45 +275,42 @@ def data_vs_grid(
     -------
     None
     """
+
+    # Create empty dictionaries for the kwargs_... if they are None.
+    # Mutable default values leads to dangerous behaviour
+    # (https://stackoverflow.com/questions/1132941/least-astonishment-and-the-mutable-default-argument)
+    # Hence, it is done this way.
+
+    if kwargs_plot is None:
+        kwargs_plot = dict()
+    if kwargs_text is None:
+        kwargs_text = dict()
+
     # Create a Path() from path_save if not None and it is a str
     if path_save is not None and isinstance(path_save, str):
         path_save = pathlib.Path(path_save)
 
     # Set the default settings if they are not provided
-    if "label" not in kwargs:
-        kwargs["label"] = ["data", "GRID"]
-    if "color" not in kwargs:
-        kwargs["color"] = ["#007972", "#fe9901"]
-    if "linewidth" not in kwargs:
-        kwargs["linewidth"] = 1
-    if "linestyle" not in kwargs:
-        kwargs["linestyle"] = ["solid", "dashed"]
+    if "label" not in kwargs_plot:
+        kwargs_plot["label"] = ["data", "GRID"]
+    if "color" not in kwargs_plot:
+        kwargs_plot["color"] = ["#007972", "#fe9901"]
+    if "linewidth" not in kwargs_plot:
+        kwargs_plot["linewidth"] = 1
+    if "linestyle" not in kwargs_plot:
+        kwargs_plot["linestyle"] = ["solid", "dashed"]
 
     data_grid = compute.compute_grid_curves(fit_values_grid, data)
 
-    fig1, ax1 = base_data_sf(
+    fig1, ax1 = _base_data_multiple(
         [data, data_grid],
         process_data_flag=process_data_flag,
+        xlim=xlim,
+        ylim=ylim,
         figsize=figsize,
-        **kwargs,
+        kwargs_plot=kwargs_plot,
+        kwargs_text=kwargs_text,
     )
-
-    # Legend
-    # Remove duplicate labels
-    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
-    handles, labels = ax1.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
-    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
-
-    # Axis limits
-    if xlim is not None:
-        ax1.set_xlim(xlim)
-    if ylim is not None:
-        ax1.set_ylim(ylim)
-
-    # Labels
-    ax1.set_xlabel("time (s)")
-    ax1.set_ylabel("survival function")
 
     if path_save is not None:
         fig1.savefig(path_save, bbox_inches="tight", dpi=200)
