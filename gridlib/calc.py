@@ -103,7 +103,7 @@ def gradh(
     # Derivative
     for m in range(time.shape[0]):
         grad_s = grad_s + 2 * eq0[m] * q[m] / q[0] * (
-            (A[:, m] / h[0]) - A[:, 0] * h[m] / (h[0]) ** 2
+            A[:, m] / h[0] - A[:, 0] * h[m] / (h[0]) ** 2
         )
 
     return grad_s
