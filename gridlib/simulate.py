@@ -56,7 +56,7 @@ def tl_simulation_single(
     return {f"{t_tl}s": {"time": time, "value": value}}
 
 
-def tl_simulations(
+def tl_simulation(
     k: Sequence[float],
     s: Sequence[float],
     kb: float,
