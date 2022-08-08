@@ -7,11 +7,6 @@ import numpy as np
 from . import data_utils
 
 
-def choose_state(keff: np.ndarray, p: np.ndarray):
-    """Function returns the keff associated to a certain state depending on p"""
-    return np.random.choice(keff, p=p)
-
-
 def tl_simulation_single(
     k: Sequence[float],
     s: Sequence[float],
@@ -32,11 +27,12 @@ def tl_simulation_single(
 
     binding_sum = 0
 
+    # TODO: this can likely be improved a lot with respect to speed
     rng = np.random.default_rng()
     while binding_sum < N and count < (N * 100):
         # while np.sum(binding) < N and count < (N * 100):
 
-        keff_state = choose_state(keff, p)
+        keff_state = rng.choice(keff, p=p)
         lifetime = rng.exponential(scale=1 / keff_state)
 
         if lifetime > time[0]:
