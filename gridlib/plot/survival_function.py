@@ -110,9 +110,9 @@ def data_multiple(
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
-    path_save: Union[str, pathlib.Path] = None,
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
+    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots a single or multiple data dictionaries"""
 
@@ -160,9 +160,9 @@ def data_vs_multi_exp(
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
-    path_save: Union[str, pathlib.Path] = None,
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
+    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -244,9 +244,9 @@ def data_vs_grid(
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
-    path_save: Union[str, pathlib.Path] = None,
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
+    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots the survival function of the true data and the GRID curves.
 
