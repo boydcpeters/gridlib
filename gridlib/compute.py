@@ -2,6 +2,7 @@
 Module with functions to compute curves or survival functions.
 """
 from typing import Dict, List, Tuple, Union
+import math
 
 import numpy as np
 
@@ -73,6 +74,47 @@ def compute_survival_function(
 
 
 def compute_multi_exp(
+    k: np.ndarray, s: np.ndarray, a: float, time: np.ndarray
+) -> np.ndarray:
+    """Function computes the multi-exponential for the given time points.
+
+    Parameters
+    ----------
+    k: np.ndarray
+        Decay rates
+    s: np.ndarray
+        Amplitudes of the respective decay rates. The sum of the amplitudes should
+        be equal to zero.
+    a: float
+        Photobleaching number (a * t_int)
+    time: np.ndarray
+        Time points for which the multi-exponential needs to be determined.
+
+    Returns
+    -------
+    value: np.ndarray
+        The resulting normalized multi-exponential values at the given time points.
+    """
+
+    if not math.isclose(1.0, np.sum(s)):
+        raise ValueError(f"Sum of amplitudes should be equal to 1, but is {np.sum(s)}.")
+
+    # Frame number, start counting at 1
+    m = np.arange(time.shape[0]) + 1
+
+    # Calculate the model function
+    # Decay spectrum
+    h = calc.calch(time, k, s)
+    # Bleaching
+    q = np.exp(-a * m)
+
+    # Calculate the complete GRID fit function
+    value = q / q[0] * h / h[0]
+
+    return value
+
+
+def compute_multi_exp_fit_values(
     fit_values_multi_exp: Dict[str, Union[np.array, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
@@ -130,19 +172,7 @@ def compute_multi_exp(
         # Store the time points
         data_multi_exp[t_tl]["time"] = t
 
-        # Frame number
-        m = np.arange(t.shape[0]) + 1
-
-        # Calculate the model function
-        # Decay spectrum
-        h = calc.calch(t, k, s)
-        # Bleaching
-        q = np.exp(-a * m)
-
-        # Calculate the complete GRID fit function
-        y = q / q[0] * h / h[0]
-
-        data_multi_exp[t_tl]["value"] = y
+        data_multi_exp[t_tl]["value"] = compute_multi_exp(k, s, a, t)
 
     return data_multi_exp
 
@@ -188,6 +218,6 @@ def compute_grid_curves(
         }
     """
 
-    data_grid = compute_multi_exp(fit_values_grid, data)
+    data_grid = compute_multi_exp_fit_values(fit_values_grid, data)
 
     return data_grid
