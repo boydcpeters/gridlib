@@ -27,7 +27,8 @@ def tl_simulation_single(
     binding = np.zeros(time.shape[0])
     binding_sum = 0
 
-    # TODO: this can likely be improved a lot with respect to speed
+    # TODO: future - improve speed: multiprocessing, or use "chunks", so do like
+    # 1000 molecules at the same time with arrays?
     rng = np.random.default_rng()
     while binding_sum < N and count < (N * 10):
 
@@ -71,6 +72,7 @@ def tl_simulation(
     else:
         N = [N for _ in range(len(t_tl_all))]
 
+    # TODO: future - allow this to be done in a multiprocessed way
     for i, t_tl in enumerate(t_tl_all):
         if isinstance(t_tl, str):
             t_tl_s = data_utils.get_time_sec(t_tl)
