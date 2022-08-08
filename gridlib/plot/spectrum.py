@@ -50,8 +50,8 @@ def event_spectrum(
     figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    path_save: Union[str, pathlib.Path] = None,
     color="#fe9901",
+    path_save: Union[str, pathlib.Path] = None,
 ):
 
     # Create a Path() from path_save if not None and it is a str
@@ -96,8 +96,8 @@ def state_spectrum(
     figsize: Tuple[float, float] = (10, 6),
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    path_save: Union[str, pathlib.Path] = None,
     color="#fe9901",
+    path_save: Union[str, pathlib.Path] = None,
 ):
 
     # Create a Path() from path_save if not None and it is a str
