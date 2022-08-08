@@ -23,14 +23,13 @@ def tl_simulation_single(
 
     count = 0
     time = np.linspace(t_tl, 1000 * t_tl, num=1001, endpoint=True)
-    binding = np.zeros(time.shape[0])
 
+    binding = np.zeros(time.shape[0])
     binding_sum = 0
 
     # TODO: this can likely be improved a lot with respect to speed
     rng = np.random.default_rng()
-    while binding_sum < N and count < (N * 100):
-        # while np.sum(binding) < N and count < (N * 100):
+    while binding_sum < N and count < (N * 10):
 
         keff_state = rng.choice(keff, p=p)
         lifetime = rng.exponential(scale=1 / keff_state)
