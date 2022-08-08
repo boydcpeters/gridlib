@@ -8,13 +8,38 @@ from . import data_utils
 
 
 def tl_simulation_single(
-    k: Sequence[float],
-    s: Sequence[float],
+    k: np.ndarray,
+    s: np.ndarray,
     kb: float,
     t_int: float,
     t_tl: float,
     N: int = 10000,
 ):
+    """Function simulates the dissociation of molecules and calculates the resulting
+    survival time distribution.
+
+    Parameters
+    ----------
+    k: np.ndarray
+        Decay rates with units per second.
+    s: np.ndarray
+        Amplitudes for the respective decay rates.
+    kb: float
+        Photobleaching rate per second (kb = a / t_int).
+    t_int: float
+        The integration time in seconds.
+    t_tl: float
+        The time-lapse time to simulate in seconds.
+    N: int, optional
+        Number of molecules to simulate and use for the survival time distribution
+        calculation (default 10000).
+
+    Returns
+    -------
+    Dict[str, Dict[str, np.ndarray]]
+    The returned dictionary has the following structure:
+    {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}}
+    """
 
     p = s / np.sum(s)
 
@@ -30,6 +55,9 @@ def tl_simulation_single(
     # TODO: future - improve speed: multiprocessing, or use "chunks", so do like
     # 1000 molecules at the same time with arrays?
     rng = np.random.default_rng()
+
+    # Simulate until enough points have been captured or the computation time is
+    # exceeded
     while binding_sum < N and count < (N * 10):
 
         keff_state = rng.choice(keff, p=p)
@@ -42,7 +70,7 @@ def tl_simulation_single(
         else:
             count = count + 1
 
-    # Calculate the survival function values
+    # Calculate the survival function values with cumulative summing
     value = np.cumsum(binding[::-1])[::-1]
 
     # Delete the empty elements
