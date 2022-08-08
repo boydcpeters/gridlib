@@ -38,7 +38,7 @@ def tl_simulation_single(
     -------
     Dict[str, Dict[str, np.ndarray]]
     The returned dictionary has the following structure:
-    {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}}
+        {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}}
     """
 
     p = s / np.sum(s)
@@ -81,13 +81,43 @@ def tl_simulation_single(
 
 
 def tl_simulation(
-    k: Sequence[float],
-    s: Sequence[float],
+    k: np.ndarray,
+    s: np.ndarray,
     kb: float,
     t_int: float,
     t_tl_all: Sequence[Union[float, str]],
-    N: Union[int, Sequence] = 100000,
+    N: Union[int, Sequence[int]] = 10000,
 ):
+    """Function simulates the dissociation of molecules and calculates the resulting
+    survival time distribution.
+
+    Parameters
+    ----------
+    k: np.ndarray
+        Decay rates with units per second.
+    s: np.ndarray
+        Amplitudes for the respective decay rates.
+    kb: float
+        Photobleaching rate per second (kb = a / t_int).
+    t_int: float
+        The integration time in seconds.
+    t_tl_all: Sequence[float | str]
+        The time-lapse times to simulate. If the time-lapse times are provided as
+        floats then they are interpreted as seconds. However, the time-lapse times can
+        also be provided as strings, eg. '100ms' or '1.5s'.
+    N: int | Sequence[int], optional
+        Number of molecules to simulate and use for the survival time distribution
+        calculation (default 10000). If only an integer value is provided then this
+        value will be used for all the simulations. In the case that the provided
+        N object is an iterable, each element is used as value for each time-lapse
+        condition.
+
+    Returns
+    -------
+    Dict[str, Dict[str, np.ndarray]]
+    The returned dictionary has the following structure:
+        {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}, ...}
+    """
     # TODO function to perform multiple simulations and get back a data dictionary
     data = dict()
 
