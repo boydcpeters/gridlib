@@ -6,7 +6,6 @@ from typing import Dict, Tuple, Union
 
 import numpy as np
 
-# TODO: change names from calc_multi_exp() -> compute_multi_exp()
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)
 
 
@@ -241,3 +240,47 @@ def lsqobj_grid(
     grad = gradceq + reg_weight * gradreg
 
     return d, grad
+
+
+def global_multi_exp(
+    values: np.ndarray,
+    data: Dict[str, Dict[str, np.ndarray]],
+    n: int,
+    t_int: float,
+) -> Tuple[float, np.ndarray]:
+    """Function returns the residuals"""
+    # Initialization of the variables
+    # ---------------------------------------------------------------------------------
+    d = np.array([], dtype=np.float64)
+
+    # Unpack the values array and assign them to the correct variable
+    # ---------------------------------------------------------------------------------
+    k = values[:n]
+    s = values[n : (2 * n)]
+    a = values[-1]
+
+    # Constraints for global fit
+    # ---------------------------------------------------------------------------------
+
+    # Cost function for difference between fit and measurement
+    # Loop over all the time-lapse conditions
+    for t_tl in data.keys():
+        # read n-th measured time-lapse
+        time = data[t_tl]["time"]  # time-points (lifetime) array
+        p = data[t_tl]["value"]  # probability array
+
+        # IMPORTANT: frame count should start at 1, NOT 0
+        m = np.arange(time.shape[0]) + 1
+
+        # Calculate the model function
+        # Decay spectrum
+        h = calch(time, k, s)
+        # Photobleaching
+        q = np.exp(-a * m)
+
+        # Calculate the residuals
+        eq0 = ((q / q[0]) * (h / h[0])) - (p / p[0])
+
+        d = np.concatenate((d, eq0))
+
+    return d
