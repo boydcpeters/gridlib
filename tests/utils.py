@@ -13,4 +13,5 @@ def approx_nested_dict_data(dict1, dict2):
         for key2 in dict1[key1].keys():
             np.testing.assert_allclose(dict1[key1][key2], dict2[key1][key2])
 
+    # If it goes through all the checks return True
     return True
