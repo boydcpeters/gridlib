@@ -1,4 +1,5 @@
 from typing import Tuple
+import math
 
 import numpy as np
 import scipy.optimize
@@ -109,8 +110,7 @@ def fit_grid(parameters, data):
     return fit_results
 
 
-def create_grid_multi_exp(grid_vals):
-    pass
+# TODO: function works!! Yayy, but need to clean it up.
 
 
 def fit_multi_exp(parameters, data, n: int = 2):
@@ -129,53 +129,77 @@ def fit_multi_exp(parameters, data, n: int = 2):
 
     coordinates = []
     for i in range(n):
-        coordinates.append(np.geomspace(k_min, k_max, num=2, endpoint=True))
+        coordinates.append(
+            np.geomspace(k_min, k_max, num=2, endpoint=True, dtype=np.float64)
+        )
 
     # Create the grid
-    x0_all = np.meshgrid(*coordinates)
-    x0_all = np.reshape(x0_all, (-1, n))
+    x0_k_all = np.meshgrid(*coordinates)
+    x0_k_all = np.reshape(x0_k_all, (-1, n))
 
-    print(f"Total fits: {x0_all.shape[0]}")
+    bnds = [(k_min, k_max) for _ in range(x0_k_all.shape[1])]
 
-    fit_results_all = np.zeros((x0), dtype=np.float64)
+    # Initial guesses and bounds
+    x0_s = np.linspace(0.05, 0.7, num=n, endpoint=True, dtype=np.float64)
+    bnds.extend([(0.0, 1.0) for _ in range(x0_s.shape[0])])
 
-    # Update the x0 array and set the bounds for both the amplitudes and the
-    # photobleaching number
+    # Default values for photobleaching bounds
     lbq = 0  # lower bound photobleaching
     ubq = 3  # upper bound photobleaching
-
-    bnds = [(0, 1) for _ in range(x0.shape[0])]
-    bnds.append((lbq, ubq))  # add the bounds for the photobleaching
     if parameters["fit_a"]:
-        x0 = np.concatenate((x0, np.array([0.05], dtype=np.float64)))
-
+        a = 2.0 * t_int  # default bleaching rate is 2 s^-1
+        bnds.append((lbq, ubq))
     elif not parameters["fit_a"]:
-        x0 = np.concatenate((x0, np.array([parameters["a_fixed"]])))
-        bnds[-1] = (parameters["a_fixed"], parameters["a_fixed"])
+        a = parameters["a_fixed"]
+        bnds.append((parameters["a_fixed"], parameters["a_fixed"]))
 
-    # print(x0.shape)
-    # print(bnds)
+    lb = []
+    ub = []
+    for bnd in bnds:
+        print(bnd)
+        lb_val, ub_val = bnd
+        lb.append(lb_val)
+        ub.append(ub_val)
 
-    cons = [{"type": "eq", "fun": con_eq}]
-    options = {"maxiter": 1000, "disp": True}
+    lb = np.array(lb)
+    ub = np.array(ub)
 
-    res = scipy.optimize.minimize(
-        calc.lsqobj_grid,
-        x0,
-        args=(data_processed, k, reg_weight, t_int),
-        method="SLSQP",
-        jac=True,  # jac=True, means the gradient is given by the function
-        bounds=bnds,
-        constraints=cons,
-        options=options,
-    )
+    bnds = (lb, ub)
 
-    grid_results = {"k": k, "s": res.x[: k.shape[0]], "a": res.x[-1]}
+    print(f"Total fits: {x0_k_all.shape[0]}")
 
-    fit_results = {"grid": grid_results}
+    fit_results_all = []
+
+    for i in range(x0_k_all.shape[0]):
+        x0 = np.concatenate((x0_k_all[i, :], x0_s, np.array([a])))
+        res = scipy.optimize.least_squares(
+            calc.global_multi_exp,
+            x0,
+            args=(data_processed, n, t_int),
+            bounds=bnds,
+            method="trf",
+        )
+        fit_results_all.append(res)
+
+    # Find the best fitted parameters
+    cost_min = math.inf
+    x_best = None
+
+    for res in fit_results_all:
+        if res.cost < cost_min:
+            cost_min = res.cost
+            x_best = res.x
+
+    multi_exp_results = {
+        "k": x_best[:n],
+        "s": x_best[n : (2 * n)],
+        "a": x_best[-1],
+        "error": cost_min,
+    }
+
+    fit_results = {f"{n}-exp": multi_exp_results}
 
     return fit_results
-    scipy.optimize.least_squares()
 
 
 def fit(parameters, data):
