@@ -14,7 +14,7 @@ def _num_decimal_places(value: str) -> int:
 
     Parameters
     ----------
-    value: str
+    value : str
         A float in string format for which the number of decimals should be determined.
 
     Returns
@@ -51,16 +51,16 @@ def get_time_sec(t_str: str, return_num_decimals: bool = False) -> float:
 
     Parameters
     ----------
-    t_str: str
+    t_str : str
         A value string from which the time in units of seconds needs to be retrieved.
-    return_num_decimals: bool, optional
+    return_num_decimals : bool, optional
         Specifies whether the number of decimals needs to be returned. (default False)
 
     Returns
     -------
-    t_s: float
+    t_s : float
         Time in seconds
-    d_places: int, optional
+    d_places : int, optional
         Number of decimal places. Only provided if `return_num_decimals` is True.
 
     Examples
@@ -122,14 +122,16 @@ def _fmt_t_str_key(t_str: str) -> str:
     return f"{t_s:.{d_places}f}s"
 
 
-def fmt_t_str_data(data: Dict) -> Dict:
-    """Function formats all the t_tls with ms to s so the t_tls can be easily compared.
-
-    # TODO: update doc string
+def fmt_t_str_data(
+    data: Dict[str, Dict[str, np.ndarray]]
+) -> Dict[str, Dict[str, np.ndarray]]:
+    """Function formats all the time-lapse times in the data dictionary to strings
+    where the time-lapse times are in seconds. This allows for easier comparison and
+    general processing.
 
     Parameters
     ----------
-    data: Dict
+    data : Dict[str, Dict[str, np.ndarray]]
         Survival function data for time-lapse conditions with the following data
         structure:
             {
@@ -142,9 +144,9 @@ def fmt_t_str_data(data: Dict) -> Dict:
 
     Returns
     -------
-    Dict
-        Data dictionary but with the t_tls as second values instead of millisecond
-        values.
+    Dict[str, Dict[str, np.ndarray]]
+        Data dictionary but with the time-lapse time keys all in seconds instead of
+        seconds or milliseconds.
 
     Examples
     --------
@@ -171,7 +173,7 @@ def process_data(
 
     Parameters
     ----------
-    data: Dict[str, Dict[str, np.ndarray]]
+    data : Dict[str, Dict[str, np.ndarray]]
         Survival function data for time-lapse conditions with the following data
         structure:
             {
@@ -181,14 +183,14 @@ def process_data(
                 },
                 ...
             }
-    delete: bool, optional
+    delete : bool, optional
         Flag to indicate whether the first data point of the shortest time-lapse time
         should be deleted if the first time point is equal to the time-lapse time
         (default True).
 
     Returns
     -------
-    data_processed: Dict[str, Dict[str, np.ndarray]]
+    data_processed : Dict[str, Dict[str, np.ndarray]]
         The processed survival function data for time-lapse conditions with the
         following data structure:
             {
@@ -247,7 +249,7 @@ def isvalid_parameters(parameters: Dict) -> bool:
 
     Parameters
     ----------
-    parameters: Dict
+    parameters : Dict
         Dictionary containing all the parameters needed to perform the GRID fitting.
 
     Returns
