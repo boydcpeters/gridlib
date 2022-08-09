@@ -171,21 +171,22 @@ def data_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
-            f"{t_tl}": {
+            "t_tl": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
             }
         }
     data_multi_exp: Dict[str, Dict[str, np.ndarray]]
-        Data of the computed GRID survival functions. The dictionary structure is as follows:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the survival function values corresponding to the
-                    respective time value
+        Survival function data for time-lapse conditions with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
     """
 
     # Create empty dictionaries for the kwargs_... if they are None.
@@ -253,23 +254,14 @@ def data_vs_grid(
     Parameters
     ----------
     data: Dict[str, Dict[str, np.ndarray]]
-        Data of the survival function from real data with the following data structure:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the survival function values corresponding to the
-                    respective time value
+        Survival function data for every time-lapse condition with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                }
             }
-        }
-    data_grid: Dict[str, Dict[str, np.ndarray]]
-        Data of the computed GRID survival functions. The dictionary structure is as follows:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the survival function values corresponding to the
-                    respective time value
-            }
-        }
     xlim: Tuple[float, float] = None, ylim: Tuple[float, float] = None, path_save: str or pathlib.Path
         Path designates the place where the figure should be saved if a value is set. The figure is
         not saved if the values is set to None. (default None)
