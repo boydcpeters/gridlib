@@ -246,7 +246,6 @@ def global_multi_exp(
     values: np.ndarray,
     data: Dict[str, Dict[str, np.ndarray]],
     n: int,
-    t_int: float,
 ) -> Tuple[float, np.ndarray]:
     """Function returns the residuals"""
     # Initialization of the variables
