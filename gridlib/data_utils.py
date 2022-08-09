@@ -1,7 +1,7 @@
 # Here are utils function, such as for checking the whether the parameters are
 #  valid
 # and for reformatting the t_tls arguments
-
+import copy
 import math
 import re
 from typing import Dict
@@ -140,12 +140,15 @@ def fmt_t_str_data(data: Dict) -> Dict:
 
     Examples
     --------
-    >>> data = {"50ms": {"time": [1, 2], "value": [3, 4]}, "1s": {"time": [5], "value":
-    [6]}}
+    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
+                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     >>> fmt_t_str_data(data)
-    {"0.05s": {"time": [1, 2], "value": [3, 4]}, "1s": {"time": [5], "value": [6]}}
+    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
+     "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     """
-    return {_fmt_t_str_key(key): value for key, value in data.items()}
+    # Deepcopy is required, because otherwise it will store just the reference pointer
+    # but not the array itself
+    return {_fmt_t_str_key(key): copy.deepcopy(value) for key, value in data.items()}
 
 
 def process_data(
@@ -192,15 +195,15 @@ def process_data(
     >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15])), "value": array([41, 23, 8])},
                 "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     >>> process_data(data)
-    {"0.05s": {"time": array([0.1, 0.15]), "value": array([0.74193548, 0.25806452])},
-     "1s": {"time": array([1.0, 2.0]), "value": array([0.79069767, 0.20930233])}}
+    {"0.05s": {"time": array([0.1, 0.15]), "value": array([1.0, 0.34782609])},
+     "1s": {"time": array([1.0, 2.0]), "value": array([1.0, 0.26470588])}}
 
     If `delete` is set to False:
     >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
                 "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     >>> process_data(data, delete=False)
-    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": [0.56944444, 0.31944444, 0.11111111])},
-    "1s": {"time": array([1.0, 2.0]), "value": array([0.79069767, 0.20930233])}}
+    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": [1.0, 0.56097561, 0.19512195])},
+    "1s": {"time": array([1.0, 2.0]), "value": array([1.0, 0.26470588])}}
     """
 
     # Format the data such that all the keys are in seconds
