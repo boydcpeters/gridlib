@@ -130,7 +130,15 @@ def fmt_t_str_data(data: Dict) -> Dict:
     Parameters
     ----------
     data: Dict
-        Data dictionary
+        Survival function data for time-lapse conditions with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
+            }
 
     Returns
     -------
@@ -164,15 +172,15 @@ def process_data(
     Parameters
     ----------
     data: Dict[str, Dict[str, np.ndarray]]
-        Data of the survival function with the following data structure:
-        {
-            f"{t_tl}s": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the survival function values corresponding
-                         to the respective time value
+        Survival function data for time-lapse conditions with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
-
     delete: bool, optional
         Flag to indicate whether the first data point of the shortest time-lapse time
         should be deleted if the first time point is equal to the time-lapse time
@@ -181,14 +189,15 @@ def process_data(
     Returns
     -------
     data_processed: Dict[str, Dict[str, np.ndarray]]
-        Processed data with the following data structure:
-        {
-            f"{t_tl}s": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the normalized survival function values
-                        corresponding to the respective time value
+        The processed survival function data for time-lapse conditions with the
+        following data structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
 
     Examples
     --------

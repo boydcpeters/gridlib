@@ -133,27 +133,28 @@ def compute_multi_exp_fit_values(
                 if multi-exponential fit:
                 "Adj_R_squared": adjusted R squared for every k and S
     data: Dict[str, Dict[str, np.ndarray]]
-        Data of the survival function from real data with the following data structure:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values,
-                "value": np.ndarray with all the survival function values corresponding
-                         to the respective time value.
+        Survival function data for time-lapse conditions with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
 
     Returns
     -------
     data_multi_exp: Dict[str, Dict[str, np.ndarray]]
-        Data of the computed GRID survival functions. The dictionary structure is as
-        follows:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values.
-                "value": np.ndarray with all the survival function values corresponding
-                         to the respective time value.
+        Survival function data computed with the provided multi-exponential fit values
+        for every time-lapse conditions in data. The object has the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                }
             }
-        }
     """
     k = fit_values_multi_exp["k"]
     s = fit_values_multi_exp["s"]
@@ -195,27 +196,28 @@ def compute_grid_curves(
             Optional:
                 "fit_error": error of the fit
     data: Dict[str, Dict[str, np.ndarray]]
-        Data of the survival function from real data with the following data structure:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values.
-                "value": np.ndarray with all the survival function values corresponding
-                         to the respective time value.
+        Survival function data for time-lapse conditions with the following data
+        structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
 
     Returns
     -------
     data_grid: Dict[str, Dict[str, np.ndarray]]
-        Data of the computed GRID survival functions. The dictionary structure is as
-        follows:
-        {
-            f"{t_tl}": {
-                "time": np.ndarray with all the time values.
-                "value": np.ndarray with all the survival function values corresponding
-                         to the respective time value.
+        Survival function data computed with the provided GRID fit values for every
+        time-lapse conditions in data. The object has the following data structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
             }
-        }
     """
 
     data_grid = compute_multi_exp_fit_values(fit_values_grid, data)

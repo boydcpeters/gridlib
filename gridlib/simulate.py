@@ -37,8 +37,14 @@ def tl_simulation_single(
     Returns
     -------
     Dict[str, Dict[str, np.ndarray]]
-    The returned dictionary has the following structure:
-        {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}}
+        Survival function data for specified time-lapse condition with the following
+        data structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                }
+            }
     """
 
     p = s / np.sum(s)
@@ -77,7 +83,7 @@ def tl_simulation_single(
     time = time[value > 0]
     value = value[value > 0]
 
-    return {f"{t_tl}s": {"time": time, "value": value}}
+    return {"t_tl": {"time": time, "value": value}}
 
 
 def tl_simulation(
@@ -115,8 +121,15 @@ def tl_simulation(
     Returns
     -------
     Dict[str, Dict[str, np.ndarray]]
-    The returned dictionary has the following structure:
-        {f"{t_tl}s": {"time": np.ndarray, "value": np.ndarray}, ...}
+        Survival function data for specified time-lapse conditions with the following
+        data structure:
+            {
+                "t_tl": {
+                    "time": np.ndarray with the time points,
+                    "value": np.ndarray with the survival function values,
+                },
+                ...
+            }
     """
     # TODO function to perform multiple simulations and get back a data dictionary
     data = dict()
