@@ -13,10 +13,10 @@ def _base_spectrum(
     k: np.ndarray,
     weight: np.ndarray,
     scale: str = "log",
-    threshold: float = 0.001,
-    figsize: Tuple[float, float] = (10, 6),
+    threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
     color="#fe9901",
 ):
 
@@ -46,10 +46,10 @@ def _base_spectrum(
 def event_spectrum(
     fit_results_grid,
     scale: str = "log",
-    threshold: float = 0.001,
-    figsize: Tuple[float, float] = (10, 6),
+    threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
     color="#fe9901",
     path_save: Union[str, pathlib.Path] = None,
 ):
@@ -67,9 +67,9 @@ def event_spectrum(
         weight,
         scale=scale,
         threshold=threshold,
-        figsize=figsize,
         xlim=xlim,
         ylim=ylim,
+        figsize=figsize,
         color=color,
     )
 
@@ -92,10 +92,10 @@ def event_spectrum(
 def state_spectrum(
     fit_results_grid,
     scale: str = "log",
-    threshold: float = 0.001,
-    figsize: Tuple[float, float] = (10, 6),
+    threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
     color="#fe9901",
     path_save: Union[str, pathlib.Path] = None,
 ):
@@ -116,9 +116,9 @@ def state_spectrum(
         state,
         scale=scale,
         threshold=threshold,
-        figsize=figsize,
         xlim=xlim,
         ylim=ylim,
+        figsize=figsize,
         color=color,
     )
 
