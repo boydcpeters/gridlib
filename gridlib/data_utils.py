@@ -6,6 +6,8 @@ import math
 import re
 from typing import Dict
 
+import numpy as np
+
 
 def _num_decimal_places(value: str) -> int:
     """Function finds the number of decimal places in a string float.
@@ -146,39 +148,85 @@ def fmt_t_str_data(data: Dict) -> Dict:
     return {_fmt_t_str_key(key): value for key, value in data.items()}
 
 
-# TODO: add specific kwargs for every seperate function
-def process_data(data: Dict) -> Dict:
-    """Function processes the data so it is ready for function fitting. The processing
-    consists of three steps. First, all the keys in the data are changed to seconds.
-    Secondly, the first data point of the shortest time-lapse time is deleted if
-    the first time-point is equal to the time-lapse time. This is removed since this
-    value is likely very noisy. Finally, the values are normalized so they represent
+def process_data(
+    data: Dict[str, Dict[str, np.ndarray]], delete: bool = True
+) -> Dict[str, Dict[str, np.ndarray]]:
+    """Function processes data so functions can be fitted to it. The processing consists
+    of three steps. First, the keys of the data are changed to strings with
+    the unit being seconds. The second step is optional, but the first data point of
+    the shortest time-lapse time is deleted if the first time point is equal to the
+    time-lapse time. Finally, the values are normalized so they represent
     probabilities.
 
     Parameters
     ----------
-    data: Dict
+    data: Dict[str, Dict[str, np.ndarray]]
+        Data of the survival function with the following data structure:
+        {
+            f"{t_tl}s": {
+                "time": np.ndarray with all the time values,
+                "value": np.ndarray with all the survival function values corresponding
+                         to the respective time value
+            }
+        }
 
+    delete: bool, optional
+        Flag to indicate whether the first data point of the shortest time-lapse time
+        should be deleted if the first time point is equal to the time-lapse time
+        (default True).
+
+    Returns
+    -------
+    data_processed: Dict[str, Dict[str, np.ndarray]]
+        Processed data with the following data structure:
+        {
+            f"{t_tl}s": {
+                "time": np.ndarray with all the time values,
+                "value": np.ndarray with all the normalized survival function values
+                        corresponding to the respective time value
+            }
+        }
+
+    Examples
+    --------
+    >>> data = {"50ms": {"time": [0.05, 0.1, 0.15], "value": [41, 23, 8]},
+                "1s": {"time": [1.0, 2.0], "value": [34, 9]}}
+    >>> process_data(data)
+    {"0.05s": {"time": [0.1, 0.15], "value": [0.74193548, 0.25806452]},
+     "1s": {"time": [1.0, 2.0], "value": [0.79069767, 0.20930233]}}
+
+    If `delete` is set to False:
+    >>> data = {"50ms": {"time": [0.05, 0.1, 0.15], "value": [41, 23, 8]},
+                "1s": {"time": [1.0, 2.0], "value": [34, 9]}}
+    >>> process_data(data, delete=False)
+    {"0.05s": {"time": [0.05, 0.1, 0.15], "value": [0.56944444, 0.31944444, 0.11111111]},
+     "1s": {"time": [1.0, 2.0], "value": [0.79069767, 0.20930233]}}
     """
-    data = fmt_t_str_data(data)
 
-    t_tls = list(data.keys())
-    t_tls.sort()  # Sort the key values from low to high
+    # Format the data such that all the keys are in seconds
+    data_processed = fmt_t_str_data(data)
 
-    t_tl_min = t_tls[0]
-    s_min = get_time_sec(t_tl_min)
-    if math.isclose(s_min, data[t_tl_min]["time"][0]):
-        data[t_tl_min]["time"] = data[t_tl_min]["time"][1:]
-        data[t_tl_min]["value"] = data[t_tl_min]["value"][1:]
-        print(
-            "WARNING: The first data point was deleted! See documentation to\
-                understand why."
+    if delete:
+        t_tls = list(data_processed.keys())
+        t_tls.sort()  # Sort the key values from low to high
+
+        t_tl_min = t_tls[0]
+        s_min = get_time_sec(t_tl_min)
+        if math.isclose(s_min, data[t_tl_min]["time"][0]):
+            data_processed[t_tl_min]["time"] = data_processed[t_tl_min]["time"][1:]
+            data_processed[t_tl_min]["value"] = data_processed[t_tl_min]["value"][1:]
+            print(
+                "WARNING: The first data point was deleted! See documentation to\
+                    understand why."
+            )
+
+    # Normalize the data
+    for t_tl in data_processed.keys():
+        data_processed[t_tl]["value"] = (
+            data_processed[t_tl]["value"] / data_processed[t_tl]["value"][0]
         )
 
-    for t_tl in data.keys():
-        data[t_tl]["value"] = data[t_tl]["value"] / data[t_tl]["value"][0]
-
-    return data
+    return data_processed
 
 
 def isvalid_parameters(parameters: Dict) -> bool:
