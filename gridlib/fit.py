@@ -190,9 +190,19 @@ def fit_multi_exp(parameters, data, n: int = 2):
             cost_min = res.cost
             x_best = res.x
 
+    # Unpack the k array
+    k_temp = x_best[:n]
+
+    # Renormalize s
+    s_temp = x_best[n : (2 * n)]
+    s_norm = s_temp / np.sum(s_temp)
+
+    # The indices to sort the k_array from low to high
+    idx = np.argsort(k_temp)
+
     multi_exp_results = {
-        "k": x_best[:n],
-        "s": x_best[n : (2 * n)],
+        "k": k_temp[idx],
+        "s": s_norm[idx],
         "a": x_best[-1],
         "error": cost_min,
     }
