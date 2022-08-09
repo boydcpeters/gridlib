@@ -1,7 +1,10 @@
 """Tests for `data_utils` module."""
+import copy
 import pytest
 
+import numpy as np
 from gridlib import data_utils
+from . import utils
 
 
 def test__num_decimal_places():
@@ -58,11 +61,62 @@ def test_fmt_t_str_data():
     """Test function `fmt_t_str_data()`."""
 
     data = {
-        "50ms": {"time": [1, 2], "value": [3, 4]},
-        "1s": {"time": [5], "value": [6]},
+        "50ms": {
+            "time": np.array([0.05, 0.1, 0.15]),
+            "value": np.array([41, 23, 8]),
+        },
+        "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])},
     }
+
+    data_original = copy.deepcopy(data)
+
     desired = {
-        "0.05s": {"time": [1, 2], "value": [3, 4]},
-        "1s": {"time": [5], "value": [6]},
+        "0.05s": {
+            "time": np.array([0.05, 0.1, 0.15]),
+            "value": np.array([41, 23, 8]),
+        },
+        "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])},
     }
-    assert data_utils.fmt_t_str_data(data) == desired
+    assert utils.approx_nested_dict_data(data_utils.fmt_t_str_data(data), desired)
+
+    # Check if the original data dictionary wasn't altered
+    assert utils.approx_nested_dict_data(data, data_original)
+
+
+def test_process_data():
+    """Test function `process_data()`."""
+    data = {
+        "50ms": {"time": np.array([0.05, 0.1, 0.15]), "value": np.array([41, 23, 8])},
+        "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])},
+    }
+
+    data_original = copy.deepcopy(data)
+
+    desired_default = {
+        "0.05s": {
+            "time": np.array([0.1, 0.15]),
+            "value": np.array([1.0, 0.34782609]),
+        },
+        "1s": {
+            "time": np.array([1.0, 2.0]),
+            "value": np.array([1.0, 0.26470588]),
+        },
+    }
+
+    desired_delete_false = {
+        "0.05s": {
+            "time": np.array([0.05, 0.1, 0.15]),
+            "value": np.array([1.0, 0.56097561, 0.19512195]),
+        },
+        "1s": {
+            "time": np.array([1.0, 2.0]),
+            "value": np.array([1.0, 0.26470588]),
+        },
+    }
+    assert utils.approx_nested_dict_data(data_utils.process_data(data), desired_default)
+    assert utils.approx_nested_dict_data(
+        data_utils.process_data(data, delete=False), desired_delete_false
+    )
+
+    # Check if the original data dictionary wasn't altered
+    assert utils.approx_nested_dict_data(data, data_original)
