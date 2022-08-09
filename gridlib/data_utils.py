@@ -189,18 +189,18 @@ def process_data(
 
     Examples
     --------
-    >>> data = {"50ms": {"time": [0.05, 0.1, 0.15], "value": [41, 23, 8]},
-                "1s": {"time": [1.0, 2.0], "value": [34, 9]}}
+    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15])), "value": array([41, 23, 8])},
+                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     >>> process_data(data)
-    {"0.05s": {"time": [0.1, 0.15], "value": [0.74193548, 0.25806452]},
-     "1s": {"time": [1.0, 2.0], "value": [0.79069767, 0.20930233]}}
+    {"0.05s": {"time": array([0.1, 0.15]), "value": array([0.74193548, 0.25806452])},
+     "1s": {"time": array([1.0, 2.0]), "value": array([0.79069767, 0.20930233])}}
 
     If `delete` is set to False:
-    >>> data = {"50ms": {"time": [0.05, 0.1, 0.15], "value": [41, 23, 8]},
-                "1s": {"time": [1.0, 2.0], "value": [34, 9]}}
+    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
+                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
     >>> process_data(data, delete=False)
-    {"0.05s": {"time": [0.05, 0.1, 0.15], "value": [0.56944444, 0.31944444, 0.11111111]},
-     "1s": {"time": [1.0, 2.0], "value": [0.79069767, 0.20930233]}}
+    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": [0.56944444, 0.31944444, 0.11111111])},
+    "1s": {"time": array([1.0, 2.0]), "value": array([0.79069767, 0.20930233])}}
     """
 
     # Format the data such that all the keys are in seconds
@@ -212,7 +212,7 @@ def process_data(
 
         t_tl_min = t_tls[0]
         s_min = get_time_sec(t_tl_min)
-        if math.isclose(s_min, data[t_tl_min]["time"][0]):
+        if math.isclose(s_min, data_processed[t_tl_min]["time"][0]):
             data_processed[t_tl_min]["time"] = data_processed[t_tl_min]["time"][1:]
             data_processed[t_tl_min]["value"] = data_processed[t_tl_min]["value"][1:]
             print(
