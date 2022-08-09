@@ -146,6 +146,7 @@ def fmt_t_str_data(data: Dict) -> Dict:
     return {_fmt_t_str_key(key): value for key, value in data.items()}
 
 
+# TODO: add specific kwargs for every seperate function
 def process_data(data: Dict) -> Dict:
     """Function processes the data so it is ready for function fitting. The processing
     consists of three steps. First, all the keys in the data are changed to seconds.
