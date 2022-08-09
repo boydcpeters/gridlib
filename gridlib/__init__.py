@@ -5,3 +5,7 @@ __email__ = "boyd.c.peters@gmail.com"
 __version__ = "0.1.0"
 
 from . import io, plot
+from .simulate import *
+from .fit import *
+from .data_utils import *
+from .compute import *
