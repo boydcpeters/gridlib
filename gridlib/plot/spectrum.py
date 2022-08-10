@@ -227,3 +227,52 @@ def _base_spectrum_with_multi_exp(
 
 
 # Important: the weight_single_exp is overwritten from 1 to 0.2 for visual reasons, see comment in code.
+
+
+def event_spectrum_with_multi_exp(
+    fit_values,
+    scale: str = "log",
+    threshold: float = 0.0,
+    xlim: Tuple[float, float] = None,
+    ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
+    color=None,
+):
+
+    a = None
+
+    key_to_k_and_weight = dict()
+    for key in fit_values.keys():
+
+        k = fit_values[key]["k"]
+        s = fit_values[key]["s"]
+
+        key_to_k_and_weight[key] = dict()
+        key_to_k_and_weight[key]["k"] = k
+        key_to_k_and_weight[key]["weight"] = s
+
+        # Store the photobleaching number if it is in the fit results
+        if key == "grid":
+            a = fit_values[key]["a"]
+
+    fig, ax = _base_spectrum_with_multi_exp(
+        key_to_k_and_weight,
+        scale=scale,
+        threshold=threshold,
+        xlim=xlim,
+        ylim=ylim,
+        figsize=figsize,
+        color=color,
+    )
+
+    # Labels
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("event spectrum")
+
+    if a is not None:
+        # add the bleaching number in the plot if there were grid fit values provided
+        # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
+        anchored_text = AnchoredText(f"a = {a:.5f}", loc="center left", frameon=False)
+        ax.add_artist(anchored_text)
+
+    return fig, ax
