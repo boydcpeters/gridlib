@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import AnchoredText
 
-from ..plot import _plot_utils
+from . import _plot_utils
 
 
 def _base_spectrum(
@@ -144,6 +144,7 @@ def _base_spectrum_with_multi_exp(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     color=None,
+    add_legend: bool = True,
 ):
     """"""
 
@@ -205,12 +206,13 @@ def _base_spectrum_with_multi_exp(
     if ylim is not None:
         ax.set_ylim(ylim)
 
-    # Legend
-    # Remove duplicate labels
-    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
-    handles, labels = ax.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
-    ax.legend(by_label.values(), by_label.keys())  # , loc="lower left")
+    if add_legend:
+        # Legend
+        # Remove duplicate labels
+        # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
+        handles, labels = ax.get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        ax.legend(by_label.values(), by_label.keys())  # , loc="lower left")
 
     return fig, ax
 
@@ -226,6 +228,7 @@ def event_spectrum_with_multi_exp(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     color=None,
+    add_legend: bool = True,
 ):
 
     a = None  # Photobleaching number
@@ -252,6 +255,7 @@ def event_spectrum_with_multi_exp(
         ylim=ylim,
         figsize=figsize,
         color=color,
+        add_legend=add_legend,
     )
 
     # Labels
@@ -262,6 +266,60 @@ def event_spectrum_with_multi_exp(
         # add the bleaching number in the plot if there were grid fit values provided
         # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
         anchored_text = AnchoredText(f"a = {a:.5f}", loc="center left", frameon=False)
+        ax.add_artist(anchored_text)
+
+    return fig, ax
+
+
+def state_spectrum_with_multi_exp(
+    fit_values,
+    scale: str = "log",
+    threshold: float = 0.0,
+    xlim: Tuple[float, float] = None,
+    ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (10, 6),
+    color=None,
+    add_legend: bool = True,
+):
+
+    a = None  # Photobleaching number
+
+    key_to_k_and_weight = dict()
+    for key in fit_values.keys():
+
+        k = fit_values[key]["k"]
+        s = fit_values[key]["s"]
+
+        s_state = (1 / k) * s
+        s_state = s_state / np.sum(s_state)  # normalization
+
+        key_to_k_and_weight[key] = dict()
+        key_to_k_and_weight[key]["k"] = k
+        key_to_k_and_weight[key]["weight"] = s_state
+
+        # Store the photobleaching number if it is in the fit results
+        if key == "grid":
+            a = fit_values[key]["a"]
+
+    fig, ax = _base_spectrum_with_multi_exp(
+        key_to_k_and_weight,
+        scale=scale,
+        threshold=threshold,
+        xlim=xlim,
+        ylim=ylim,
+        figsize=figsize,
+        color=color,
+        add_legend=add_legend,
+    )
+
+    # Labels
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("state spectrum")
+
+    if a is not None:
+        # add the bleaching number in the plot if there were grid fit values provided
+        # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
+        anchored_text = AnchoredText(f"a = {a:.5f}", loc="center right", frameon=False)
         ax.add_artist(anchored_text)
 
     return fig, ax
