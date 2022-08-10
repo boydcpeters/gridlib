@@ -1,8 +1,7 @@
 """
 Module with functions to plot event spectrum and state spectrum.
 """
-import pathlib
-from typing import Tuple, Union
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -51,12 +50,7 @@ def event_spectrum(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     color="#fe9901",
-    path_save: Union[str, pathlib.Path] = None,
 ):
-
-    # Create a Path() from path_save if not None and it is a str
-    if path_save is not None and isinstance(path_save, str):
-        path_save = pathlib.Path(path_save)
 
     k = fit_results_grid["k"]
     weight = fit_results_grid["s"]
@@ -84,10 +78,6 @@ def event_spectrum(
     )
     ax.add_artist(anchored_text)
 
-    if path_save is not None:
-        fig.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig)
-
     return fig, ax
 
 
@@ -99,12 +89,7 @@ def state_spectrum(
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (10, 6),
     color="#fe9901",
-    path_save: Union[str, pathlib.Path] = None,
 ):
-
-    # Create a Path() from path_save if not None and it is a str
-    if path_save is not None and isinstance(path_save, str):
-        path_save = pathlib.Path(path_save)
 
     k = fit_results_grid["k"]
     weight = fit_results_grid["s"]
@@ -137,6 +122,4 @@ def state_spectrum(
     )
     ax.add_artist(anchored_text)
 
-    if path_save is not None:
-        fig.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig)
+    return fig, ax
