@@ -3,7 +3,8 @@ Module with functions to plot event spectrum and state spectrum.
 """
 from typing import Tuple
 
-import _plot_utils
+from ..plot import _plot_utils
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import AnchoredText
