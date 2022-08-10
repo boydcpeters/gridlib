@@ -111,13 +111,6 @@ def _base_data_multiple(
                 )
                 text_points.add(text_point)
 
-    # Legend
-    # Remove duplicate labels
-    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
-    handles, labels = ax.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
-    ax.legend(by_label.values(), by_label.keys())  # , loc="lower left")
-
     # Axis limits
     if xlim is not None:
         ax.set_xlim(xlim)
@@ -127,6 +120,13 @@ def _base_data_multiple(
     # Labels
     ax.set_xlabel("time (s)")
     ax.set_ylabel("survival function")
+
+    # Legend
+    # Remove duplicate labels
+    # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
+    handles, labels = ax.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax.legend(by_label.values(), by_label.keys())  # , loc="lower left")
 
     return fig, ax
 
