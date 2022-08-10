@@ -214,18 +214,6 @@ def _base_spectrum_with_multi_exp(
     return fig, ax
 
 
-# def event_spectrum_with_multi_exp(
-#     fit_results,
-#     scale: str = "log",
-#     threshold: float = 0.0,
-#     xlim: Tuple[float, float] = None,
-#     ylim: Tuple[float, float] = None,
-#     figsize: Tuple[float, float] = (10, 6),
-#     color="#fe9901",
-# ):
-#     pass
-
-
 # Important: the weight_single_exp is overwritten from 1 to 0.2 for visual reasons, see comment in code.
 
 
@@ -239,7 +227,7 @@ def event_spectrum_with_multi_exp(
     color=None,
 ):
 
-    a = None
+    a = None  # Photobleaching number
 
     key_to_k_and_weight = dict()
     for key in fit_values.keys():
