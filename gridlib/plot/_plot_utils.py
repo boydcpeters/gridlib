@@ -3,6 +3,7 @@ Module with utility functions required for the plotting.
 """
 from typing import Dict
 
+import matplotlib.pyplot as plt
 from .. import data_utils
 
 
@@ -57,3 +58,11 @@ def _get_key_to_value_i(i: int, key_to_value: Dict):
             key_to_value_i[key] = value
 
     return key_to_value_i
+
+
+def _default_colors():
+    return plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+
+def _gridlib_colors():
+    return ["#fe9901", "#63cabc", "#382134", "#007972", "#2333be", "#aaaaaa"]
