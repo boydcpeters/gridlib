@@ -1,9 +1,11 @@
 """Tests for `data_utils` module."""
 import copy
-import pytest
 
 import numpy as np
+import pytest
+
 from gridlib import data_utils
+
 from . import utils
 
 

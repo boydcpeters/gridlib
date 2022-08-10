@@ -4,6 +4,7 @@ Module with utility functions required for the plotting.
 from typing import Dict
 
 import matplotlib.pyplot as plt
+
 from .. import data_utils
 
 

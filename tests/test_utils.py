@@ -1,8 +1,9 @@
 """Tests for `utils` module in the tests folder."""
+import copy
+
+import numpy as np
 import pytest
 
-import copy
-import numpy as np
 from . import utils
 
 

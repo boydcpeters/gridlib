@@ -1,5 +1,5 @@
-from typing import Tuple
 import math
+from typing import Tuple
 
 import numpy as np
 import scipy.optimize

@@ -3,11 +3,11 @@ Module with functions to plot event spectrum and state spectrum.
 """
 from typing import Tuple
 
-from ..plot import _plot_utils
-
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import AnchoredText
+
+from ..plot import _plot_utils
 
 
 def _base_spectrum(

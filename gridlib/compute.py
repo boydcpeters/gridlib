@@ -1,8 +1,8 @@
 """
 Module with functions to compute curves or survival functions.
 """
-from typing import Dict, List, Tuple, Union
 import math
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
 
