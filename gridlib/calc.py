@@ -146,16 +146,18 @@ def lsqobj_grid(
     reg_weight: float,
     t_int: float,
 ) -> Tuple[float, np.ndarray]:
-    """Objective function for determining dissociation rate spectra. The cost function
-    d contains the difference between Fit and measured values and the regularization
-    for the mean decay rate of the population.
+    """Returns the loss value and the gradient for the GRID fit.
+
+    Objective function for determining dissociation rate spectra. The cost function d
+    contains the difference between the GRID fit and measured values and the
+    regularization for the mean decay rate of the population.
 
     Parameters
     ----------
-    values: np.ndarray
+    values : np.ndarray
         Array with decay rate amplitudes + photobleaching number with the structure:
             values = np.array([s, a]) where s is an array with the amplitudes.
-    data: Dict[str, Dict[str, np.ndarray]]
+    data : Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
             "t_tl": {
@@ -163,12 +165,19 @@ def lsqobj_grid(
                 "value": np.ndarray with the survival function values,
             }
         }
-    k: np.ndarray
+    k : np.ndarray
         Array of the decay rates of the fixed grid positions
-    reg_weight: float
+    reg_weight : float
         Regularization weight
-    t_int: float
+    t_int : float
         Integration time
+
+    Returns
+    -------
+    d : float
+        Loss value for the provided values.
+    grad: np.ndarray
+        Gradient for the provided values.
     """
 
     # Initialization of the variables
