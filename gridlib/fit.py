@@ -80,17 +80,20 @@ def fit_grid(parameters, data):
     bnds.append((lbq, ubq))  # add the bounds for the photobleaching
     if parameters["fit_a"]:
         # The initial kb guess is 2 s^-1 as default
-        x0 = np.concatenate((x0, np.array([2 * t_int], dtype=np.float64)))
+        a = 2.0 * t_int  # 2 s^-1 * t_int
+        x0 = np.concatenate((x0, np.array([a], dtype=np.float64)))
 
     elif not parameters["fit_a"]:
-        x0 = np.concatenate((x0, np.array([parameters["a_fixed"]])))
-        bnds[-1] = (parameters["a_fixed"], parameters["a_fixed"])
+        a = parameters["a_fixed"]
+        x0 = np.concatenate((x0, np.array([a])))
+        bnds[-1] = (a, a)  # Fix the photobleaching number
 
     # print(x0.shape)
     # print(bnds)
 
     cons = [{"type": "eq", "fun": con_eq}]
-    options = {"maxiter": 1000, "disp": True}
+    # TODO: change iprint, see source code
+    options = {"maxiter": 1000, "disp": True, "iprint": 2, "ftol": 10 ** (-12)}
 
     res = scipy.optimize.minimize(
         calc.lsqobj_grid,
@@ -175,7 +178,7 @@ def fit_multi_exp(parameters, data, n: int = 2):
         res = scipy.optimize.least_squares(
             calc.global_multi_exp,
             x0,
-            args=(data_processed, n, t_int),
+            args=(data_processed, n),
             bounds=bnds,
             method="trf",
         )
