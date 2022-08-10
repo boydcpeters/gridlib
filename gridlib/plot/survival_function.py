@@ -12,7 +12,7 @@ from .. import compute, data_utils
 from . import _plot_utils
 
 
-# TODO: UPDATE DOCSTRING and add a _ before the function name??
+# TODO: UPDATE DOCSTRING
 def _base_data_multiple(
     data,
     process_data_flag: bool = True,
@@ -22,7 +22,34 @@ def _base_data_multiple(
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
 ):
-    """Function plots"""
+    """_summary_
+
+    Parameters
+    ----------
+    data : _type_
+        _description_
+    process_data_flag : bool, optional
+        _description_, by default True
+    xlim : Tuple[float, float], optional
+        _description_, by default None
+    ylim : Tuple[float, float], optional
+        _description_, by default None
+    figsize : Tuple[float, float], optional
+        _description_, by default (10, 6)
+    kwargs_plot : Dict, optional
+        _description_, by default None
+    kwargs_text : Dict, optional
+        _description_, by default None
+
+    Returns
+    -------
+    fig : matplotlib.Figure
+        TODO: link this to matplotlib.Figure documentation
+        https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure
+    ax: matplotlib.axes.Axes
+        TODO: link to the matplotlib.axes.Axes documentation
+        https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes
+    """
 
     # Create empty dictionaries for the kwargs_... if they are None.
     # Mutable default values leads to dangerous behaviour
