@@ -45,7 +45,7 @@ def _base_data_multiple(
         for i in range(len(data)):
             data[i] = data_utils.process_data(data[i])
 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
     text_points = set()
 
@@ -60,7 +60,7 @@ def _base_data_multiple(
             time = d[t_tl]["time"]
             value = d[t_tl]["value"]
 
-            ax1.loglog(time, value, **kwargs_d)
+            ax.loglog(time, value, **kwargs_d)
 
             if i == 0:
                 # Create the new point position for the text
@@ -76,7 +76,7 @@ def _base_data_multiple(
                 if a == "$0.39\,\mathrm{s}$":
                     text_point = (time[0] * 1.1, value[0] * 1.1)
 
-                ax1.text(
+                ax.text(
                     text_point[0],
                     text_point[1],
                     _plot_utils._fmt_t_str_plot(t_tl),
@@ -87,21 +87,21 @@ def _base_data_multiple(
     # Legend
     # Remove duplicate labels
     # Implementation from: https://stackoverflow.com/questions/13588920/stop-matplotlib-repeating-labels-in-legend
-    handles, labels = ax1.get_legend_handles_labels()
+    handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    ax1.legend(by_label.values(), by_label.keys())  # , loc="lower left")
+    ax.legend(by_label.values(), by_label.keys())  # , loc="lower left")
 
     # Axis limits
     if xlim is not None:
-        ax1.set_xlim(xlim)
+        ax.set_xlim(xlim)
     if ylim is not None:
-        ax1.set_ylim(ylim)
+        ax.set_ylim(ylim)
 
     # Labels
-    ax1.set_xlabel("time (s)")
-    ax1.set_ylabel("survival function")
+    ax.set_xlabel("time (s)")
+    ax.set_ylabel("survival function")
 
-    return fig1, ax1
+    return fig, ax
 
 
 def data_multiple(
@@ -130,7 +130,7 @@ def data_multiple(
     if path_save is not None and isinstance(path_save, str):
         path_save = pathlib.Path(path_save)
 
-    fig1, ax1 = _base_data_multiple(
+    fig, ax = _base_data_multiple(
         data,
         process_data_flag=process_data_flag,
         xlim=xlim,
@@ -141,10 +141,10 @@ def data_multiple(
     )
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
 
-    return fig1, ax1
+    return fig, ax
 
 
 # TODO: UPDATE DOCSTRING
@@ -218,7 +218,7 @@ def data_vs_multi_exp(
 
     data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
 
-    fig1, ax1 = _base_data_multiple(
+    fig, ax = _base_data_multiple(
         [data, data_multi_exp],
         process_data_flag=process_data_flag,
         xlim=xlim,
@@ -229,10 +229,10 @@ def data_vs_multi_exp(
     )
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
 
-    return fig1, ax1
+    return fig, ax
 
 
 # TODO: UPDATE DOCSTRING
@@ -297,7 +297,7 @@ def data_vs_grid(
 
     data_grid = compute.compute_grid_curves(fit_values_grid, data)
 
-    fig1, ax1 = _base_data_multiple(
+    fig, ax = _base_data_multiple(
         [data, data_grid],
         process_data_flag=process_data_flag,
         xlim=xlim,
@@ -308,7 +308,7 @@ def data_vs_grid(
     )
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
 
-    return fig1, ax1
+    return fig, ax

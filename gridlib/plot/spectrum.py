@@ -20,27 +20,27 @@ def _base_spectrum(
     color="#fe9901",
 ):
 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
     # Plot the results
     idx = weight >= threshold
-    ax1.plot(
+    ax.plot(
         k[idx], weight[idx], linestyle="None", marker="o", markersize=3, color=color
     )
-    ax1.vlines(
+    ax.vlines(
         k[idx], np.zeros(k.shape[0])[idx], weight[idx], linewidth=0.75, color=color
     )
 
     if scale == "log":
-        ax1.set_xscale("log")
+        ax.set_xscale("log")
 
     # Axis limits
     if xlim is not None:
-        ax1.set_xlim(xlim)
+        ax.set_xlim(xlim)
     if ylim is not None:
-        ax1.set_ylim(ylim)
+        ax.set_ylim(ylim)
 
-    return fig1, ax1
+    return fig, ax
 
 
 def event_spectrum(
@@ -62,7 +62,7 @@ def event_spectrum(
     weight = fit_results_grid["s"]
     bleaching_number = fit_results_grid["a"]
 
-    fig1, ax1 = _base_spectrum(
+    fig, ax = _base_spectrum(
         k,
         weight,
         scale=scale,
@@ -74,19 +74,21 @@ def event_spectrum(
     )
 
     # Labels
-    ax1.set_xlabel("dissociation rate (1/s)")
-    ax1.set_ylabel("event spectrum")
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("event spectrum")
 
     # add the bleaching number in the plot
     # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
     anchored_text = AnchoredText(
         f"a = {bleaching_number:.5f}", loc="center left", frameon=False
     )
-    ax1.add_artist(anchored_text)
+    ax.add_artist(anchored_text)
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
+
+    return fig, ax
 
 
 def state_spectrum(
@@ -111,7 +113,7 @@ def state_spectrum(
     state = (1 / k) * weight
     state = state / np.sum(state)  # normalization
 
-    fig1, ax1 = _base_spectrum(
+    fig, ax = _base_spectrum(
         k,
         state,
         scale=scale,
@@ -123,8 +125,8 @@ def state_spectrum(
     )
 
     # Labels
-    ax1.set_xlabel("dissociation rate (1/s)")
-    ax1.set_ylabel("state spectrum")
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("state spectrum")
 
     # add the bleaching number in the plot
     # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
@@ -133,8 +135,8 @@ def state_spectrum(
         loc="center right",
         frameon=False,
     )
-    ax1.add_artist(anchored_text)
+    ax.add_artist(anchored_text)
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
