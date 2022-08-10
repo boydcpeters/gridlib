@@ -321,11 +321,15 @@ pydocstyle = ">=2.1"
 
 [[package]]
 name = "flake8-logging-format"
-version = "0.6.0"
-description = "Flake8 extension to validate (lack of) logging format strings"
+version = "0.7.4"
+description = ""
 category = "dev"
 optional = false
 python-versions = "*"
+
+[package.extras]
+lint = ["flake8"]
+test = ["pytest", "pytest-cov", "pyhamcrest"]
 
 [[package]]
 name = "flake8-polyfill"
@@ -1035,8 +1039,8 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-lint = ["flake8", "mypy", "docutils-stubs"]
 test = ["pytest"]
+lint = ["docutils-stubs", "mypy", "flake8"]
 
 [[package]]
 name = "stevedore"
@@ -1164,7 +1168,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "<3.11,>=3.7"
-content-hash = "e89e9e2cbf8e734933e8d0d2d99cfe244bfa1e368a189e2e0dd818a19f618243"
+content-hash = "dc2c0052744c0226b262d24072437c3b8a4318415bb3ac6a466ccb3accea1dcc"
 
 [metadata.files]
 alabaster = [
@@ -1338,7 +1342,7 @@ flake8-docstrings = [
     {file = "flake8_docstrings-1.6.0-py2.py3-none-any.whl", hash = "sha256:99cac583d6c7e32dd28bbfbef120a7c0d1b6dde4adb5a9fd441c4227a6534bde"},
 ]
 flake8-logging-format = [
-    {file = "flake8-logging-format-0.6.0.tar.gz", hash = "sha256:ca5f2b7fc31c3474a0aa77d227e022890f641a025f0ba664418797d979a779f8"},
+    {file = "flake8-logging-format-0.7.4.tar.gz", hash = "sha256:d867b46a8a2da5d6b70aa115022a104cf6dae6a671637aae2ef3eb6eac4235dd"},
 ]
 flake8-polyfill = [
     {file = "flake8-polyfill-1.0.2.tar.gz", hash = "sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda"},
