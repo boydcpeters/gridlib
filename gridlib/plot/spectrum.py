@@ -11,132 +11,6 @@ from . import _plot_utils
 
 
 def _base_spectrum(
-    k: np.ndarray,
-    weight: np.ndarray,
-    scale: str = "log",
-    threshold: float = 0.0,
-    xlim: Tuple[float, float] = None,
-    ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
-    color="#fe9901",
-):
-
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
-
-    # Plot the results
-    idx = weight >= threshold
-    ax.plot(
-        k[idx],
-        weight[idx],
-        linestyle="None",
-        marker="o",
-        markersize=3,
-        color=color,
-    )
-    ax.vlines(
-        k[idx],
-        np.zeros(k.shape[0])[idx],
-        weight[idx],
-        linewidth=0.75,
-        color=color,
-    )
-
-    if scale == "log":
-        ax.set_xscale("log")
-
-    # Axis limits
-    if xlim is not None:
-        ax.set_xlim(xlim)
-    if ylim is not None:
-        ax.set_ylim(ylim)
-
-    return fig, ax
-
-
-def event_spectrum(
-    fit_results,
-    scale: str = "log",
-    threshold: float = 0.0,
-    xlim: Tuple[float, float] = None,
-    ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
-    color="#fe9901",
-):
-
-    k = fit_results["k"]
-    weight = fit_results["s"]
-    bleaching_number = fit_results["a"]
-
-    fig, ax = _base_spectrum(
-        k,
-        weight,
-        scale=scale,
-        threshold=threshold,
-        xlim=xlim,
-        ylim=ylim,
-        figsize=figsize,
-        color=color,
-    )
-
-    # Labels
-    ax.set_xlabel("dissociation rate (1/s)")
-    ax.set_ylabel("event spectrum")
-
-    # add the bleaching number in the plot
-    # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
-    anchored_text = AnchoredText(
-        f"a = {bleaching_number:.5f}", loc="center left", frameon=False
-    )
-    ax.add_artist(anchored_text)
-
-    return fig, ax
-
-
-def state_spectrum(
-    fit_results,
-    scale: str = "log",
-    threshold: float = 0.0,
-    xlim: Tuple[float, float] = None,
-    ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
-    color="#fe9901",
-):
-
-    k = fit_results["k"]
-    weight = fit_results["s"]
-    bleaching_number = fit_results["a"]
-
-    state = (1 / k) * weight
-    state = state / np.sum(state)  # normalization
-
-    fig, ax = _base_spectrum(
-        k,
-        state,
-        scale=scale,
-        threshold=threshold,
-        xlim=xlim,
-        ylim=ylim,
-        figsize=figsize,
-        color=color,
-    )
-
-    # Labels
-    ax.set_xlabel("dissociation rate (1/s)")
-    ax.set_ylabel("state spectrum")
-
-    # add the bleaching number in the plot
-    # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
-    anchored_text = AnchoredText(
-        f"a = {bleaching_number:.5f}",
-        loc="center right",
-        frameon=False,
-    )
-    ax.add_artist(anchored_text)
-
-    return fig, ax
-
-
-def _base_spectrum_with_multi_exp(
     key_to_k_and_weight,
     scale: str = "log",
     threshold: float = 0.0,
@@ -146,7 +20,47 @@ def _base_spectrum_with_multi_exp(
     color=None,
     add_legend: bool = True,
 ):
-    """"""
+    """Base function that plots the spectra in one figure.
+
+    Parameters
+    ----------
+    key_to_k_and_weight : Dict[str, Dict[str, np.ndarray]]
+        The decay rates and weights wrapped in the following structure:
+            {
+                "label": {
+                    "k": np.ndarray with the decay rates,
+                    "weight": np.ndarray with the respective weights
+                }
+            }
+    scale : {"log", "linear"}, optional
+        The scale on the x-axis. The default value is "log".
+    threshold : float, optional
+        The weight threshold for plotting lines, by default 0.0.
+    xlim : Tuple[float, float], optional
+        A tuple of the x-axis limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple of the y-axis limits, by default None.
+    figsize : Tuple[float, float], optional
+        A tuple of the figure size, by default (10, 6).
+    color : color or sequence of colors, optional
+        The color or colors to use for the plotting. The standard gridlib colors are
+        used if the value is set to None. The value is by default None.
+    add_legend : bool, optional
+        Indicates whether the legend needs to be plotted, by default True.
+
+    Returns
+    -------
+    fig : matplotlib.Figure
+        TODO: link this to matplotlib.Figure documentation
+        https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure
+    ax: matplotlib.axes.Axes
+        TODO: link to the matplotlib.axes.Axes documentation
+        https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes
+    """
+
+    # Check if the scale option is valid
+    if scale not in ["log", "linear"]:
+        raise ValueError("The variable 'scale' does not contain a valid value.")
 
     # Colors
     gridlib_colors = _plot_utils._gridlib_colors()
@@ -191,7 +105,7 @@ def _base_spectrum_with_multi_exp(
             k[idx],
             np.zeros(k.shape[0])[idx],
             weight[idx],
-            linewidth=0.75,
+            linewidth=1,
             linestyles=linestyle_vlines,
             color=color[i],
             label=label,
@@ -217,10 +131,10 @@ def _base_spectrum_with_multi_exp(
     return fig, ax
 
 
-# Important: the weight_single_exp is overwritten from 1 to 0.2 for visual reasons, see comment in code.
+# TODO: think about setting the weight for a single-exponential to 0.2 for visual reasons
 
 
-def event_spectrum_with_multi_exp(
+def event_spectrum(
     fit_values,
     scale: str = "log",
     threshold: float = 0.0,
@@ -230,6 +144,43 @@ def event_spectrum_with_multi_exp(
     color=None,
     add_legend: bool = True,
 ):
+    """Function plots the event spectrum of different fit values in one figure.
+
+    Parameters
+    ----------
+    key_to_k_and_weight : Dict[str, Dict[str, np.ndarray]]
+        The decay rates and weights wrapped in the following structure:
+            {
+                "label": {
+                    "k": np.ndarray with the decay rates,
+                    "weight": np.ndarray with the respective weights
+                }
+            }
+    scale : {"log", "linear"}, optional
+        The scale on the x-axis. The default value is "log".
+    threshold : float, optional
+        The weight threshold for plotting lines, by default 0.0.
+    xlim : Tuple[float, float], optional
+        A tuple of the x-axis limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple of the y-axis limits, by default None.
+    figsize : Tuple[float, float], optional
+        A tuple of the figure size, by default (10, 6).
+    color : color or sequence of colors, optional
+        The color or colors to use for the plotting. The standard gridlib colors are
+        used if the value is set to None. The value is by default None.
+    add_legend : bool, optional
+        Indicates whether the legend needs to be plotted, by default True.
+
+    Returns
+    -------
+    fig : matplotlib.Figure
+        TODO: link this to matplotlib.Figure documentation
+        https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure
+    ax: matplotlib.axes.Axes
+        TODO: link to the matplotlib.axes.Axes documentation
+        https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes
+    """
 
     a = None  # Photobleaching number
 
@@ -247,7 +198,7 @@ def event_spectrum_with_multi_exp(
         if key == "grid":
             a = fit_values[key]["a"]
 
-    fig, ax = _base_spectrum_with_multi_exp(
+    fig, ax = _base_spectrum(
         key_to_k_and_weight,
         scale=scale,
         threshold=threshold,
@@ -271,7 +222,7 @@ def event_spectrum_with_multi_exp(
     return fig, ax
 
 
-def state_spectrum_with_multi_exp(
+def state_spectrum(
     fit_values,
     scale: str = "log",
     threshold: float = 0.0,
@@ -281,6 +232,43 @@ def state_spectrum_with_multi_exp(
     color=None,
     add_legend: bool = True,
 ):
+    """Function plots the state spectrum of different fit values in one figure.
+
+    Parameters
+    ----------
+    key_to_k_and_weight : Dict[str, Dict[str, np.ndarray]]
+        The decay rates and weights wrapped in the following structure:
+            {
+                "label": {
+                    "k": np.ndarray with the decay rates,
+                    "weight": np.ndarray with the respective weights
+                }
+            }
+    scale : {"log", "linear"}, optional
+        The scale on the x-axis. The default value is "log".
+    threshold : float, optional
+        The weight threshold for plotting lines, by default 0.0.
+    xlim : Tuple[float, float], optional
+        A tuple of the x-axis limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple of the y-axis limits, by default None.
+    figsize : Tuple[float, float], optional
+        A tuple of the figure size, by default (10, 6).
+    color : color or sequence of colors, optional
+        The color or colors to use for the plotting. The standard gridlib colors are
+        used if the value is set to None. The value is by default None.
+    add_legend : bool, optional
+        Indicates whether the legend needs to be plotted, by default True.
+
+    Returns
+    -------
+    fig : matplotlib.Figure
+        TODO: link this to matplotlib.Figure documentation
+        https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure
+    ax: matplotlib.axes.Axes
+        TODO: link to the matplotlib.axes.Axes documentation
+        https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes
+    """
 
     a = None  # Photobleaching number
 
@@ -301,7 +289,7 @@ def state_spectrum_with_multi_exp(
         if key == "grid":
             a = fit_values[key]["a"]
 
-    fig, ax = _base_spectrum_with_multi_exp(
+    fig, ax = _base_spectrum(
         key_to_k_and_weight,
         scale=scale,
         threshold=threshold,
