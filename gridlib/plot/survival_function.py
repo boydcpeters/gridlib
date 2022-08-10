@@ -139,7 +139,6 @@ def data_multiple(
     figsize: Tuple[float, float] = (10, 6),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
-    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots a single or multiple data dictionaries"""
 
@@ -153,10 +152,6 @@ def data_multiple(
     if kwargs_text is None:
         kwargs_text = dict()
 
-    # Create a Path() from path_save if not None and it is a str
-    if path_save is not None and isinstance(path_save, str):
-        path_save = pathlib.Path(path_save)
-
     fig, ax = _base_data_multiple(
         data,
         process_data_flag=process_data_flag,
@@ -167,10 +162,6 @@ def data_multiple(
         kwargs_text=kwargs_text,
     )
 
-    if path_save is not None:
-        fig.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig)
-
     return fig, ax
 
 
@@ -178,8 +169,6 @@ def data_multiple(
 # TODO: check how .plot() function shows kwargs, it puts it under "Other parameters"
 # although we know have it as a keyword argument with a default value, so we should
 # likely just put it under "Parameters"
-
-
 def data_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]],
     fit_values_multi_exp: Dict[str, Dict[str, np.ndarray]],
@@ -189,7 +178,6 @@ def data_vs_multi_exp(
     figsize: Tuple[float, float] = (10, 6),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
-    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots the survival function of the true data and the multi-exponential curves.
 
@@ -226,10 +214,6 @@ def data_vs_multi_exp(
     if kwargs_text is None:
         kwargs_text = dict()
 
-    # Create a Path() from path_save if not None and it is a str
-    if path_save is not None and isinstance(path_save, str):
-        path_save = pathlib.Path(path_save)
-
     key = fit_values_multi_exp.keys()[0]
     n_exp = fit_values_multi_exp[key]["k"].shape[0]
 
@@ -255,10 +239,6 @@ def data_vs_multi_exp(
         kwargs_text=kwargs_text,
     )
 
-    if path_save is not None:
-        fig.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig)
-
     return fig, ax
 
 
@@ -274,7 +254,6 @@ def data_vs_grid(
     figsize: Tuple[float, float] = (10, 6),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
-    path_save: Union[str, pathlib.Path] = None,
 ):
     """Function plots the survival function of the true data and the GRID curves.
 
@@ -308,10 +287,6 @@ def data_vs_grid(
     if kwargs_text is None:
         kwargs_text = dict()
 
-    # Create a Path() from path_save if not None and it is a str
-    if path_save is not None and isinstance(path_save, str):
-        path_save = pathlib.Path(path_save)
-
     # Set the default settings if they are not provided
     if "label" not in kwargs_plot:
         kwargs_plot["label"] = ["data", "GRID"]
@@ -333,9 +308,5 @@ def data_vs_grid(
         kwargs_plot=kwargs_plot,
         kwargs_text=kwargs_text,
     )
-
-    if path_save is not None:
-        fig.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig)
 
     return fig, ax
