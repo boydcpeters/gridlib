@@ -222,7 +222,7 @@ def lsqobj_grid(
     A = transmat(tau, k)
 
     # Calculate the mean decay rate at borders t
-    kquer = A @ (k * s) / (A @ s)
+    kquer = (A @ (k * s)) / (A @ s)
 
     # Regularisation
     # TODO: check the 0.5, does not seem to be in the GRID paper
