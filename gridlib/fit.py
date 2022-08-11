@@ -93,7 +93,7 @@ def fit_grid(parameters, data):
 
     cons = [{"type": "eq", "fun": con_eq}]
     # TODO: change iprint, see source code
-    options = {"maxiter": 1000, "disp": True, "iprint": 2, "ftol": 10 ** (-12)}
+    options = {"maxiter": 1000, "disp": True, "iprint": 1, "ftol": 10 ** (-10)}
 
     res = scipy.optimize.minimize(
         calc.lsqobj_grid,
@@ -116,8 +116,8 @@ def fit_grid(parameters, data):
 # TODO: function works!! Yayy, but need to clean it up.
 
 
-def fit_multi_exp(parameters, data, n: int = 2):
-    """Function to fit a multi-exponential to the provided data and returns the fitted
+def _fit_n_exp(parameters, data, n: int = 2):
+    """Function to fit an n-exponential to the provided data and returns the fitted
     parameter results."""
 
     data_processed = data_utils.process_data(data)
@@ -211,6 +211,22 @@ def fit_multi_exp(parameters, data, n: int = 2):
     }
 
     fit_results = {f"{n}-exp": multi_exp_results}
+
+    return fit_results
+
+
+def fit_multi_exp(parameters, data):
+
+    if not data_utils.isvalid_parameters(parameters):
+        raise ValueError("parameters does not contain a valid value")
+
+    n_values = parameters["n_exp"]
+
+    fit_results = dict()
+
+    for n in n_values:
+        fit_result_n_exp = _fit_n_exp(parameters, data, n=n)
+        fit_results = {**fit_results, **fit_result_n_exp}
 
     return fit_results
 
