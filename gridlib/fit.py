@@ -1,3 +1,7 @@
+"""
+Module for GRID and multi-exponential fitting.
+"""
+
 import math
 from typing import Tuple
 
