@@ -5,10 +5,12 @@ calculations.
 from typing import Dict, Tuple, Union
 
 import numpy as np
+from numba import njit
 
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)
 
 
+@njit()
 def transmat(time: np.ndarray, k: np.ndarray) -> np.ndarray:
     """Function to calculate the forward Laplace transformation matrix A (MxN)-
     matrix.
@@ -42,6 +44,7 @@ def transmat(time: np.ndarray, k: np.ndarray) -> np.ndarray:
     return A
 
 
+@njit()
 def calch(time: np.ndarray, k: np.ndarray, s: np.ndarray) -> np.ndarray:
     """Function calculates the superposition of the different independent decay
     curves with the forward Laplace transformation.
@@ -70,6 +73,7 @@ def calch(time: np.ndarray, k: np.ndarray, s: np.ndarray) -> np.ndarray:
     return h
 
 
+@njit()
 def gradh(
     eq0: np.ndarray, q: np.ndarray, h: np.ndarray, time: np.ndarray, k: np.ndarray
 ) -> np.ndarray:
@@ -108,6 +112,7 @@ def gradh(
     return grad_s
 
 
+@njit()
 def gradq(
     eq0: np.ndarray, q: np.ndarray, h: np.ndarray, time: np.ndarray, a: float
 ) -> float:
