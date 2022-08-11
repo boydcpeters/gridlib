@@ -33,8 +33,11 @@ def _sample_data(data, perc: float = 0.8, seed=None):
 
         p = data[t_tl]["value"] / np.sum(data[t_tl]["value"])
 
-        track_lifes_sampled = np.random.choice(
-            track_lifes, size=data_points_sample, replace=True, p=p
+        track_lifes_sampled = rng.choice(
+            track_lifes,
+            size=data_points_sample,
+            replace=True,
+            p=p,
         )
 
         time, value = compute.compute_survival_function(track_lifes_sampled, t_tl_s)
