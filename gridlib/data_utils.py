@@ -284,6 +284,7 @@ def isvalid_parameters(parameters: Dict) -> bool:
             "fit_a",
             "fit_a_exp",
             "a_fixed",
+            "n_exp",
         ]
     )
 
