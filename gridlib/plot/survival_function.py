@@ -152,6 +152,16 @@ def data_multiple(
     if kwargs_text is None:
         kwargs_text = dict()
 
+    # Set the default settings if they are not provided
+    if "label" not in kwargs_plot:
+        kwargs_plot["label"] = ["data1", "data2"]
+    if "color" not in kwargs_plot:
+        kwargs_plot["color"] = ["#007972", "#fe9901"]
+    if "linewidth" not in kwargs_plot:
+        kwargs_plot["linewidth"] = 1
+    if "linestyle" not in kwargs_plot:
+        kwargs_plot["linestyle"] = ["solid", "dashed"]
+
     fig, ax = _base_data_multiple(
         data,
         process_data_flag=process_data_flag,
