@@ -106,7 +106,12 @@ def fit_grid(parameters, data):
         options=options,
     )
 
-    grid_results = {"k": k, "s": res.x[: k.shape[0]], "a": res.x[-1]}
+    grid_results = {
+        "k": k,
+        "s": res.x[: k.shape[0]],
+        "a": res.x[-1],
+        "loss": res.fun,
+    }
 
     fit_results = {"grid": grid_results}
 
@@ -140,32 +145,34 @@ def _fit_n_exp(parameters, data, n: int = 2):
     x0_k_all = np.meshgrid(*coordinates)
     x0_k_all = np.reshape(x0_k_all, (-1, n))
 
-    bnds = [(k_min, k_max) for _ in range(x0_k_all.shape[1])]
-
-    # Initial guesses and bounds
+    # Initial guesses
     x0_s = np.linspace(0.05, 0.7, num=n, endpoint=True, dtype=np.float64)
-    bnds.extend([(0.0, 1.0) for _ in range(x0_s.shape[0])])
+
+    # Create the arrays for the bounds, +1 for the photobleaching bounds
+    lb = np.zeros(x0_k_all.shape[1] + x0_s.shape[0] + 1)
+    ub = np.ones(x0_k_all.shape[1] + x0_s.shape[0] + 1)
+
+    # Set the bounds for the decay rates
+    lb[: x0_k_all.shape[1]] = k_min
+    ub[: x0_k_all.shape[1]] = k_max
+
+    # Bounds for the amplitudes are already set, since they are the
+    # default values, see initialization of the lb and ub array
+    # # Set the bounds for the amplitudes
+    # lb[x0_k_all.shape[1] : (x0_k_all.shape[1] + x0_s.shape[0])] = 0
+    # ub[x0_k_all.shape[1] : (x0_k_all.shape[1] + x0_s.shape[0])] = 1
 
     # Default values for photobleaching bounds
     lbq = 0  # lower bound photobleaching
     ubq = 3  # upper bound photobleaching
     if parameters["fit_a"]:
         a = 1.0 * t_int  # default bleaching rate is 1 s^-1
-        bnds.append((lbq, ubq))
+        lb[-1] = lbq
+        ub[-1] = ubq
     elif not parameters["fit_a"]:
         a = parameters["a_fixed"]
-        bnds.append((parameters["a_fixed"], parameters["a_fixed"]))
-
-    lb = []
-    ub = []
-    for bnd in bnds:
-        print(bnd)
-        lb_val, ub_val = bnd
-        lb.append(lb_val)
-        ub.append(ub_val)
-
-    lb = np.array(lb)
-    ub = np.array(ub)
+        lb[-1] = parameters["a_fixed"]
+        ub[-1] = parameters["a_fixed"]
 
     bnds = (lb, ub)
 
@@ -207,7 +214,7 @@ def _fit_n_exp(parameters, data, n: int = 2):
         "k": k_temp[idx],
         "s": s_norm[idx],
         "a": x_best[-1],
-        "error": cost_min,
+        "loss": cost_min,
     }
 
     fit_results = {f"{n}-exp": multi_exp_results}
@@ -232,5 +239,11 @@ def fit_multi_exp(parameters, data):
 
 
 def fit(parameters, data):
-    """Function to fit both with GRID and with a multi-exponential."""
-    pass
+    """Function to fit both with GRID and with multi-exponentials."""
+
+    fit_results_grid = fit_grid(parameters, data)
+    fit_results_multi_exp = fit_multi_exp(parameters, data)
+
+    fit_results = {**fit_results_grid, **fit_results_multi_exp}
+
+    return fit_results
