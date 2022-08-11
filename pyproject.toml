@@ -36,7 +36,7 @@ classifiers=[
 [tool.poetry.dependencies]
 python = "<3.11,>=3.7"
 scipy = "^1.6.0"
-matplotlib = "^3.4.0"
+matplotlib = "^3.5.3"
 # numpy will also be installed since it is a dependency of scipy and matplotlib
 
 [tool.poetry.dev-dependencies]
