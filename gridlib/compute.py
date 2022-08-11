@@ -8,21 +8,29 @@ import numpy as np
 
 from . import calc
 
-
+# TODO: update docstring
 def compute_survival_function(
     track_lifes: Union[List, np.ndarray],
-    t_tl: Union[int, float],
-    min_track_length: int = None,
+    t_tl: float,
+    min_track_life: int = None,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Function creates the time and value arrays describing the survival function distribution from
     a set of track lifes.
 
+
+    # If frame_end=5, and frame_start=2, then track_life should be 3
+    # ie. count the amount of delta t's between the start and end
+
+    So track lifes is the number of delta t's.
+
     Parameters
     ----------
-    track_lifes: List or np.ndarray
+    track_lifes : List or np.ndarray
         Contains all the individual track lifes, so duplicate track life values are
         allowed/expected.
-    min_track_length: int
+    t_tl : float
+        Time-lapse time in seconds.
+    min_track_life : int
         The minimum track life length, this is inferred when the value is set to None, and then it
         is assumed that the minimum value in the track_lifes list/np.ndarray is equal to the minimum
         allowable value set in the settings. However, this can also be set manually. (default None)
@@ -37,33 +45,33 @@ def compute_survival_function(
     if isinstance(track_lifes, list):
         track_lifes = np.array(track_lifes, dtype=np.int64)
 
-    if min_track_length is None:
+    if min_track_life is None:
         # Get the shortest possible track life from all the track lifes. min_track_length assumes
         # that the minimum allowable track length is in the dataset, so if the minimum track length
         # was set to 3 than we assume that a track life of 3 is at least in the dataset once,
         # otherwise the min_track_length should be set in the function call.
-        min_track_length = np.amin(track_lifes)
+        min_track_life = np.amin(track_lifes)
 
     # Get the largest possible track in this tl condition
-    max_track_length = np.amax(track_lifes)
+    max_track_life = np.amax(track_lifes)
 
     # Retrieve the unique track length values and their counts
-    cur_track_lengths, count = np.unique(track_lifes, return_counts=True)
+    track_life_values, count = np.unique(track_lifes, return_counts=True)
 
     # Array to store the number of occurences of each lifetime.
-    amount = np.zeros(max_track_length + 1, dtype=np.int64)
+    amount = np.zeros(max_track_life + 1, dtype=np.int64)
 
     # Fill the array at the indices of the the unique track lengths with their respective count
-    amount[cur_track_lengths] = count
+    amount[track_life_values] = count
 
     # Delete the first n rows to account for the min_track_length
-    amount = amount[min_track_length:]
+    amount = amount[min_track_life:]
 
     # Create the time vector
     time = np.linspace(
-        min_track_length * t_tl,
-        max_track_length * t_tl,
-        num=(max_track_length - min_track_length + 1),
+        min_track_life * t_tl,
+        max_track_life * t_tl,
+        num=((max_track_life - min_track_life) + 1),
         dtype=np.float64,
     )
 
