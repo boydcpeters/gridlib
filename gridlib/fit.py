@@ -80,7 +80,7 @@ def fit_grid(parameters, data):
     bnds.append((lbq, ubq))  # add the bounds for the photobleaching
     if parameters["fit_a"]:
         # The initial kb guess is 2 s^-1 as default
-        a = 2.0 * t_int  # 2 s^-1 * t_int
+        a = 1.0 * t_int  # # default bleaching rate is 1 s^-1
         x0 = np.concatenate((x0, np.array([a], dtype=np.float64)))
 
     elif not parameters["fit_a"]:
@@ -150,7 +150,7 @@ def fit_multi_exp(parameters, data, n: int = 2):
     lbq = 0  # lower bound photobleaching
     ubq = 3  # upper bound photobleaching
     if parameters["fit_a"]:
-        a = 2.0 * t_int  # default bleaching rate is 2 s^-1
+        a = 1.0 * t_int  # default bleaching rate is 1 s^-1
         bnds.append((lbq, ubq))
     elif not parameters["fit_a"]:
         a = parameters["a_fixed"]
