@@ -45,6 +45,9 @@ def compute_survival_function(
     if isinstance(track_lifes, list):
         track_lifes = np.array(track_lifes, dtype=np.int64)
 
+    if not np.issubdtype(track_lifes.dtype, np.integer):
+        raise ValueError("The dtype of the provided array should be integer.")
+
     if min_track_life is None:
         # Get the shortest possible track life from all the track lifes. min_track_length assumes
         # that the minimum allowable track length is in the dataset, so if the minimum track length
