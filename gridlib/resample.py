@@ -7,7 +7,8 @@ from . import compute
 from . import data_utils
 from gridlib.fit import fit_grid
 
-
+# TODO: function works now, but the calculation of the probability is currently very
+# whacky done. Clean it up a bit, so it is at least better understandable.
 def _sample_data(data, perc: float = 0.8, seed=None):
 
     rng = np.random.default_rng(seed)
@@ -26,12 +27,22 @@ def _sample_data(data, perc: float = 0.8, seed=None):
         # math.ceil returns an integer
         data_points_sample = math.ceil(data_point_all * perc)
 
-        track_lifes = np.rint(data[t_tl]["value"] / t_tl_s)
+        track_lifes = np.rint(data[t_tl]["time"] / t_tl_s)
         # Cast it to the integer dtype, since the compute survival functions needs
         # an array with dtype integer.
         track_lifes = track_lifes.astype(np.int64)
 
-        p = data[t_tl]["value"] / np.sum(data[t_tl]["value"])
+        # TODO: clean this up
+        # Calculate the probability for every track life
+        temp = data[t_tl]["value"][::-1]
+        temp2 = temp[1:] - temp[:-1]  # check out np.diff
+        temp2 = temp2[::-1]  # need to invert it back
+        temp2 = np.concatenate(
+            (temp2, np.array([temp[0]]))
+        )  # add the last element again
+        p = temp2 / np.sum(temp2)
+        # THE NEXT LINE IS WRONG!! THIS IS THE CUMULATIVE SUM, NOT THE INDIVIDUAL COUNTS
+        # p = data[t_tl]["value"] / np.sum(data[t_tl]["value"])
 
         track_lifes_sampled = rng.choice(
             track_lifes,
@@ -94,6 +105,7 @@ def resampling_grid(
     for _ in range(n):
 
         data_resampled = _sample_data(data, perc=perc, seed=rng)
+
         fit_results_temp = fit_grid(parameters, data_resampled)
 
         fit_results_resampled.append(fit_results_temp)
