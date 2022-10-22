@@ -5,6 +5,7 @@ calculations.
 from typing import Dict, Tuple, Union
 
 import numpy as np
+import data_utils
 
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)
 
@@ -144,7 +145,6 @@ def lsqobj_grid(
     data: Dict[str, Dict[str, np.ndarray]],
     k: np.ndarray,
     reg_weight: float,
-    t_int: float,
 ) -> Tuple[float, np.ndarray]:
     """Returns the loss value and the gradient for the GRID fit.
 
@@ -169,8 +169,6 @@ def lsqobj_grid(
         Array of the decay rates of the fixed grid positions
     reg_weight : float
         Regularization weight
-    t_int : float
-        Integration time
 
     Returns
     -------
@@ -197,7 +195,15 @@ def lsqobj_grid(
 
     # Cost function for difference between fit and measurement
     # Loop over all the time-lapse conditions
+
+    tau_min = np.inf  # variable to store the minimum integration time
     for t_tl in data.keys():
+
+        # Check if this is the minimum integration time (tau)
+        tau = data_utils.get_time_sec(t_tl)
+        if tau < tau_min:
+            tau_min = tau
+
         # read n-th measured time-lapse
         time = data[t_tl]["time"]  # time-points (lifetime) array
         p = data[t_tl]["value"]  # probability array
@@ -227,14 +233,13 @@ def lsqobj_grid(
     # Regularization for the dead time
     # ------------------------------------------------------------------
     # Initialize variables
-    tau = np.array([t_int, 2 * t_int], dtype=np.float64)  # death time
+    tau = np.array([tau_min, 2 * tau_min], dtype=np.float64)  # death time
     A = transmat(tau, k)
 
     # Calculate the mean decay rate at borders t
     kquer = (A @ (k * s)) / (A @ s)
 
     # Regularisation
-    # TODO: check the 0.5, does not seem to be in the GRID paper
     reg = 0.5 * (kquer[0] - kquer[1]) ** 2
 
     # Gradient of regularisation
