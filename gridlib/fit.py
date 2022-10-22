@@ -65,8 +65,6 @@ def fit_grid(parameters, data):
     if not data_utils.isvalid_parameters(parameters):
         raise ValueError("parameters does not contain a valid value")
 
-    t_int = parameters["t_int"]
-
     k = create_fixed_grid(
         parameters["k_min"], parameters["k_max"], parameters["N"], parameters["scale"]
     )
@@ -97,12 +95,12 @@ def fit_grid(parameters, data):
 
     cons = [{"type": "eq", "fun": con_eq}]
     # TODO: change iprint, see source code
-    options = {"maxiter": 1000, "disp": True, "iprint": 1, "ftol": 10 ** (-10)}
+    options = {"maxiter": 600, "disp": True, "iprint": 1, "ftol": 10 ** (-11)}
 
     res = scipy.optimize.minimize(
         calc.lsqobj_grid,
         x0,
-        args=(data_processed, k, reg_weight, t_int),
+        args=(data_processed, k, reg_weight),
         method="SLSQP",
         jac=True,  # jac=True, means the gradient is given by the function
         bounds=bnds,

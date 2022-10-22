@@ -275,7 +275,6 @@ def isvalid_parameters(parameters: Dict) -> bool:
     """
     KEYS_ALLOWED = set(
         [
-            "t_int",
             "k_min",
             "k_max",
             "N",
@@ -296,8 +295,6 @@ def isvalid_parameters(parameters: Dict) -> bool:
                 parameters t_tls"
         )
 
-    if "t_int" not in parameters:
-        raise ValueError("Key 't_int' is missing in the parameters variable")
     elif "k_min" not in parameters:
         raise ValueError("Key 'k_min' is missing in the parameters variable")
     elif "k_max" not in parameters:
