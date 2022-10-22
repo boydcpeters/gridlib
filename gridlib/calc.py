@@ -5,7 +5,7 @@ calculations.
 from typing import Dict, Tuple, Union
 
 import numpy as np
-import data_utils
+import gridlib.data_utils
 
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)
 
