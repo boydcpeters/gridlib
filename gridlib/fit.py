@@ -132,8 +132,6 @@ def _fit_n_exp(parameters, data, n: int = 2):
     if not data_utils.isvalid_parameters(parameters):
         raise ValueError("parameters does not contain a valid value")
 
-    t_int = parameters["t_int"]
-
     k_min = parameters["k_min"]
     k_max = parameters["k_max"]
 
@@ -168,7 +166,9 @@ def _fit_n_exp(parameters, data, n: int = 2):
     lbq = 0  # lower bound photobleaching
     ubq = 3  # upper bound photobleaching
     if parameters["fit_a"]:
-        a = 1.0 * t_int  # default bleaching rate is 1 s^-1
+        tau_min = min(data_utils.get_time_sec(t_tl) for t_tl in data.keys())
+        # The initial kb guess is 2 s^-1 as default
+        a = 1.0 * tau_min  # # default bleaching rate is 1 s^-1
         lb[-1] = lbq
         ub[-1] = ubq
     elif not parameters["fit_a"]:
