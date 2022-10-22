@@ -2,7 +2,7 @@
 Module with functions to read and write fit results.
 """
 import pathlib
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Union, List
 
 import numpy as np
 import scipy.io as sio
@@ -110,3 +110,71 @@ def read_fit_results_trackit(
     }
 
     return fit_results
+
+
+def read_data_grid_resampling(
+    path: str,
+) -> Tuple[
+    Dict[str, Union[np.ndarray, float]], List[Dict[str, Union[np.ndarray, float]]]
+]:
+    """Function loads and parses the resampling data from GRID.
+
+    Parameters:
+    ----------
+    path: str
+        Path to the file with all the resampling data
+
+    Returns:
+    -------
+    results_full: Dict[str, Union[np.array, float]]
+        Dictionary with the following key-value pairs:
+            "k": np.ndarray with the dissociation rates
+            "S": np.ndarray with the corresponding weights
+            "a": bleaching number (a = kb * t_int)
+            "loss": final cost value
+    results_resampling: List[Dict[str, Union[np.array, float]]]
+        List of dictionaries with the following key-value pairs:
+            "k": np.ndarray with the dissociation rates
+            "s": np.ndarray with the corresponding weights
+            "a": bleaching number (a = kb * t_int)
+            "loss": final cost value
+        Every dictionary entry in the list contains the results of one data resample.
+    """
+    mat_contents = sio.loadmat(path, simplify_cells=True)
+
+    results_full = mat_contents["result100"]
+    results_resampling = mat_contents["results"]
+    return results_full, results_resampling
+
+
+def read_data_grid_resampling_trackit(
+    path: str,
+) -> Tuple[
+    Dict[str, Union[np.ndarray, float]], List[Dict[str, Union[np.ndarray, float]]]
+]:
+    """Function loads and parses the resampling data from GRID.
+
+    Parameters:
+    ----------
+    path: str
+        Path to the file with all the resampling data
+
+    Returns:
+    -------
+    results_full: Dict[str, Union[np.array, float]]
+        Dictionary with the following key-value pairs:
+            "k": np.ndarray with the dissociation rates
+            "S": np.ndarray with the corresponding weights
+            "a1": bleaching number (a = kb * t_int)
+    results_resampling: List[Dict[str, Union[np.array, float]]]
+        List of dictionaries with the following key-value pairs:
+            "k": np.ndarray with the dissociation rates
+            "S": np.ndarray with the corresponding weights
+            "a1": bleaching number (a = kb * t_int)
+        Every dictionary entry in the list contains the results of one data resample.
+    """
+    mat_contents = sio.loadmat(path, simplify_cells=True)
+
+    results_full = mat_contents["result100"]
+    results_resampling = mat_contents["results"]
+    return results_full, results_resampling
