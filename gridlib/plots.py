@@ -54,24 +54,24 @@ def create_base_spectrum(
     color_results = "#fe9901"
     markersize = 16
 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
     # Plot the results
     idx = weight >= 0.00001
-    ax1.scatter(k[idx], weight[idx], s=markersize, color=color_results)
-    ax1.vlines(
+    ax.scatter(k[idx], weight[idx], s=markersize, color=color_results)
+    ax.vlines(
         k[idx], np.zeros(k.shape[0])[idx], weight[idx], linewidth=1, color=color_results
     )
 
-    ax1.set_xscale("log")
+    ax.set_xscale("log")
 
     # Axis limits
     if xlim is not None:
-        ax1.set_xlim(xlim)
+        ax.set_xlim(xlim)
     if ylim is not None:
-        ax1.set_ylim(ylim)
+        ax.set_ylim(ylim)
 
-    return fig1, ax1
+    return fig, ax
 
 
 def plot_event_spectrum(
@@ -90,22 +90,22 @@ def plot_event_spectrum(
     weight = fit_values_grid["S"]
     bleaching_number = fit_values_grid["a1"]
 
-    fig1, ax1 = create_base_spectrum(k, weight, figsize=figsize, xlim=xlim, ylim=ylim)
+    fig, ax = create_base_spectrum(k, weight, figsize=figsize, xlim=xlim, ylim=ylim)
 
     # Labels
-    ax1.set_xlabel("dissociation rate (1/s)")
-    ax1.set_ylabel("event spectrum")
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("event spectrum")
 
     # add the bleaching number in the plot
     # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
     anchored_text = AnchoredText(
         f"a = {bleaching_number:.5f}", loc="center left", frameon=False
     )
-    ax1.add_artist(anchored_text)
+    ax.add_artist(anchored_text)
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
 
 
 def plot_state_spectrum(
@@ -127,22 +127,22 @@ def plot_state_spectrum(
     state = (1 / k) * weight
     state = state / np.sum(state)  # normalization
 
-    fig1, ax1 = create_base_spectrum(k, state, figsize=figsize, xlim=xlim, ylim=ylim)
+    fig, ax = create_base_spectrum(k, state, figsize=figsize, xlim=xlim, ylim=ylim)
 
     # Labels
-    ax1.set_xlabel("dissociation rate (1/s)")
-    ax1.set_ylabel("state spectrum")
+    ax.set_xlabel("dissociation rate (1/s)")
+    ax.set_ylabel("state spectrum")
 
     # add the bleaching number in the plot
     # https://stackoverflow.com/questions/23112903/matplotlib-text-boxes-automatic-position
     anchored_text = AnchoredText(
         f"a = {bleaching_number:.5f}", loc="center right", frameon=False
     )
-    ax1.add_artist(anchored_text)
+    ax.add_artist(anchored_text)
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
 
 
 def create_base_sf_data_vs_multi_exp(
@@ -157,7 +157,7 @@ def create_base_sf_data_vs_multi_exp(
     data_sf: Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
-            f"{t_tl}": {
+            "t_tl": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
@@ -166,7 +166,7 @@ def create_base_sf_data_vs_multi_exp(
     data_sf_multi_exp: Dict[str, Dict[str, np.ndarray]]
         Data of the computed GRID survival functions. The dictionary structure is as follows:
         {
-            f"{t_tl}": {
+            "t_tl": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
@@ -182,7 +182,7 @@ def create_base_sf_data_vs_multi_exp(
     # Process data_sf
     data_sf = data_utils.process_data(data_sf)
 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
     # Set to store all the text positions in the graph
     text_points = set()
@@ -196,11 +196,11 @@ def create_base_sf_data_vs_multi_exp(
         # Survival probability values
         value_prob = value / value[0]
 
-        ax1.loglog(time, value_prob, color=color_data, linewidth=linewidth_data)
+        ax.loglog(time, value_prob, color=color_data, linewidth=linewidth_data)
 
         time_multi_exp = data_sf_multi_exp[t_tl]["time"]
         value_multi_exp = data_sf_multi_exp[t_tl]["value"]
-        ax1.loglog(
+        ax.loglog(
             time_multi_exp,
             value_multi_exp,
             color=color_multi_exp,
@@ -221,12 +221,12 @@ def create_base_sf_data_vs_multi_exp(
         if a == "$0.39\,\mathrm{s}$":
             text_point = (time[0] * 1.1, value_prob[0] * 1.1)
 
-        ax1.text(
+        ax.text(
             text_point[0], text_point[1], fmt_t_tl(t_tl), color=color_data, fontsize=8
         )
         text_points.add(text_point)
 
-    return fig1, ax1, color_data, color_multi_exp, linewidth_data, linewidth_multi_exp
+    return fig, ax, color_data, color_multi_exp, linewidth_data, linewidth_multi_exp
 
 
 def plot_sf_data_vs_grid(
@@ -244,7 +244,7 @@ def plot_sf_data_vs_grid(
     data_sf: Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
-            f"{t_tl}": {
+            "t_tl": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
@@ -253,7 +253,7 @@ def plot_sf_data_vs_grid(
     data_sf_grid: Dict[str, Dict[str, np.ndarray]]
         Data of the computed GRID survival functions. The dictionary structure is as follows:
         {
-            f"{t_tl}": {
+            "t_tl": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
@@ -275,8 +275,8 @@ def plot_sf_data_vs_grid(
         path_save = pathlib.Path(path_save)
 
     (
-        fig1,
-        ax1,
+        fig,
+        ax,
         color_data,
         color_grid,
         linewidth_data,
@@ -295,20 +295,20 @@ def plot_sf_data_vs_grid(
         ),
         Line2D([0], [0], color=color_data, linewidth=linewidth_data, label="data"),
     ]
-    ax1.legend(handles=legend_elements, loc="lower left")
+    ax.legend(handles=legend_elements, loc="lower left")
 
     # Axis limits
     if xlim is not None:
-        ax1.set_xlim(xlim)
+        ax.set_xlim(xlim)
     if ylim is not None:
-        ax1.set_ylim(ylim)
-    # ax1.set_xlim((10**-1, 10**3))
-    # ax1.set_ylim((10**-5, 10**0))
+        ax.set_ylim(ylim)
+    # ax.set_xlim((10**-1, 10**3))
+    # ax.set_ylim((10**-5, 10**0))
 
     # Labels
-    ax1.set_xlabel("time (s)")
-    ax1.set_ylabel("survival function")
+    ax.set_xlabel("time (s)")
+    ax.set_ylabel("survival function")
 
     if path_save is not None:
-        fig1.savefig(path_save, bbox_inches="tight", dpi=200)
-        plt.close(fig1)
+        fig.savefig(path_save, bbox_inches="tight", dpi=200)
+        plt.close(fig)
