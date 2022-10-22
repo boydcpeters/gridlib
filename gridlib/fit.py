@@ -120,9 +120,6 @@ def fit_grid(parameters, data):
     return fit_results
 
 
-# TODO: function works!! Yayy, but need to clean it up.
-
-
 def _fit_n_exp(parameters, data, n: int = 2):
     """Function to fit an n-exponential to the provided data and returns the fitted
     parameter results."""
@@ -142,33 +139,37 @@ def _fit_n_exp(parameters, data, n: int = 2):
         )
 
     # Create the grid
-    x0_k_all = np.meshgrid(*coordinates)
-    x0_k_all = np.reshape(x0_k_all, (-1, n))
+    x0_k = np.meshgrid(*coordinates)
+    x0_k = np.reshape(x0_k, (-1, n))
 
     # Initial guesses
     x0_s = np.linspace(0.05, 0.7, num=n, endpoint=True, dtype=np.float64)
 
-    # Create the arrays for the bounds, +1 for the photobleaching bounds
-    lb = np.zeros(x0_k_all.shape[1] + x0_s.shape[0] + 1)
-    ub = np.ones(x0_k_all.shape[1] + x0_s.shape[0] + 1)
+    # Create the arrays for the bounds of the decay rates, and amplitude values
+    # +1 for the photobleaching bounds
+    lb = np.zeros(x0_k.shape[1] + x0_s.shape[0] + 1)
+    ub = np.ones(x0_k.shape[1] + x0_s.shape[0] + 1)
 
     # Set the bounds for the decay rates
-    lb[: x0_k_all.shape[1]] = k_min
-    ub[: x0_k_all.shape[1]] = k_max
+    lb[: x0_k.shape[1]] = k_min
+    ub[: x0_k.shape[1]] = k_max
 
     # Bounds for the amplitudes are already set, since they are the
     # default values, see initialization of the lb and ub array
     # # Set the bounds for the amplitudes
-    # lb[x0_k_all.shape[1] : (x0_k_all.shape[1] + x0_s.shape[0])] = 0
-    # ub[x0_k_all.shape[1] : (x0_k_all.shape[1] + x0_s.shape[0])] = 1
+    # lb[x0_k.shape[1] : (x0_k.shape[1] + x0_s.shape[0])] = 0
+    # ub[x0_k.shape[1] : (x0_k.shape[1] + x0_s.shape[0])] = 1
 
-    # Default values for photobleaching bounds
-    lbq = 0  # lower bound photobleaching
-    ubq = 3  # upper bound photobleaching
+    # Set the initial photobleaching number and the photobleaching bounds
     if parameters["fit_a"]:
         tau_min = min(data_utils.get_time_sec(t_tl) for t_tl in data.keys())
         # The initial kb guess is 2 s^-1 as default
         a = 1.0 * tau_min  # # default bleaching rate is 1 s^-1
+
+        # Default values for photobleaching bounds
+        lbq = 0  # lower bound photobleaching
+        ubq = 3  # upper bound photobleaching
+
         lb[-1] = lbq
         ub[-1] = ubq
     elif not parameters["fit_a"]:
@@ -178,12 +179,12 @@ def _fit_n_exp(parameters, data, n: int = 2):
 
     bnds = (lb, ub)
 
-    print(f"Total fits: {x0_k_all.shape[0]}")
+    print(f"Total fits: {x0_k.shape[0]}")
 
     fit_results_all = []
 
-    for i in range(x0_k_all.shape[0]):
-        x0 = np.concatenate((x0_k_all[i, :], x0_s, np.array([a])))
+    for i in range(x0_k.shape[0]):
+        x0 = np.concatenate((x0_k[i, :], x0_s, np.array([a])))
         res = scipy.optimize.least_squares(
             calc.global_multi_exp,
             x0,
@@ -202,16 +203,18 @@ def _fit_n_exp(parameters, data, n: int = 2):
             cost_min = res.cost
             x_best = res.x
 
-    # Unpack the k array
+    # Retrieve the best decay rates
     k_temp = x_best[:n]
 
-    # Renormalize s
+    # Retrieve the best weight values
     s_temp = x_best[n : (2 * n)]
+    # Renormalize s
     s_norm = s_temp / np.sum(s_temp)
 
     # The indices to sort the k_array from low to high
     idx = np.argsort(k_temp)
 
+    # Store the best results in a dictionary
     multi_exp_results = {
         "k": k_temp[idx],
         "s": s_norm[idx],
@@ -219,6 +222,8 @@ def _fit_n_exp(parameters, data, n: int = 2):
         "loss": cost_min,
     }
 
+    # Store the results in a dictionary as a value with the key indicating the
+    # number of decay rates
     fit_results = {f"{n}-exp": multi_exp_results}
 
     return fit_results
