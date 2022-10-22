@@ -7,10 +7,28 @@ from . import compute
 from . import data_utils
 from gridlib.fit import fit_grid
 
-# TODO: function works now, but the calculation of the probability is currently very
-# whacky done. Clean it up a bit, so it is at least better understandable.
+# TODO: add docstring
 def _sample_data(data, perc: float = 0.8, seed=None):
+    """_summary_
 
+    Parameters
+    ----------
+    data : _type_
+        _description_
+    perc : float, optional
+        _description_, by default 0.8
+    seed : {None, int, array_like[ints], SeedSequence, BitGenerator, Generator}, optional
+        A seed to initialize the BitGenerator. If None, then fresh, unpredictable
+        entropy will be pulled from the OS. If an int or array_like[ints] is passed,
+        then it will be passed to SeedSequence to derive the initial BitGenerator state.
+        One may also pass in a SeedSequence instance. Additionally, when passed a
+        BitGenerator, it will be wrapped by Generator. (THIS IS FROM NUMPY DOC, MAYBE CHANGE THIS), by default None
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     rng = np.random.default_rng(seed)
 
     data_sampled = dict()
@@ -25,8 +43,9 @@ def _sample_data(data, perc: float = 0.8, seed=None):
 
         # Determine how many data points should be in the resampled version
         # math.ceil returns an integer
-        data_points_sample = math.ceil(data_point_all * perc)
+        num_sample = math.ceil(data_point_all * perc)
 
+        # Round the possible track lifes to the closest integer
         track_lifes = np.rint(data[t_tl]["time"] / t_tl_s)
         # Cast it to the integer dtype, since the compute survival functions needs
         # an array with dtype integer.
@@ -34,19 +53,27 @@ def _sample_data(data, perc: float = 0.8, seed=None):
 
         # TODO: clean this up
         # Calculate the probability for every track life
+        # ----------------------------------------------
+        # First retrieve the true values and invert these, so the counts go from
+        # low to high
         temp = data[t_tl]["value"][::-1]
-        temp2 = temp[1:] - temp[:-1]  # check out np.diff
-        temp2 = temp2[::-1]  # need to invert it back
-        temp2 = np.concatenate(
-            (temp2, np.array([temp[0]]))
+
+        # Calculate the difference between every track life step
+        diff = temp[1:] - temp[:-1]  # check out np.diff?
+        # invert the values back so they align again with the track lifes
+        diff = diff[::-1]
+
+        # Concatenate the last value, because it equals "temp[0] - 0 = temp[0]"
+        values = np.concatenate(
+            (diff, np.array([temp[0]]))
         )  # add the last element again
-        p = temp2 / np.sum(temp2)
+        p = values / np.sum(values)
         # THE NEXT LINE IS WRONG!! THIS IS THE CUMULATIVE SUM, NOT THE INDIVIDUAL COUNTS
         # p = data[t_tl]["value"] / np.sum(data[t_tl]["value"])
 
         track_lifes_sampled = rng.choice(
             track_lifes,
-            size=data_points_sample,
+            size=num_sample,
             replace=True,
             p=p,
         )
@@ -83,7 +110,7 @@ def resampling_grid(
         Number of times the data should be resampled and should be fitted with GRID, by default 10.
     perc : float, optional
         The percentage of the data that should be resampled, by default 0.8
-    seed{None, int, array_like[ints], SeedSequence, BitGenerator, Generator}, optional
+    seed : {None, int, array_like[ints], SeedSequence, BitGenerator, Generator}, optional
         A seed to initialize the BitGenerator. If None, then fresh, unpredictable
         entropy will be pulled from the OS. If an int or array_like[ints] is passed,
         then it will be passed to SeedSequence to derive the initial BitGenerator state.
