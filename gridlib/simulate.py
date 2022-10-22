@@ -100,19 +100,19 @@ def tl_simulation(
 
     Parameters
     ----------
-    k: np.ndarray
+    k : np.ndarray
         Decay rates with units per second.
-    s: np.ndarray
+    s : np.ndarray
         Amplitudes for the respective decay rates.
-    kb: float
+    kb : float
         Photobleaching rate per second (kb = a / t_int).
-    t_int: float
+    t_int : float
         The integration time in seconds.
-    t_tl_all: Sequence[float | str]
+    t_tl_all : Sequence[float | str]
         The time-lapse times to simulate. If the time-lapse times are provided as
         floats then they are interpreted as seconds. However, the time-lapse times can
         also be provided as strings, eg. '100ms' or '1.5s'.
-    N: int | Sequence[int], optional
+    N : int | Sequence[int], optional
         Number of molecules to simulate and use for the survival time distribution
         calculation (default 10000). If only an integer value is provided then this
         value will be used for all the simulations. In the case that the provided
