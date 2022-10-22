@@ -11,8 +11,6 @@ import scipy.optimize
 import gridlib.calc as calc
 import gridlib.data_utils as data_utils
 
-# TODO: I think t_int should not be set but should be inferred, discuss with Ihor?
-
 
 def create_fixed_grid(
     k_min: float, k_max: float, n: int, scale: str
@@ -81,8 +79,10 @@ def fit_grid(parameters, data):
     bnds = [(0, 1) for _ in range(x0.shape[0])]
     bnds.append((lbq, ubq))  # add the bounds for the photobleaching
     if parameters["fit_a"]:
+
+        tau_min = min(data_utils.get_time_sec(t_tl) for t_tl in data.keys())
         # The initial kb guess is 2 s^-1 as default
-        a = 1.0 * t_int  # # default bleaching rate is 1 s^-1
+        a = 1.0 * tau_min  # # default bleaching rate is 1 s^-1
         x0 = np.concatenate((x0, np.array([a], dtype=np.float64)))
 
     elif not parameters["fit_a"]:
