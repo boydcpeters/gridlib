@@ -91,19 +91,19 @@ def compute_multi_exp(
 
     Parameters
     ----------
-    k: np.ndarray
+    k : np.ndarray
         Decay rates
-    s: np.ndarray
+    s : np.ndarray
         Amplitudes of the respective decay rates. The sum of the amplitudes should
         be equal to zero.
-    a: float
+    a : float
         Photobleaching number (a * t_int)
-    time: np.ndarray
+    time : np.ndarray
         Time points for which the multi-exponential needs to be determined.
 
     Returns
     -------
-    value: np.ndarray
+    value : np.ndarray
         The resulting normalized multi-exponential values at the given time points.
     """
 
@@ -125,7 +125,37 @@ def compute_multi_exp(
     return value
 
 
-def compute_multi_exp_fit_values(
+def compute_grid_curve(
+    k: np.ndarray, s: np.ndarray, a: float, time: np.ndarray
+) -> np.ndarray:
+    """Function computes the GRID curve for the given time points. This is just a
+    wrapper function for :func:`compute_multi_exp`, since the GRID curve is just a
+    multi-exponential curve.
+
+    Parameters
+    ----------
+    k : np.ndarray
+        Decay rates
+    s : np.ndarray
+        Amplitudes of the respective decay rates. The sum of the amplitudes should
+        be equal to zero.
+    a : float
+        Photobleaching number (a * t_int)
+    time : np.ndarray
+        Time points for which the multi-exponential needs to be determined.
+
+    Returns
+    -------
+    value : np.ndarray
+        The resulting normalized multi-exponential values at the given time points.
+    """
+
+    value = compute_multi_exp(k, s, a, time)
+
+    return value
+
+
+def compute_multi_exp_for_data(
     fit_values_multi_exp: Dict[str, Union[np.array, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
@@ -189,13 +219,13 @@ def compute_multi_exp_fit_values(
     return data_multi_exp
 
 
-def compute_grid_curves(
+def compute_grid_curves_for_data(
     fit_values_grid: Dict[str, Union[np.array, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
     """Function computes the GRID curves for the given fit_values_grid parameters.
     This is a convenience function and is just a wrapper around the function
-    'calc_multi_exp()'.
+    :func:`calc_multi_exp`.
 
     Parameters
     ----------
@@ -231,6 +261,6 @@ def compute_grid_curves(
             }
     """
 
-    data_grid = compute_multi_exp_fit_values(fit_values_grid, data)
+    data_grid = compute_multi_exp_for_data(fit_values_grid, data)
 
     return data_grid
