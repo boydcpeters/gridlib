@@ -16,7 +16,7 @@ def _base_spectrum(
     threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
+    figsize: Tuple[float, float] = (8, 5),
     color=None,
     add_legend: bool = True,
 ):
@@ -41,7 +41,7 @@ def _base_spectrum(
     ylim : Tuple[float, float], optional
         A tuple of the y-axis limits, by default None.
     figsize : Tuple[float, float], optional
-        A tuple of the figure size, by default (10, 6).
+        A tuple of the figure size, by default (8, 5).
     color : color or sequence of colors, optional
         The color or colors to use for the plotting. The standard gridlib colors are
         used if the value is set to None. The value is by default None.
@@ -140,7 +140,7 @@ def event_spectrum(
     threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
+    figsize: Tuple[float, float] = (8, 5),
     color=None,
     add_legend: bool = True,
 ):
@@ -165,7 +165,7 @@ def event_spectrum(
     ylim : Tuple[float, float], optional
         A tuple of the y-axis limits, by default None.
     figsize : Tuple[float, float], optional
-        A tuple of the figure size, by default (10, 6).
+        A tuple of the figure size, by default (8, 5).
     color : color or sequence of colors, optional
         The color or colors to use for the plotting. The standard gridlib colors are
         used if the value is set to None. The value is by default None.
@@ -228,7 +228,7 @@ def state_spectrum(
     threshold: float = 0.0,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (10, 6),
+    figsize: Tuple[float, float] = (8, 5),
     color=None,
     add_legend: bool = True,
 ):
@@ -253,7 +253,7 @@ def state_spectrum(
     ylim : Tuple[float, float], optional
         A tuple of the y-axis limits, by default None.
     figsize : Tuple[float, float], optional
-        A tuple of the figure size, by default (10, 6).
+        A tuple of the figure size, by default (8, 5).
     color : color or sequence of colors, optional
         The color or colors to use for the plotting. The standard gridlib colors are
         used if the value is set to None. The value is by default None.
