@@ -1,7 +1,6 @@
 
 # GRIDLib
 
-
 <div align="center">
 
 [![PyPI - Version](https://img.shields.io/pypi/v/gridlib.svg)](https://pypi.python.org/pypi/gridlib)
@@ -17,14 +16,11 @@
 
 </div>
 
-
 Python package to perform GRID analysis on fluorescence survival time distributions.
-
 
 * GitHub repo: <https://github.com/boydcpeters/gridlib.git>
 * Documentation: <https://gridlib.readthedocs.io>
 * Free software: GNU General Public License v3
-
 
 ## Features
 
@@ -33,6 +29,23 @@ Python package to perform GRID analysis on fluorescence survival time distributi
 ## Quickstart
 
 TODO
+
+## References
+
+The GRID fitting procedure implemented in this package is based on the following paper:
+
+```
+@article{reisser2020inferring,
+  title={Inferring quantity and qualities of superimposed reaction rates from single molecule survival time distributions},
+  author={Reisser, Matthias and Hettich, Johannes and Kuhn, Timo and Popp, Achim P and Gro{\ss}e-Berkenbusch, Andreas and Gebhardt, J Christof M},
+  journal={Scientific reports},
+  volume={10},
+  number={1},
+  pages={1--13},
+  year={2020},
+  publisher={Nature Publishing Group}
+}
+```
 
 ## Credits
 
