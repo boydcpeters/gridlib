@@ -23,22 +23,7 @@ def write_fit_results(
     if isinstance(path, str):
         path = pathlib.Path(path)
 
-    # Dictionary of which the information is stored in the .mat file.
-    mdic = dict()
-
-    # Loop over all the fit results and check the number of exponentials
-    # The assumption is made that for a number of more than 10 exponentials, it is the
-    # result of GRID fitting.
-    for fit_result in fit_results:
-        n = fit_result["k"].shape[0]
-        if n >= 10:
-            key = "grid"
-        else:
-            key = f"{n}-exp"
-
-        mdic[key] = fit_result
-
-    sio.savemat(path, mdic)
+    sio.savemat(path, fit_results)
     print(f"Fit results are saved in {path}")
 
 
