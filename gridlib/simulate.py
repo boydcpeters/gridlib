@@ -84,7 +84,12 @@ def tl_simulation_single(
     time = time[value > 0]
     value = value[value > 0]
 
-    return {"t_tl": {"time": time, "value": value}}
+    data = {f"{t_tl}s": {"time": time, "value": value}}
+
+    # Make sure the data is formatted correctly
+    data = data_utils.fmt_t_str_data(data)
+
+    return data
 
 
 def tl_simulation(
@@ -154,7 +159,5 @@ def tl_simulation(
         data_single = tl_simulation_single(k, s, kb, t_int, t_tl_s, N[i])
 
         data = {**data, **data_single}
-
-    data = data_utils.fmt_t_str_data(data)
 
     return data
