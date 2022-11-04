@@ -244,8 +244,8 @@ def process_data(
     return data_processed
 
 
-def isvalid_parameters(parameters: Dict) -> bool:
-    """Function checks whether the provided parameters are valid.
+def isvalid_parameters_grid(parameters: Dict) -> bool:
+    """Function checks whether the provided parameters are valid for GRID fitting.
 
     Parameters
     ----------
@@ -257,41 +257,50 @@ def isvalid_parameters(parameters: Dict) -> bool:
     bool
         Defines whether the dictionary is valid or not.
 
+    Notes
+    -----
+    Valid key, value pairs:
+
+    "k": np.ndarray,
+    "k_min": float,
+    "k_max": float,
+    "N": int,
+    "reg_weight": float,
+    "fit_a": bool,
+    "a_fixed": None | float
+
     Example
     -------
-    A valid parameters dictionary:
+    >>> parameters = {
+            "k_min": 10**(-3),
+            "k_max": 10**1,
+            "N": 200,
+            "reg_weight": 0.01
+            "fit_a": True,
+            "a_fixed": None
+        }
+    >>> isvalid_parameters_grid(parameters)
+    True
 
-    parameters = {
-        "t_int": 0.05,
-        "k_min": 10**(-3),
-        "k_max": 10**1,
-        "N": 200,
-        "scale": "log",  # "linear"
-        "reg_weight": 0.01,
-        "fit_a": True,
-        "fit_a_exp": True,
-        "a_fixed": None
-    }
     """
     KEYS_ALLOWED = set(
         [
+            "k",
             "k_min",
             "k_max",
             "N",
             "reg_weight",
             "scale",
             "fit_a",
-            "fit_a_exp",
             "a_fixed",
-            "n_exp",
         ]
     )
 
-    t_tls_para = set(parameters.keys())
+    param_keys = set(parameters.keys())
 
-    if len(t_tls_para.difference(KEYS_ALLOWED)) != 0:
+    if len(param_keys.difference(KEYS_ALLOWED)) != 0:
         raise ValueError(
-            f"The keywords: {t_tls_para.difference(KEYS_ALLOWED)} are not valid \
+            f"The keywords: {param_keys.difference(KEYS_ALLOWED)} are not valid \
                 parameters t_tls"
         )
 
@@ -307,8 +316,6 @@ def isvalid_parameters(parameters: Dict) -> bool:
         raise ValueError("Key 'reg_weight' is missing in the parameters variable")
     elif "fit_a" not in parameters:
         raise ValueError("Key 'fit_a' is missing in the parameters variable")
-    elif "fit_a_exp" not in parameters:
-        raise ValueError("Key 'fit_a_exp' is missing in the parameters variable")
 
     if parameters["scale"] not in set(["log", "linear"]):
         raise ValueError("Value for key 'scale' should be either log or linear")
@@ -317,10 +324,118 @@ def isvalid_parameters(parameters: Dict) -> bool:
             "If the photobleaching number should not be fitted then a photobleaching \
                 number (a) should be provided"
         )
-    if not parameters["fit_a"] and parameters["fit_a_exp"]:
-        print(
-            "WARNING! Photobleaching number is fixed for GRID but is still set to be \
-            fitted for the multi-exponentials!"
+    return True
+
+
+def isvalid_parameters_n_exp(parameters: Dict) -> bool:
+    """Function checks whether the provided parameters are valid for n-exp fitting.
+
+    Parameters
+    ----------
+    parameters : Dict
+        Dictionary containing all the parameters needed to perform the n-exp fitting.
+
+    Returns
+    -------
+    bool
+        Defines whether the dictionary is valid or not.
+
+    Notes
+    -----
+    Valid key, value pairs:
+    "n_exp": int | Sequence
+    "k": np.ndarray
+    "k_min": float
+    "k_max": float
+    "fit_a": bool
+    "a_fixed": None | float
+
+    Example
+    -------
+    >>> parameters = {
+            "n_exp": 3
+            "k_min": 10**(-3),
+            "k_max": 10**1,
+            "fit_a": True,
+            "a_fixed": None
+        }
+    >>> isvalid_parameters_n_exp(parameters)
+    True
+    """
+    KEYS_ALLOWED = set(
+        [
+            "n_exp",
+            "k",
+            "k_min",
+            "k_max",
+            "fit_a",
+            "a_fixed",
+        ]
+    )
+
+    param_keys = set(parameters.keys())
+
+    if len(param_keys.difference(KEYS_ALLOWED)) != 0:
+        raise ValueError(
+            f"The keywords: {param_keys.difference(KEYS_ALLOWED)} are not valid \
+                parameters t_tls"
+        )
+    elif "n_exp" not in parameters:
+        raise ValueError("Key 'n_exp' is missing in the parameters variable")
+    elif "k" not in parameters and (
+        "k_min" not in parameters or "k_max" not in parameters
+    ):
+        if "k_min" not in parameters:
+            raise ValueError("Key 'k_min' is missing in the parameters variable")
+        elif "k_max" not in parameters:
+            raise ValueError("Key 'k_max' is missing in the parameters variable")
+    elif "fit_a" not in parameters:
+        raise ValueError("Key 'fit_a' is missing in the parameters variable")
+    if not parameters["fit_a"] and "a_fixed" not in parameters:
+        raise ValueError(
+            "If the photobleaching number should not be fitted then a photobleaching \
+                number (a) should be provided"
         )
 
     return True
+
+
+def split_parameters(parameters: Dict) -> Dict:
+    """Function splits a provided parameters dictionary into two different
+    dictionaries. One dictionary for parameters required for GRID fitting and one
+    dictionary for parameters required for n-exp fitting."""
+    KEYS_GRID = set(
+        [
+            "k",
+            "k_min",
+            "k_max",
+            "N",
+            "reg_weight",
+            "scale",
+            "fit_a",
+            "a_fixed",
+        ]
+    )
+
+    KEYS_N_EXP = set(
+        [
+            "n_exp",
+            "k",
+            "k_min",
+            "k_max",
+            "fit_a",
+            "a_fixed",
+        ]
+    )
+
+    parameters_grid = dict()
+    parameters_n_exp = dict()
+
+    for key, value in parameters.items():
+
+        if key in KEYS_GRID:
+            parameters_grid[key] = value
+        if key in KEYS_N_EXP:
+            parameters_n_exp[key] = value
+
+    return parameters_grid, parameters_n_exp
