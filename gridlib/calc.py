@@ -296,3 +296,47 @@ def global_multi_exp(
         d = np.concatenate((d, eq0))
 
     return d
+
+
+# TODO: make a multi-exp fitting with fixed k values function
+def global_multi_exp_fixed_k(
+    values: np.ndarray,
+    k: np.ndarray,
+    data: Dict[str, Dict[str, np.ndarray]],
+    n: int,
+) -> Tuple[float, np.ndarray]:
+    """Function returns the residuals"""
+    # Initialization of the variables
+    # ---------------------------------------------------------------------------------
+    d = np.array([], dtype=np.float64)
+
+    # Unpack the values array and assign them to the correct variable
+    # ---------------------------------------------------------------------------------
+    s = values[:n]
+    a = values[-1]
+
+    # Constraints for global fit
+    # ---------------------------------------------------------------------------------
+
+    # Cost function for difference between fit and measurement
+    # Loop over all the time-lapse conditions
+    for t_tl in data.keys():
+        # read n-th measured time-lapse
+        time = data[t_tl]["time"]  # time-points (lifetime) array
+        p = data[t_tl]["value"]  # probability array
+
+        # IMPORTANT: frame count should start at 1, NOT 0
+        m = np.arange(time.shape[0]) + 1
+
+        # Calculate the model function
+        # Decay spectrum
+        h = calch(time, k, s)
+        # Photobleaching
+        q = np.exp(-a * m)
+
+        # Calculate the residuals
+        eq0 = ((q / q[0]) * (h / h[0])) - (p / p[0])
+
+        d = np.concatenate((d, eq0))
+
+    return d
