@@ -28,9 +28,9 @@ classifiers=[
 ]
 
 [tool.poetry.urls]
-"homepage" = "https://github.com/boydcpeters/gridlib"
+"Homepage" = "https://github.com/boydcpeters/gridlib"
 "Bug Tracker" = "https://github.com/boydcpeters/gridlib/issues"
-
+"Documentation" = "https://gridlib.readthedocs.io/en/latest/"
 
 
 
