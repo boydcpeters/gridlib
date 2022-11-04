@@ -137,7 +137,7 @@ def tl_simulation(
                 ...
             }
     """
-    # TODO function to perform multiple simulations and get back a data dictionary
+    # Dictionary with all the simulated data points
     data = dict()
 
     if isinstance(N, Sequence):
