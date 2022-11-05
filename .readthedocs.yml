@@ -14,7 +14,6 @@ sphinx:
 python:
   version: "3.7"
   install:
-    # The requirements.txt file is old, just use poetry dependencies for the docs
-    # - requirements: docs/requirements.txt
+    - requirements: docs/requirements.txt
     - method: pip
       path: .
