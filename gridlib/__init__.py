@@ -2,7 +2,7 @@
 
 __author__ = """Boyd Christiaan Peters"""
 __email__ = "boyd.c.peters@gmail.com"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 from . import io, plot
 from .compute import *
