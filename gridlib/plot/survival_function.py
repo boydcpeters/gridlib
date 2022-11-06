@@ -307,7 +307,7 @@ def data_vs_grid(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
-    data_grid = compute.compute_grid_curves(fit_values_grid, data)
+    data_grid = compute.compute_grid_curve(fit_values_grid, data)
 
     fig, ax = _base_data_multiple(
         [data, data_grid],
