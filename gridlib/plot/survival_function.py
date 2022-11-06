@@ -175,6 +175,7 @@ def data_multiple(
     return fig, ax
 
 
+# TODO: fix bug in compute_multi_exp call
 # TODO: UPDATE DOCSTRING
 # TODO: check how .plot() function shows kwargs, it puts it under "Other parameters"
 # although we know have it as a keyword argument with a default value, so we should
@@ -307,7 +308,11 @@ def data_vs_grid(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
-    data_grid = compute.compute_grid_curve(fit_values_grid, data)
+    k = fit_values_grid["grid"]["k"]
+    s = fit_values_grid["grid"]["k"]
+    a = fit_values_grid["grid"]["a"]
+
+    data_grid = compute.compute_grid_curve(k, s, a, data)
 
     fig, ax = _base_data_multiple(
         [data, data_grid],
