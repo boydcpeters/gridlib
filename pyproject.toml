@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "gridlib"
-version = "0.3.3"
+version = "0.3.4"
 description = "Python package to perform GRID analysis on fluorescence survival time distributions."
 authors = ["Boyd Christiaan Peters <boyd.c.peters@gmail.com>"]
 
