@@ -309,7 +309,7 @@ def data_vs_grid(
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
     k = fit_values_grid["grid"]["k"]
-    s = fit_values_grid["grid"]["k"]
+    s = fit_values_grid["grid"]["s"]
     a = fit_values_grid["grid"]["a"]
 
     data_grid = compute.compute_grid_curve(k, s, a, data)
