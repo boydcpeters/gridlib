@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added io functions for track data reading and writing, this is an initial version and will change later to make it more general.
 - Added function to retrieve the track lifes of a track.
 - Added myst-parser to dev dependencies for the docs.
+- Removed recommonmark from dev dependencies, since it is deprecated.
 
 ## [0.2.1] - 2022-11-05
 
