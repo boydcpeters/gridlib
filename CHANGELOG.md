@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.1] - 2022-11-06
 
+- Fixed a bug which prevented the read_track_file_csv() function from being called.
+
 ## [0.3.0] - 2022-11-06
 
 - Added io functions for track data reading and writing, this is an initial version and will change later to make it more general.
