@@ -34,7 +34,7 @@ TODO
 
 The GRID fitting procedure implemented in this package is based on the following paper:
 
-```
+```latex
 @article{reisser2020inferring,
   title={Inferring quantity and qualities of superimposed reaction rates from single molecule survival time distributions},
   author={Reisser, Matthias and Hettich, Johannes and Kuhn, Timo and Popp, Achim P and Gro{\ss}e-Berkenbusch, Andreas and Gebhardt, J Christof M},
