@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.2] - 2022-11-06
 
-- Fixed bug in a plotting function
+- Fixed bug in a plotting function for plotting the GRID curves against the data.
 
 ## [0.3.1] - 2022-11-06
 
