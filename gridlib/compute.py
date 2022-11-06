@@ -8,6 +8,54 @@ import numpy as np
 
 from . import calc
 
+
+def retrieve_track_lifes(data, filtered: bool = True) -> Dict:
+    """Function retrieves the amount of frames a molecule is bound.
+
+    Parameters
+    ----------
+    data : List[List]
+        The data values as follows: (f, t, x, y, track_id, disp, intensity, sigma, fit_error)
+    filtered : bool (CURRENTLY NOT IMPLEMENTED!!!)
+        Only return residence frame lengths when the full tracklet is imaged. You don't know
+        how long a particle has been bound at the start of imaging or how long it will stay bound
+        after the imaging stops, so these particle residence frame length are not really
+        trustworthy.
+
+    Returns
+    -------
+    track_lifes: np.array
+    """
+    # TODO: filtering is currently not implemented
+    track_lifes = []
+
+    frame_start = None
+    frame_end = None
+
+    for i in range(len(data)):
+
+        # if there is no value for the frame_start and frame_end, set a value, ie. first data point
+        if frame_start is None:
+            frame_start = data[i][0]
+            frame_end = data[i][0]
+        elif data[i][4] == data[i - 1][4]:
+            frame_end = data[i][0]
+        else:
+            # If frame_end=5, and frame_start=2, then track_life should be 3
+            # ie. count the amount of delta t's between the start and end
+            track_life = frame_end - frame_start
+            track_lifes.append(track_life)
+            frame_start = data[i][0]
+            frame_end = data[i][0]
+
+        # if it is the last data point, add the track life
+        if i == len(data) - 1:
+            track_life = frame_end - frame_start
+            track_lifes.append(track_life)
+
+    return track_lifes
+
+
 # TODO: update docstring
 def compute_survival_function(
     track_lifes: Union[List, np.ndarray],
