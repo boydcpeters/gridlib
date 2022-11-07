@@ -238,11 +238,13 @@ def data_vs_multi_exp(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
-    k = fit_values_multi_exp[n_exp_key]["k"]
-    s = fit_values_multi_exp[n_exp_key]["s"]
-    a = fit_values_multi_exp[n_exp_key]["a"]
+    # k = fit_values_multi_exp[n_exp_key]["k"]
+    # s = fit_values_multi_exp[n_exp_key]["s"]
+    # a = fit_values_multi_exp[n_exp_key]["a"]
 
-    data_multi_exp = compute.compute_multi_exp_for_data(k, s, a, data)
+    data_multi_exp = compute.compute_multi_exp_for_data(
+        fit_values_multi_exp[n_exp_key], data
+    )
 
     fig, ax = _base_data_multiple(
         [data, data_multi_exp],
@@ -312,11 +314,11 @@ def data_vs_grid(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
-    k = fit_values_grid["grid"]["k"]
-    s = fit_values_grid["grid"]["s"]
-    a = fit_values_grid["grid"]["a"]
+    # k = fit_values_grid["grid"]["k"]
+    # s = fit_values_grid["grid"]["s"]
+    # a = fit_values_grid["grid"]["a"]
 
-    data_grid = compute.compute_grid_curves_for_data(k, s, a, data)
+    data_grid = compute.compute_grid_curves_for_data(fit_values_grid["grid"], data)
 
     fig, ax = _base_data_multiple(
         [data, data_grid],
