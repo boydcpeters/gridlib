@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.6] - 2022-11-07
+
 ## [0.3.5] - 2022-11-07
 
 ### Fixed
@@ -50,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release on PyPI.
 
-[Unreleased]: https://github.com/boydcpeters/gridlib/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/boydcpeters/gridlib/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/boydcpeters/gridlib/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/boydcpeters/gridlib/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/boydcpeters/gridlib/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/boydcpeters/gridlib/compare/v0.3.2...v0.3.3
