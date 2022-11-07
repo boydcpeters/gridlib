@@ -225,8 +225,8 @@ def data_vs_multi_exp(
     if kwargs_text is None:
         kwargs_text = dict()
 
-    key = fit_values_multi_exp.keys()[0]
-    n_exp = fit_values_multi_exp[key]["k"].shape[0]
+    n_exp_key = fit_values_multi_exp.keys()[0]
+    n_exp = fit_values_multi_exp[n_exp_key]["k"].shape[0]
 
     # Set the default settings if they are not provided
     if "label" not in kwargs_plot:
@@ -238,7 +238,11 @@ def data_vs_multi_exp(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed"]
 
-    data_multi_exp = compute.compute_multi_exp(fit_values_multi_exp, data)
+    k = fit_values_multi_exp[n_exp_key]["k"]
+    s = fit_values_multi_exp[n_exp_key]["s"]
+    a = fit_values_multi_exp[n_exp_key]["a"]
+
+    data_multi_exp = compute.compute_multi_exp_for_data(k, s, a, data)
 
     fig, ax = _base_data_multiple(
         [data, data_multi_exp],
@@ -312,7 +316,7 @@ def data_vs_grid(
     s = fit_values_grid["grid"]["s"]
     a = fit_values_grid["grid"]["a"]
 
-    data_grid = compute.compute_grid_curve(k, s, a, data)
+    data_grid = compute.compute_grid_curves_for_data(k, s, a, data)
 
     fig, ax = _base_data_multiple(
         [data, data_grid],
