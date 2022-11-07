@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.5] - 2022-11-07
 
+### Fixed
+
+- Bug in the plotting of the survival function curves is now fixed.
+
 ## [0.3.4] - 2022-11-06
 
 - Bug was not properly fixed yet, but should be now.
