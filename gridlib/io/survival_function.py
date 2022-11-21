@@ -179,7 +179,8 @@ def read_data_survival_function(
                 val_str = row[(2 * i) + 1]
                 if val_str != "":
                     temp = data[t_tl].get("value", [])
-                    val = int(val_str)
+                    # value could be ###.0, so first convert str to float
+                    val = int(float(val_str))
                     temp.append(val)
                     data[t_tl]["value"] = temp
 
