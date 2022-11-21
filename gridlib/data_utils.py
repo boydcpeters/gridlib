@@ -269,16 +269,26 @@ def isvalid_parameters_grid(parameters: Dict) -> bool:
     "fit_a": bool,
     "a_fixed": None | float
 
-    Example
-    -------
+    Examples
+    --------
     >>> parameters = {
-            "k_min": 10**(-3),
-            "k_max": 10**1,
-            "N": 200,
-            "reg_weight": 0.01
-            "fit_a": True,
-            "a_fixed": None
-        }
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+    >>> isvalid_parameters_grid(parameters)
+    True
+
+    >>> parameters = {
+        "k": [0.001, 0.05, 1.5, 5.6],
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
     >>> isvalid_parameters_grid(parameters)
     True
 
@@ -303,22 +313,30 @@ def isvalid_parameters_grid(parameters: Dict) -> bool:
             f"The keywords: {param_keys.difference(KEYS_ALLOWED)} are not valid \
                 parameters t_tls"
         )
+    elif "k" not in parameters and (
+        "k_min" not in parameters
+        or "k_max" not in parameters
+        or "N" not in parameters
+        or "scale" not in parameters
+    ):
+        if "k_min" not in parameters:
+            raise ValueError("Key 'k_min' is missing in the parameters variable")
+        elif "k_max" not in parameters:
+            raise ValueError("Key 'k_max' is missing in the parameters variable")
+        elif "N" not in parameters:
+            raise ValueError("Key 'N' is missing in the parameters variable")
+        elif "scale" not in parameters:
+            raise ValueError("Key 'scale' is missing in the parameters variable")
 
-    elif "k_min" not in parameters:
-        raise ValueError("Key 'k_min' is missing in the parameters variable")
-    elif "k_max" not in parameters:
-        raise ValueError("Key 'k_max' is missing in the parameters variable")
-    elif "N" not in parameters:
-        raise ValueError("Key 'N' is missing in the parameters variable")
-    elif "scale" not in parameters:
-        raise ValueError("Key 'scale' is missing in the parameters variable")
+        # Check if the 'scale' parameter is a valid value
+        if parameters["scale"] not in set(["log", "linear"]):
+            raise ValueError("Value for key 'scale' should be either log or linear")
+
     elif "reg_weight" not in parameters:
         raise ValueError("Key 'reg_weight' is missing in the parameters variable")
     elif "fit_a" not in parameters:
         raise ValueError("Key 'fit_a' is missing in the parameters variable")
 
-    if parameters["scale"] not in set(["log", "linear"]):
-        raise ValueError("Value for key 'scale' should be either log or linear")
     if not parameters["fit_a"] and "a_fixed" not in parameters:
         raise ValueError(
             "If the photobleaching number should not be fitted then a photobleaching \
@@ -350,15 +368,23 @@ def isvalid_parameters_n_exp(parameters: Dict) -> bool:
     "fit_a": bool
     "a_fixed": None | float
 
-    Example
-    -------
+    Examples
+    --------
     >>> parameters = {
-            "n_exp": 3
+            "n_exp": 3,
             "k_min": 10**(-3),
             "k_max": 10**1,
             "fit_a": True,
-            "a_fixed": None
+            "a_fixed": None,
         }
+    >>> isvalid_parameters_n_exp(parameters)
+    True
+
+    >>> parameters = {
+        "k": [0.001, 0.05, 1.5, 5.6],
+        "fit_a": True,
+        "a_fixed": None,
+    }
     >>> isvalid_parameters_n_exp(parameters)
     True
     """
@@ -380,15 +406,18 @@ def isvalid_parameters_n_exp(parameters: Dict) -> bool:
             f"The keywords: {param_keys.difference(KEYS_ALLOWED)} are not valid \
                 parameters t_tls"
         )
-    elif "n_exp" not in parameters:
-        raise ValueError("Key 'n_exp' is missing in the parameters variable")
+
     elif "k" not in parameters and (
-        "k_min" not in parameters or "k_max" not in parameters
+        "k_min" not in parameters
+        or "k_max" not in parameters
+        or "n_exp" not in parameters
     ):
         if "k_min" not in parameters:
             raise ValueError("Key 'k_min' is missing in the parameters variable")
         elif "k_max" not in parameters:
             raise ValueError("Key 'k_max' is missing in the parameters variable")
+        elif "n_exp" not in parameters:
+            raise ValueError("Key 'n_exp' is missing in the parameters variable")
     elif "fit_a" not in parameters:
         raise ValueError("Key 'fit_a' is missing in the parameters variable")
     if not parameters["fit_a"] and "a_fixed" not in parameters:

@@ -122,3 +122,217 @@ def test_process_data():
 
     # Check if the original data dictionary wasn't altered
     assert utils.approx_nested_dict_data(data, data_original)
+
+
+def test_isvalid_parameters_grid():
+    """Test function `isvalid_parameters_grid()`."""
+
+    parameters_correct1 = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+    assert data_utils.isvalid_parameters_grid(parameters_correct1)
+
+    parameters_correct2 = {
+        "k": [0.001, 0.05, 1.5, 5.6],
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+    assert data_utils.isvalid_parameters_grid(parameters_correct2)
+
+    parameters_empty = {}
+
+    parameters_miss_k_min = {
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_k_max = {
+        "k_min": 10 ** (-3),
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_N = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_scale = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_reg_weight = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_fit_a = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "a_fixed": None,
+    }
+
+    parameters_miss_fit_fixed = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": False,
+    }
+
+    parameters_extra = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "N": 200,
+        "scale": "log",
+        "reg_weight": 0.01,
+        "fit_a": True,
+        "a_fixed": None,
+        "n_exp": 3,
+    }
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_empty)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_k_min)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_k_max)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_N)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_scale)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_reg_weight)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_fit_a)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_miss_fit_fixed)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_grid(parameters_extra)
+
+
+def test_isvalid_parameters_n_exp():
+
+    """Test function `isvalid_parameters_n_exp()`."""
+
+    parameters1 = {
+        "n_exp": 3,
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+    assert data_utils.isvalid_parameters_n_exp(parameters1)
+
+    parameters2 = {
+        "k": [0.001, 0.05, 1.5, 5.6],
+        "fit_a": True,
+        "a_fixed": None,
+    }
+    assert data_utils.isvalid_parameters_n_exp(parameters2)
+
+    parameters_empty = {}
+
+    parameters_miss_n_exp = {
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_k_min = {
+        "n_exp": 3,
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_k_max = {
+        "n_exp": 3,
+        "k_min": 10 ** (-3),
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+    parameters_miss_fit_a = {
+        "n_exp": 3,
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "a_fixed": None,
+    }
+
+    parameters_miss_a_fixed = {
+        "n_exp": 3,
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "fit_a": False,
+    }
+
+    parameters_extra = {
+        "n_exp": 3,
+        "k_min": 10 ** (-3),
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+        "reg_weight": 0.01,
+    }
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_empty)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_miss_n_exp)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_miss_k_min)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_miss_k_max)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_miss_fit_a)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_miss_a_fixed)
+
+    with pytest.raises(ValueError):
+        data_utils.isvalid_parameters_n_exp(parameters_extra)
