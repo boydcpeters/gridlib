@@ -1,6 +1,7 @@
-# Here are utils function, such as for checking the whether the parameters are
-#  valid
-# and for reformatting the t_tls arguments
+"""
+Module for utility functions.
+"""
+
 import copy
 import math
 import re
@@ -150,11 +151,11 @@ def fmt_t_str_data(
 
     Examples
     --------
-    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
-                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
+    >>> data = {"50ms": {"time": np.array([0.05, 0.1, 0.15]), "value": np.array([41, 23, 8])},
+                "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])}}
     >>> fmt_t_str_data(data)
-    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
-     "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
+    {"0.05s": {"time": np.array([0.05, 0.1, 0.15]), "value": np.array([41, 23, 8])},
+     "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])}}
     """
     # Deepcopy is required, because otherwise it will store just the reference pointer
     # but not the array itself
@@ -203,18 +204,18 @@ def process_data(
 
     Examples
     --------
-    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15])), "value": array([41, 23, 8])},
-                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
+    >>> data = {"50ms": {"time": np.array([0.05, 0.1, 0.15])), "value": np.array([41, 23, 8])},
+                "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])}}
     >>> process_data(data)
-    {"0.05s": {"time": array([0.1, 0.15]), "value": array([1.0, 0.34782609])},
-     "1s": {"time": array([1.0, 2.0]), "value": array([1.0, 0.26470588])}}
+    {"0.05s": {"time": np.array([0.1, 0.15]), "value": np.array([1.0, 0.34782609])},
+     "1s": {"time": np.array([1.0, 2.0]), "value": np.array([1.0, 0.26470588])}}
 
     If `delete` is set to False:
-    >>> data = {"50ms": {"time": array([0.05, 0.1, 0.15]), "value": array([41, 23, 8])},
-                "1s": {"time": array([1.0, 2.0]), "value": array([34, 9])}}
+    >>> data = {"50ms": {"time": np.array([0.05, 0.1, 0.15]), "value": np.array([41, 23, 8])},
+                "1s": {"time": np.array([1.0, 2.0]), "value": np.array([34, 9])}}
     >>> process_data(data, delete=False)
-    {"0.05s": {"time": array([0.05, 0.1, 0.15]), "value": [1.0, 0.56097561, 0.19512195])},
-    "1s": {"time": array([1.0, 2.0]), "value": array([1.0, 0.26470588])}}
+    {"0.05s": {"time": np.array([0.05, 0.1, 0.15]), "value": [1.0, 0.56097561, 0.19512195])},
+    "1s": {"time": np.array([1.0, 2.0]), "value": np.array([1.0, 0.26470588])}}
     """
 
     # Format the data such that all the keys are in seconds
