@@ -48,6 +48,9 @@ def tl_simulation_single(
             }
     """
 
+    if N <= 0:
+        raise ValueError("'N' argument should be larger than zero.")
+
     p = s / np.sum(s)
 
     # Can also change kb * t_int to a
