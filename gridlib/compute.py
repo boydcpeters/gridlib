@@ -65,12 +65,6 @@ def compute_survival_function(
     """Function creates the time and value arrays describing the survival function distribution from
     a set of track lifes.
 
-
-    # If frame_end=5, and frame_start=2, then track_life should be 3
-    # ie. count the amount of delta t's between the start and end
-
-    So track lifes is the number of delta t's.
-
     Parameters
     ----------
     track_lifes : List or np.ndarray
@@ -89,6 +83,13 @@ def compute_survival_function(
         The time vector indicating all the time points for the values of the survival function.
     sf_value: np.ndarray
         The survival function values for their respective time point.
+
+    Notes
+    -----
+    If frame_end=5, and frame_start=2, then track_life should be 3
+    ie. count the amount of delta t's between the start and end
+    So track lifes is the number of delta t's.
+
     """
     if isinstance(track_lifes, list):
         track_lifes = np.array(track_lifes, dtype=np.int64)
