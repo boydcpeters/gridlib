@@ -24,17 +24,17 @@ def _num_decimal_places(value: str) -> int:
 
     Examples
     --------
-    >>> num_decimal_places("5.32")
+    >>> _num_decimal_places("5.32")
     2
-    >>> num_decimal_places("2.")
+    >>> _num_decimal_places("2.")
     0
-    >>> num_decimal_places("98.8572")
+    >>> _num_decimal_places("98.8572")
     4
-    >>> num_decimal_places("3.4120")
+    >>> _num_decimal_places("3.4120")
     3
-    >>> num_decimal_places("11")
+    >>> _num_decimal_places("11")
     0
-    >>> num_decimal_places("0.05")
+    >>> _num_decimal_places("0.05")
     2
     """
     # Regex from:
