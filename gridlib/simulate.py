@@ -48,6 +48,12 @@ def tl_simulation_single(
             }
     """
 
+    if kb <= 0:
+        raise ValueError("'kb' argument should be larger than zero")
+    if t_int <= 0:
+        raise ValueError("'t_int' argument should be larger than zero")
+    if t_tl <= 0:
+        raise ValueError("'t_tl' argument should be larger than zero")
     if N <= 0:
         raise ValueError("'N' argument should be larger than zero.")
 
