@@ -68,6 +68,11 @@ watchdog = {version = "^2.1.6", extras = ["watchmedo"]}
 numpydoc = "^1.4.0"
 myst-parser = "^0.18.1"
 
+[tool.pytest.ini_options]
+addopts = [
+  "--import-mode=importlib",
+]
+
 [tool.coverage.paths]
 source = ["gridlib", "*/site-packages"]
 
