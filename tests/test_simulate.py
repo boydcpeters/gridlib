@@ -16,3 +16,36 @@ from gridlib import simulate
 
 #     data = simulate.tl_simulations(k, s, kb, t_int, t_tl_all, N)
 #     print(data.keys())
+
+
+def test_tl_simulation_single():
+
+    k_correct = np.array([0.01, 0.5, 1.4, 5.9])
+    s_correct = np.array([0.02, 0.1, 0.25, 0.63])
+    kb_correct = 0.2
+    t_int_correct = 0.05
+    t_tl_correct = 1.0
+    N_correct = 1000
+
+    assert (
+        simulate.tl_simulation_single(
+            k_correct, s_correct, kb_correct, t_int_correct, t_tl_correct, N=N_correct
+        )
+        is not None
+    )
+
+    # Test whether an error is thrown if the sum of the weights does not equal 1
+    s_zeros = np.zeros(4)
+    with pytest.raises(ValueError):
+        simulate.tl_simulation_single(
+            k_correct, s_zeros, kb_correct, t_int_correct, t_tl_correct, N=N_correct
+        )
+
+    with pytest.raises(ValueError):
+        simulate.tl_simulation_single(
+            k_correct, s_correct, kb_correct, t_int_correct, t_tl_correct, N=0
+        )
+    with pytest.raises(ValueError):
+        simulate.tl_simulation_single(
+            k_correct, s_correct, kb_correct, t_int_correct, t_tl_correct, N=-1
+        )
