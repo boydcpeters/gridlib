@@ -2,6 +2,7 @@
 Module with function to sample from a provided GRID spectrum or multi-exponential.
 """
 from typing import Sequence, Union
+import math
 
 import numpy as np
 
@@ -47,6 +48,9 @@ def tl_simulation_single(
                 }
             }
     """
+
+    if not math.isclose(1.0, np.sum(s)):
+        raise ValueError(f"Sum of amplitudes should be equal to 1, but is {np.sum(s)}.")
 
     if kb <= 0:
         raise ValueError("'kb' argument should be larger than zero")
