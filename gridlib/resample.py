@@ -148,7 +148,7 @@ def resampling_grid(
         t1 = time.time()
 
         if i == 0:
-            print(f"Estimated time (min): {((t1-t0)*n)/60.0:d}")
+            print(f"Estimated time: {((t1-t0)*n)/60.0:.0f} min")
 
         print(f"{i}-th resampling is finished.")
 
