@@ -1,14 +1,15 @@
 from typing import Tuple, Dict, Union, List
 import math
+import time
 
 import numpy as np
 
 from . import compute
 from . import data_utils
-from gridlib.fit import fit_grid
+from . import fit
 
-# TODO: add docstring
-def _sample_data(data, perc: float = 0.8, seed=None):
+# TODO: update docstring
+def _resample_data(data, perc: float = 0.8, seed=None):
     """_summary_
 
     Parameters
@@ -122,19 +123,36 @@ def resampling_grid(
         _description_
     """
 
+    print("---------------------------------")
+    print("Fitting of all data starts now...")
     # Determine the full GRID fit results based on all the data.
-    fit_results_all = fit_grid(parameters, data)
+    fit_results_all = fit.fit_grid(parameters, data, disp=False)
+    print("Fitting of all data finished now.")
+    print("---------------------------------")
+    print("Start resampling...")
 
     rng = np.random.default_rng(seed)
 
     # Determine the GRID fit results for the resampled data
     fit_results_resampled = []
-    for _ in range(n):
+    for i in range(n):
 
-        data_resampled = _sample_data(data, perc=perc, seed=rng)
+        t0 = time.time()
 
-        fit_results_temp = fit_grid(parameters, data_resampled)
+        data_resampled = _resample_data(data, perc=perc, seed=rng)
+
+        fit_results_temp = fit.fit_grid(parameters, data_resampled, disp=False)
 
         fit_results_resampled.append(fit_results_temp)
+
+        t1 = time.time()
+
+        if i == 0:
+            print(f"Estimated time (min): {((t1-t0)*n)/60.0:d}")
+
+        print(f"{i}-th resampling is finished.")
+
+    print("Resampling is finished.")
+    print("---------------------------------")
 
     return fit_results_all, fit_results_resampled
