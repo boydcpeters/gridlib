@@ -50,4 +50,7 @@ parameters_all = {
     "n_exp": [1, 2, 3],  # fit a 1-, 2- and 3- exponential
 }
 
-fit_results_grid, fit_results_multi_exp = gridlib.fit_all(parameters_all, data)
+fit_results_all = gridlib.fit_all(parameters_all, data)
+
+# print the keys to show the different fit results
+print(fit_results_all.keys())
