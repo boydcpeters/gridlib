@@ -13,5 +13,8 @@ N = 10000
 # Simulate the survival functions
 data_simulated = gridlib.tl_simulation(k, s, kb, t_int, t_tl_all, N)
 
+print(data_simulated.keys())
+# print(data_simulated["5s"]["time"])
+
 # Save the simulated data in csv file
 gridlib.io.write_data_survival_function("examples\data\example1.csv", data_simulated)
