@@ -56,7 +56,7 @@ def con_eq(x0: np.ndarray):
     return np.sum(s) - 1
 
 
-def fit_grid(parameters, data):
+def fit_grid(parameters, data, disp: bool = True):
 
     data_processed = data_utils.process_data(data)
 
@@ -101,7 +101,7 @@ def fit_grid(parameters, data):
 
     cons = [{"type": "eq", "fun": con_eq}]
     # TODO: change iprint, see source code
-    options = {"maxiter": 600, "disp": True, "iprint": 1, "ftol": 10 ** (-11)}
+    options = {"maxiter": 600, "disp": disp, "iprint": 1, "ftol": 10 ** (-11)}
 
     res = scipy.optimize.minimize(
         calc.lsqobj_grid,
