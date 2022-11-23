@@ -67,7 +67,7 @@ def tl_simulation_single(
     keff = (kb * t_int) / t_tl + k
 
     count = 0
-    time = np.linspace(t_tl, 1000 * t_tl, num=1001, endpoint=True)
+    time = np.linspace(t_tl, 1000 * t_tl, num=1000, endpoint=True)
 
     binding = np.zeros(time.shape[0])
     binding_sum = 0
