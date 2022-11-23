@@ -101,7 +101,7 @@ def fit_grid(parameters, data, disp: bool = True):
 
     cons = [{"type": "eq", "fun": con_eq}]
     # TODO: change iprint, see source code
-    options = {"maxiter": 600, "disp": disp, "iprint": 1, "ftol": 10 ** (-11)}
+    options = {"maxiter": 600, "disp": disp, "iprint": 1, "ftol": 10 ** (-10)}
 
     res = scipy.optimize.minimize(
         calc.lsqobj_grid,
@@ -255,7 +255,7 @@ def fit_multi_exp(parameters, data):
     return fit_results
 
 
-def fit(parameters, data):
+def fit_all(parameters, data):
     """Function to fit both with GRID and with multi-exponentials."""
 
     parameters_grid, parameters_n_exp = data_utils.split_parameters(parameters)
