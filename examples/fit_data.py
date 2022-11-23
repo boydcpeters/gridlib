@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 import gridlib
 import gridlib.io
 import gridlib.plot
@@ -53,4 +56,11 @@ parameters_all = {
 fit_results_all = gridlib.fit_all(parameters_all, data)
 
 # print the keys to show the different fit results
-print(fit_results_all.keys())
+print(f"keys in the fit_results_all dictionary: {fit_results_all.keys()}")
+
+# Plot the results
+fig1, ax1 = gridlib.plot.event_spectrum(fit_results_all, ylim=(0, 0.6))
+fig2, ax2 = gridlib.plot.state_spectrum(fit_results_all, ylim=(0, 0.6))
+fig3, ax3 = gridlib.plot.data_vs_grid(data, fit_results_all)
+
+plt.show()
