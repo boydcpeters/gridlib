@@ -126,7 +126,7 @@ def resampling_grid(
     print("---------------------------------")
     print("Fitting of all data starts now...")
     # Determine the full GRID fit results based on all the data.
-    fit_results_all = fit.fit_grid(parameters, data, disp=False)
+    fit_result_full = fit.fit_grid(parameters, data, disp=False)
     print("Fitting of all data finished now.")
     print("---------------------------------")
     print("Start resampling...")
@@ -155,4 +155,4 @@ def resampling_grid(
     print("Resampling is finished.")
     print("---------------------------------")
 
-    return fit_results_all, fit_results_resampled
+    return fit_result_full, fit_results_resampled
