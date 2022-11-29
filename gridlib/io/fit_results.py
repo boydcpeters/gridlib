@@ -114,10 +114,10 @@ def read_data_grid_resampling(
     results_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
-            "S": np.ndarray with the corresponding weights
+            "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
             "loss": final cost value
-    results_resampling: List[Dict[str, Union[np.array, float]]]
+    results_resampled: List[Dict[str, Union[np.array, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
@@ -128,8 +128,9 @@ def read_data_grid_resampling(
     mat_contents = sio.loadmat(path, simplify_cells=True)
 
     results_full = mat_contents["result100"]
-    results_resampling = mat_contents["results"]
-    return results_full, results_resampling
+    results_resampled = mat_contents["results"]
+
+    return results_full, results_resampled
 
 
 def read_data_grid_resampling_trackit(
@@ -149,17 +150,41 @@ def read_data_grid_resampling_trackit(
     results_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
-            "S": np.ndarray with the corresponding weights
-            "a1": bleaching number (a = kb * t_int)
-    results_resampling: List[Dict[str, Union[np.array, float]]]
+            "s": np.ndarray with the corresponding weights
+            "a": bleaching number (a = kb * t_int)
+            "loss": None (since this is not provided by TrackIt resampling data)
+    results_resampled: List[Dict[str, Union[np.array, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
-            "S": np.ndarray with the corresponding weights
-            "a1": bleaching number (a = kb * t_int)
+            "s": np.ndarray with the corresponding weights
+            "a": bleaching number (a = kb * t_int)
+            "loss": None (since this is not provided by TrackIt resampling data)
         Every dictionary entry in the list contains the results of one data resample.
     """
     mat_contents = sio.loadmat(path, simplify_cells=True)
 
-    results_full = mat_contents["result100"]
-    results_resampling = mat_contents["results"]
-    return results_full, results_resampling
+    results_full_temp = mat_contents["result100"]
+    results_resampled_temp = mat_contents["results"]
+
+    # Update the keys, so consistent with API requirements
+    results_full = {
+        "k": results_full_temp["k"],
+        "s": results_full_temp["S"],
+        "a": results_full_temp["a1"],
+        "loss": None,
+    }
+
+    results_resampled = list()
+    for result_resampled_temp in results_resampled_temp:
+
+        # Update the keys, so consistent with API requirements
+        result_resampled = {
+            "k": result_resampled_temp["k"],
+            "s": result_resampled_temp["S"],
+            "a": result_resampled_temp["a1"],
+            "loss": None,
+        }
+
+        results_resampled.append(result_resampled)
+
+    return results_full, results_resampled
