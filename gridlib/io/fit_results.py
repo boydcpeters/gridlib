@@ -97,6 +97,22 @@ def read_fit_results_trackit(
     return fit_results
 
 
+def write_data_grid_resampling(
+    path: Union[str, pathlib.Path],
+    fit_result_full: Tuple[Dict[str, Union[np.ndarray, float]]],
+    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]],
+):
+    """Function writes the resampling results to a .mat file."""
+
+    if isinstance(path, str):
+        path = pathlib.Path(path)
+
+    data_save = {"result100": fit_result_full, "results": fit_results_resampled}
+
+    sio.savemat(path, data_save)
+    print(f"Resampling results are saved in {path}")
+
+
 def read_data_grid_resampling(
     path: str,
 ) -> Tuple[
@@ -111,13 +127,13 @@ def read_data_grid_resampling(
 
     Returns:
     -------
-    results_full: Dict[str, Union[np.array, float]]
+    fit_result_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
             "loss": final cost value
-    results_resampled: List[Dict[str, Union[np.array, float]]]
+    fit_results_resampled: List[Dict[str, Union[np.array, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
@@ -127,10 +143,10 @@ def read_data_grid_resampling(
     """
     mat_contents = sio.loadmat(path, simplify_cells=True)
 
-    results_full = mat_contents["result100"]
-    results_resampled = mat_contents["results"]
+    fit_result_full = mat_contents["result100"]
+    fit_results_resampled = mat_contents["results"]
 
-    return results_full, results_resampled
+    return fit_result_full, fit_results_resampled
 
 
 def read_data_grid_resampling_trackit(
@@ -147,18 +163,18 @@ def read_data_grid_resampling_trackit(
 
     Returns:
     -------
-    results_full: Dict[str, Union[np.array, float]]
+    fit_result_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
-            "loss": None (since this is not provided by TrackIt resampling data)
-    results_resampled: List[Dict[str, Union[np.array, float]]]
+            "loss": np.NaN (since this is not provided by TrackIt resampling data)
+    fit_results_resampled: List[Dict[str, Union[np.array, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
-            "loss": None (since this is not provided by TrackIt resampling data)
+            "loss": np.NaN (since this is not provided by TrackIt resampling data)
         Every dictionary entry in the list contains the results of one data resample.
     """
     mat_contents = sio.loadmat(path, simplify_cells=True)
@@ -167,14 +183,14 @@ def read_data_grid_resampling_trackit(
     results_resampled_temp = mat_contents["results"]
 
     # Update the keys, so consistent with API requirements
-    results_full = {
+    fit_result_full = {
         "k": results_full_temp["k"],
         "s": results_full_temp["S"],
         "a": results_full_temp["a1"],
-        "loss": None,
+        "loss": np.NaN,
     }
 
-    results_resampled = list()
+    fit_results_resampled = list()
     for result_resampled_temp in results_resampled_temp:
 
         # Update the keys, so consistent with API requirements
@@ -182,9 +198,9 @@ def read_data_grid_resampling_trackit(
             "k": result_resampled_temp["k"],
             "s": result_resampled_temp["S"],
             "a": result_resampled_temp["a1"],
-            "loss": None,
+            "loss": np.NaN,
         }
 
-        results_resampled.append(result_resampled)
+        fit_results_resampled.append(result_resampled)
 
-    return results_full, results_resampled
+    return fit_result_full, fit_results_resampled
