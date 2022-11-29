@@ -231,8 +231,8 @@ def process_data(
             data_processed[t_tl_min]["time"] = data_processed[t_tl_min]["time"][1:]
             data_processed[t_tl_min]["value"] = data_processed[t_tl_min]["value"][1:]
             print(
-                "WARNING: The first data point was deleted! See documentation to ",
-                "understand why. This is correct behaviour, but important to be aware ",
+                "WARNING: The first data point was deleted! See documentation to",
+                "understand why. This is correct behaviour, but important to be aware",
                 "of.",
             )
 
