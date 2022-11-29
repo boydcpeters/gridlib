@@ -27,6 +27,11 @@ classifiers=[
     "Topic :: Scientific/Engineering :: Physics",
 ]
 
+exclude = [
+  { path = "examples", format = ["sdist", "wheel"] }
+]
+
+
 [tool.poetry.urls]
 "Homepage" = "https://github.com/boydcpeters/gridlib"
 "Bug Tracker" = "https://github.com/boydcpeters/gridlib/issues"
