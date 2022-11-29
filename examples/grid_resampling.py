@@ -17,8 +17,19 @@ parameters = {
 }
 
 # Perform the resampling
-fit_results_all, fit_results_resampled = gridlib.resampling_grid(
+fit_result_full, fit_results_resampled = gridlib.resampling_grid(
     parameters, data, n=10, perc=0.8
 )
 
-print(len(fit_results_all), len(fit_results_resampled))
+print(len(fit_result_full), len(fit_results_resampled))
+
+# Save the the resampled data
+path_save = "examples/data/example1_resampling.mat"
+gridlib.io.write_data_grid_resampling(path_save, fit_result_full, fit_results_resampled)
+
+# Load the resampled data
+fit_result_full_2, fit_results_resampled_2 = gridlib.io.read_data_grid_resampling(
+    path_save
+)
+
+print(len(fit_result_full_2), len(fit_results_resampled_2))
