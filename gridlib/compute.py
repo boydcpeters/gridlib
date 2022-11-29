@@ -133,6 +133,31 @@ def compute_survival_function(
     return time, value
 
 
+def threshold_survival_function(data, prob_min: float = 10 ** (-2)):
+    """Function thresholds survival function data.
+
+    #TODO improve docs
+
+    """
+
+    data_processed = dict()
+
+    for t_tl in data.keys():
+        time = data[t_tl]["time"]
+        value = data[t_tl]["value"]
+
+        # Normalize to probabilities
+        prob = value / value[0]
+
+        idx = prob > prob_min
+
+        data_processed[t_tl] = dict()
+        data_processed[t_tl]["time"] = time[idx]
+        data_processed[t_tl]["value"] = value[idx]
+
+    return data_processed
+
+
 def compute_multi_exp(
     k: np.ndarray, s: np.ndarray, a: float, time: np.ndarray
 ) -> np.ndarray:
