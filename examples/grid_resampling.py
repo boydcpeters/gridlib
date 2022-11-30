@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 import gridlib
 import gridlib.io
 import gridlib.plot
@@ -33,3 +36,9 @@ fit_result_full_2, fit_results_resampled_2 = gridlib.io.read_data_grid_resamplin
 )
 
 print(len(fit_result_full_2), len(fit_results_resampled_2))
+
+
+gridlib.plot.event_spectrum_heatmap(fit_result_full, fit_results_resampled)
+gridlib.plot.state_spectrum_heatmap(fit_result_full, fit_results_resampled)
+
+plt.show()
