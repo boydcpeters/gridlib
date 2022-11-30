@@ -142,8 +142,8 @@ def _base_heatmap(
 
 
 def event_spectrum_heatmap(
-    results_full: Dict[str, Union[np.array, float]],
-    results_resampled: List[Dict[str, Union[np.array, float]]],
+    fit_result_full: Dict[str, Union[np.array, float]],
+    fit_results_resampled: List[Dict[str, Union[np.array, float]]],
     scale: str = "log",
     threshold: float = 0.0001,
     xlim: Tuple[float, float] = None,
@@ -153,20 +153,20 @@ def event_spectrum_heatmap(
 ):
 
     # Full data results
-    k_full = results_full["k"]
-    s_full = results_full["s"]
+    k_full = fit_result_full["k"]
+    s_full = fit_result_full["s"]
 
     # Resampled data results
     # shape = (number of times data resampled, number of k values (dissociation rate value))
     k_resampled = np.zeros(
-        (len(results_resampled), results_full["k"].shape[0]), dtype=np.float64
+        (len(fit_results_resampled), fit_result_full["k"].shape[0]), dtype=np.float64
     )
     s_resampled = np.zeros(
-        (len(results_resampled), results_full["k"].shape[0]), dtype=np.float64
+        (len(fit_results_resampled), fit_result_full["k"].shape[0]), dtype=np.float64
     )
 
-    for i in range(len(results_resampled)):
-        results = results_resampled[i]
+    for i in range(len(fit_results_resampled)):
+        results = fit_results_resampled[i]
         k_resampled[i, :] = results["k"]
         s_resampled[i, :] = results["s"]
 
@@ -192,8 +192,8 @@ def event_spectrum_heatmap(
 
 
 def state_spectrum_heatmap(
-    results_full: Dict[str, Union[np.array, float]],
-    results_resampled: List[Dict[str, Union[np.array, float]]],
+    fit_result_full: Dict[str, Union[np.array, float]],
+    fit_results_resampled: List[Dict[str, Union[np.array, float]]],
     scale: str = "log",
     threshold: float = 0.0001,
     xlim: Tuple[float, float] = None,
@@ -203,22 +203,22 @@ def state_spectrum_heatmap(
 ):
 
     # Full data results
-    k_full = results_full["k"]
-    s_full = results_full["s"]
+    k_full = fit_result_full["k"]
+    s_full = fit_result_full["s"]
     state_full = (1 / k_full) * s_full
     state_full = state_full / np.sum(state_full)  # normalization
 
     # Resampled data results
     # shape = (number of times data resampled, number of k values (dissociation rate value))
     k_resampled = np.zeros(
-        (len(results_resampled), results_full["k"].shape[0]), dtype=np.float64
+        (len(fit_results_resampled), fit_result_full["k"].shape[0]), dtype=np.float64
     )
     s_resampled = np.zeros(
-        (len(results_resampled), results_full["k"].shape[0]), dtype=np.float64
+        (len(fit_results_resampled), fit_result_full["k"].shape[0]), dtype=np.float64
     )
 
-    for i in range(len(results_resampled)):
-        results = results_resampled[i]
+    for i in range(len(fit_results_resampled)):
+        results = fit_results_resampled[i]
         k_resampled[i, :] = results["k"]
         s_resampled[i, :] = results["s"]
 
