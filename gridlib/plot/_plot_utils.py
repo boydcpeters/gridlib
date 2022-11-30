@@ -74,7 +74,7 @@ def _gridlib_colors():
 def _gridlib_cm():
     "Colors for the default GRIDLib colors."
     # Colormap colors
-    [
+    c = [
         [255, 255, 255],
         [254, 254, 254],
         [253, 254, 254],
