@@ -43,6 +43,8 @@ exclude = [
 python = "<3.11,>=3.7"
 scipy = "^1.6.0"
 matplotlib = "^3.4.0"
+psutil = "^5.9.0"
+tqdm = "^4.63.0"
 # numpy will also be installed since it is a dependency of scipy and matplotlib
 
 [tool.poetry.group.dev.dependencies]
