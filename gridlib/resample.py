@@ -52,7 +52,6 @@ def _resample_data(data, perc: float = 0.8, seed=None):
         # an array with dtype integer.
         track_lifes = track_lifes.astype(np.int64)
 
-        # TODO: clean this up
         # Calculate the probability for every track life
         # ----------------------------------------------
         # First retrieve the true values and invert these, so the counts go from
