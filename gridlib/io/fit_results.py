@@ -184,10 +184,12 @@ def read_data_grid_resampling_trackit(
 
     # Update the keys, so consistent with API requirements
     fit_result_full = {
-        "k": fit_result_full_temp["k"],
-        "s": fit_result_full_temp["S"],
-        "a": fit_result_full_temp["a1"],
-        "loss": np.NaN,
+        "grid": {
+            "k": fit_result_full_temp["k"],
+            "s": fit_result_full_temp["S"],
+            "a": fit_result_full_temp["a1"],
+            "loss": np.NaN,
+        }
     }
 
     fit_results_resampled = list()
@@ -195,10 +197,12 @@ def read_data_grid_resampling_trackit(
 
         # Update the keys, so consistent with API requirements
         result_resampled = {
-            "k": fit_result_resampled_temp["k"],
-            "s": fit_result_resampled_temp["S"],
-            "a": fit_result_resampled_temp["a1"],
-            "loss": np.NaN,
+            "grid": {
+                "k": fit_result_resampled_temp["k"],
+                "s": fit_result_resampled_temp["S"],
+                "a": fit_result_resampled_temp["a1"],
+                "loss": np.NaN,
+            }
         }
 
         fit_results_resampled.append(result_resampled)
