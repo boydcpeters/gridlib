@@ -179,25 +179,25 @@ def read_data_grid_resampling_trackit(
     """
     mat_contents = sio.loadmat(path, simplify_cells=True)
 
-    results_full_temp = mat_contents["result100"]
-    results_resampled_temp = mat_contents["results"]
+    fit_result_full_temp = mat_contents["result100"]
+    fit_results_resampled_temp = mat_contents["results"]
 
     # Update the keys, so consistent with API requirements
     fit_result_full = {
-        "k": results_full_temp["k"],
-        "s": results_full_temp["S"],
-        "a": results_full_temp["a1"],
+        "k": fit_result_full_temp["k"],
+        "s": fit_result_full_temp["S"],
+        "a": fit_result_full_temp["a1"],
         "loss": np.NaN,
     }
 
     fit_results_resampled = list()
-    for result_resampled_temp in results_resampled_temp:
+    for fit_result_resampled_temp in fit_results_resampled_temp:
 
         # Update the keys, so consistent with API requirements
         result_resampled = {
-            "k": result_resampled_temp["k"],
-            "s": result_resampled_temp["S"],
-            "a": result_resampled_temp["a1"],
+            "k": fit_result_resampled_temp["k"],
+            "s": fit_result_resampled_temp["S"],
+            "a": fit_result_resampled_temp["a1"],
             "loss": np.NaN,
         }
 
