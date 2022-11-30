@@ -30,14 +30,14 @@ print(len(fit_result_full), len(fit_results_resampled))
 path_save = "examples/data/example1_resampling.mat"
 gridlib.io.write_data_grid_resampling(path_save, fit_result_full, fit_results_resampled)
 
-# Load the resampled data
+# Load the resampled data (this is just for a sanity check)
 fit_result_full_2, fit_results_resampled_2 = gridlib.io.read_data_grid_resampling(
     path_save
 )
 
 print(len(fit_result_full_2), len(fit_results_resampled_2))
 
-
+# Plot the resampled data
 gridlib.plot.event_spectrum_heatmap(fit_result_full, fit_results_resampled)
 gridlib.plot.state_spectrum_heatmap(fit_result_full, fit_results_resampled)
 
