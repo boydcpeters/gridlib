@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added function that plots the resampling results as a heatmap for both event and state spectrum.
 - Added multiprocessing option to the resampling.
 - Functions to read and write GRID resampling results in .mat files.
+- Examples to run GRIDLib.
 
 ### Fixed
 
@@ -26,13 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bug in the plotting of the survival function curves is now fixed. It wasn't in the previous version due to inconsistant api, which will be fixed in a later version.
+- Bug in the plotting of the survival function curves is now actually fixed, since it was not fixed in the previous version due to inconsistant api, which will be fixed in a later version.
 
 ## [0.3.5] - 2022-11-07
 
 ### Fixed
 
-- Bug in the plotting of the survival function curves is now fixed.
+- Thought that a bug in the plotting of survival functions was fixed. This is not the case.
 
 ## [0.3.4] - 2022-11-06
 
