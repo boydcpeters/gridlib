@@ -188,7 +188,12 @@ def event_spectrum(
     for key in fit_values.keys():
 
         k = fit_values[key]["k"]
-        s = fit_values[key]["s"]
+
+        # Lower the plotting weight value of the single-exponential
+        if key == "1-exp":
+            s = 0.2
+        else:
+            s = fit_values[key]["s"]
 
         key_to_k_and_weight[key] = dict()
         key_to_k_and_weight[key]["k"] = k
