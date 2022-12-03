@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.0] - 2022-12-03
 
+### Added
+
+- Added dependencies: psutil and tqdm. These are required for the resampling function.
+- Added gridlib default colormap.
+- Added function that plots the resampling results as a heatmap for both event and state spectrum.
+- Added multiprocessing option to the resampling.
+- Functions to read and write GRID resampling results in .mat files.
+
+### Fixed
+
+- Fixed a bug in the simulation function, which lead to incorrect delta t's between sample points.
+- Set the weight of the decay rate of the single-exponential in the event spectrum to 0.2 to improve visualization.
+
 ## [0.3.6] - 2022-11-07
 
 ### Fixed
