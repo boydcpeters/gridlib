@@ -191,7 +191,7 @@ def event_spectrum(
 
         # Lower the plotting weight value of the single-exponential
         if key == "1-exp":
-            s = 0.2
+            s = np.array([0.2], dtype=np.float64)
         else:
             s = fit_values[key]["s"]
 
