@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed markdownlint errors in CHANGELOG.md file.
+- Fixed bug in the event spectrum plotting.
 
 ## [0.4.0] - 2022-12-03
 
