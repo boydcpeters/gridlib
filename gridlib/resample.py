@@ -108,7 +108,7 @@ def resampling_grid(
     n: int = 10,
     perc: float = 0.8,
     multiprocess_flag: bool = True,
-    max_worker: int = None,
+    max_workers: int = None,
 ) -> Tuple[
     Dict[str, Union[np.ndarray, float]], List[Dict[str, Union[np.ndarray, float]]]
 ]:
