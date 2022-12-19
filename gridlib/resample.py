@@ -123,10 +123,7 @@ def resampling_grid(
     Parameters
     ----------
     parameters : dict
-        A dictionary containing the parameters to use for fitting the data. The dictionary should have keys
-        corresponding to the names of the parameters, and values that are dictionaries themselves, containing
-        "bounds" and "p0" keys. The "bounds" key should contain a tuple with the lower and upper bounds of
-        the parameter, and the "p0" key should contain a list with the initial guess for the parameter.
+        A dictionary containing the parameters to use for fitting the data. UPDATE THIS TEXT
     data : dict
         A dictionary containing survival time and value data. The dictionary should have keys corresponding to
         different time-to-event values, and values that are dictionaries themselves, containing "time" and
