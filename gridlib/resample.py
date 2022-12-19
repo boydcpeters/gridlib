@@ -108,33 +108,51 @@ def resampling_grid(
     n: int = 10,
     perc: float = 0.8,
     multiprocess_flag: bool = True,
+    max_worker: int = None,
 ) -> Tuple[
     Dict[str, Union[np.ndarray, float]], List[Dict[str, Union[np.ndarray, float]]]
 ]:
-    """_summary_
+    """
+    Fit survival time and value data with a given set of parameters, using a resampling procedure.
+
+    This function performs a resampling procedure to fit survival time and value data with a given set
+    of parameters. It first fits the full dataset with the parameters, then resamples the data and fits
+    the resampled datasets with the parameters. The function returns the fit results for the full dataset
+    and the resampled datasets.
 
     Parameters
     ----------
-    parameters : _type_
-        _description_
-    data : _type_
-        _description_
+    parameters : dict
+        A dictionary containing the parameters to use for fitting the data. The dictionary should have keys
+        corresponding to the names of the parameters, and values that are dictionaries themselves, containing
+        "bounds" and "p0" keys. The "bounds" key should contain a tuple with the lower and upper bounds of
+        the parameter, and the "p0" key should contain a list with the initial guess for the parameter.
+    data : dict
+        A dictionary containing survival time and value data. The dictionary should have keys corresponding to
+        different time-to-event values, and values that are dictionaries themselves, containing "time" and
+        "value" keys. The "time" and "value" keys should contain arrays of equal length with the
+        corresponding data.
     n : int, optional
-        Number of times the data should be resampled and should be fitted with GRID, by default 10.
+        The number of resampled datasets to create. Defaults to 10.
     perc : float, optional
-        The percentage of the data that should be resampled, by default 0.8
-    seed : {None, int, array_like[ints], SeedSequence, BitGenerator, Generator}, optional
-        A seed to initialize the BitGenerator. If None, then fresh, unpredictable
-        entropy will be pulled from the OS. If an int or array_like[ints] is passed,
-        then it will be passed to SeedSequence to derive the initial BitGenerator state.
-        One may also pass in a SeedSequence instance. Additionally, when passed a
-        BitGenerator, it will be wrapped by Generator. (THIS IS FROM NUMPY DOC, MAYBE CHANGE THIS)
+        The percentage of data points to include in each resampled dataset. Defaults to 0.8.
+    multiprocess_flag : bool, optional
+        A flag indicating whether to use parallel processing when fitting the resampled datasets.
+        Defaults to True.
+    max_workers: int, optional
+        The maximum number of logical cores to use for the multiprocessing. This number
+        is only used if multiprocess_flag is set to True and the value has to be between
+        1 and the maximum # logical cores - 1. If value is set to None, than it will
+        be set to # logical cores - 1. Default is None.
+
     Returns
     -------
-    _type_
-        _description_
+    tuple
+        A tuple containing the fit results for the full dataset, and a list of fit results for the
+        resampled datasets. The fit results are dictionaries themselves, with keys corresponding to
+        the names of the fitted parameters, and values that are either arrays or floats, depending on the
+        parameter.
     """
-
     print("----------------------------------")
     print("Fitting of all data starts now...")
     # Determine the full GRID fit results based on all the data.
@@ -143,10 +161,20 @@ def resampling_grid(
     print("----------------------------------")
     print("Start resampling...")
 
-    max_workers = 1
     if multiprocess_flag:
         # The number of logical cores minus 1, for the background tasks
-        max_workers = psutil.cpu_count(logical=False) - 1
+        max_workers_limit = psutil.cpu_count(logical=False) - 1
+
+        if max_workers is None:
+            max_workers = max_workers_limit
+        elif max_workers < 1:
+            raise ValueError("max_workers should be >=1")
+        elif max_workers > max_workers_limit:
+            max_workers = max_workers_limit
+            print(
+                f"WARNING: max_workers is set to {max_workers}, since initial value",
+                "was set higher than the allowed number of workers.",
+            )
 
     # Determine the GRID fit results for the resampled data
     fit_results_resampled = []
