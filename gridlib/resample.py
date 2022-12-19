@@ -12,21 +12,27 @@ from . import compute
 from . import data_utils
 from . import fit
 
-# TODO: update docstring
+
 def _resample_data(data, perc: float = 0.8):
-    """_summary_
+    """
+    Resample the data for a given dataset, with a given percentage of data points.
 
     Parameters
     ----------
-    data : _type_
-        _description_
+    data : dict
+        A dictionary containing survival time and value data. The dictionary should have keys
+        corresponding to different time-to-event values, and values that are dictionaries themselves,
+        containing "time" and "value" keys. The "time" and "value" keys should contain arrays of
+        equal length with the corresponding data.
     perc : float, optional
-        _description_, by default 0.8
+        The percentage of data points to include in the resampled dataset. Defaults to 0.8.
 
     Returns
     -------
-    _type_
-        _description_
+    dict
+        A dictionary containing the resampled time and value data. The structure of the returned
+        dictionary is the same as the input data dictionary, with the exception that only the
+        specified percentage of data points will be included.
     """
     rng = np.random.default_rng()
 
