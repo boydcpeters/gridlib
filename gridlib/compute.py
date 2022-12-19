@@ -134,10 +134,26 @@ def compute_survival_function(
 
 
 def threshold_survival_function(data, prob_min: float = 10 ** (-2)):
-    """Function thresholds survival function data.
+    """
+    Calculate the survival function for a given dataset, with a probability threshold.
 
-    #TODO improve docs
+    Parameters
+    ----------
+    data : dict
+        A dictionary containing survival time and value data. The dictionary should have keys
+        corresponding to different time-to-event values, and values that are dictionaries themselves,
+        containing "time" and "value" keys. The "time" and "value" keys should contain arrays of
+        equal length with the corresponding data.
+    prob_min : float, optional
+        The minimum probability threshold. Only data with probabilities greater than this threshold
+        will be included in the returned dataset. Defaults to 10 ** (-2).
 
+    Returns
+    -------
+    dict
+        A dictionary containing the processed time and value data. The structure of the returned
+        dictionary is the same as the input data dictionary, with the exception that only the data
+        that meets the probability threshold will be included.
     """
 
     data_processed = dict()
