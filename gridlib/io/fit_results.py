@@ -2,7 +2,7 @@
 Module with functions to read and write fit results.
 """
 import pathlib
-from typing import Dict, Tuple, Union, List
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
 import scipy.io as sio
@@ -16,9 +16,29 @@ import scipy.io as sio
 
 def write_fit_results(
     path: Union[str, pathlib.Path],
-    fit_results: Tuple[Dict[str, Union[np.ndarray, float]]],
-):
-    """Function writes fit results to a .mat file."""
+    fit_results: Dict[str, Dict[str, Union[np.ndarray, float]]],
+) -> None:
+    """
+    Write fit results to a .mat file.
+
+    Parameters
+    ----------
+    path : Union[str, pathlib.Path]
+        The file path to write the fit results to.
+    fit_results : Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary containing the fit results, where the keys are the names of the fit results and the values are
+        dictionaries. The dictionaries have keys 'grid' or f"{n}-exp", where n is the number of exponentials, and
+        values that are either numpy arrays or floats.
+
+    Returns
+    -------
+
+    Examples
+    --------
+    >>> fit_results = {'grid': {'k': np.array([1.0e-03, ..., 10.0]), 's': np.array([1.000e-03, ..., 2.500e-03]), 'a': 0.022, 'loss': 0.0047}, '1-exp': {'k': array([0.02563639]), 's': array([1.]), 'a': 0.08514936433699753, 'loss': 1.2825570522448484}}
+    >>> write_fit_results("/path/to/file.mat", fit_results)
+    Fit results are saved in "/path/to/file.mat".
+    """
 
     if isinstance(path, str):
         path = pathlib.Path(path)
@@ -30,7 +50,26 @@ def write_fit_results(
 def read_fit_results(
     path: Union[str, pathlib.Path]
 ) -> Dict[str, Dict[str, Union[np.ndarray, float]]]:
-    """Function reads the fit results from a .mat file."""
+    """
+    Function reads the fit results from a .mat file.
+
+    Parameters
+    ----------
+    path : Union[str, pathlib.Path]
+        The file path to read the fit results from.
+
+    Returns
+    -------
+    fit_results : Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary containing the fit results, where the keys are the names of the fit results and the values are
+        dictionaries. The dictionaries have keys 'grid' or f"{n}-exp", where n is the number of exponentials, and
+        values that are either numpy arrays or floats.
+
+    Examples
+    --------
+    >>> fit_results = read_fit_results("/path/to/file.mat")
+    >>> {'grid': {'k': np.array([1.0e-03, ..., 10.0]), 's': np.array([1.000e-03, ..., 2.500e-03]), 'a': 0.022, 'loss': 0.0047}, '1-exp': {'k': array([0.02563639]), 's': array([1.]), 'a': 0.08514936433699753, 'loss': 1.2825570522448484}}
+    """
 
     mat_contents = sio.loadmat(path, simplify_cells=True)
 
@@ -120,12 +159,12 @@ def read_data_grid_resampling(
 ]:
     """Function loads and parses the resampling data from GRID.
 
-    Parameters:
+    Parameters
     ----------
     path: str
         Path to the file with all the resampling data
 
-    Returns:
+    Returns
     -------
     fit_result_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
