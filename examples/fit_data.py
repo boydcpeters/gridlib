@@ -86,3 +86,6 @@ parameters_grid_fixed = {
     "fit_a": True,
     "a_fixed": None,
 }
+
+# Perform GRID fitting
+fit_results_grid_fixed = gridlib.fit_grid(parameters_grid_fixed, data)
