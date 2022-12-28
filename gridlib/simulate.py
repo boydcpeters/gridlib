@@ -113,8 +113,9 @@ def tl_simulation(
     t_tl_all: Sequence[Union[float, str]],
     N: Union[int, Sequence[int]] = 10000,
 ):
-    """Function simulates the dissociation of molecules and calculates the resulting
-    survival time distribution.
+    """Function simulates the dissociation and photobleaching of molecules and
+    computes the resulting survival time distribution. The simulations can be performed
+    for multiple time-lapse conditions.
 
     Parameters
     ----------
@@ -149,6 +150,30 @@ def tl_simulation(
                 },
                 ...
             }
+
+    Raises
+    ------
+    ValueError
+        If N is a list and does not have the same length as t_tl_all list.
+
+    Examples
+    --------
+    >>> data_sim = tl_simulation(np.array([0.005, 0.48, 5.2]),
+    ... np.array([0.05, 0.25, 0.7]), 0.03, 0.05, [0.05, 0.2, 1.0, 5.0], N=10000)
+
+    The above function call simulates fluorescence survival time distributions of a
+    type of molecule with three different dissociation rates, and a photobleaching
+    rate of 0.03 s^-1. The integration time is set to 50 ms and the time-lapse times
+    are set to 50 ms, 200 ms, 1 s and 5 s. For each survival time distribution,
+    10000 observed molecules are simulated.
+
+    >>> data_sim = tl_simulation(np.array([0.005, 0.48, 5.2]),
+    ... np.array([0.05, 0.25, 0.7]), 0.03, 0.05, [0.05, 0.2, 1.0, 5.0],
+    ... N=[10000, 5000, 2500, 1500])
+
+    Same as the first example, but now there is a different number of molecules
+    simulated for every time-lapse condition.
+    )
     """
     # Dictionary with all the simulated data points
     data = dict()
