@@ -6,6 +6,8 @@ Welcome to GRIDLib's documentation!
 
    readme
    installation
+   basics
+   routines
    usage
    modules
    changelog
