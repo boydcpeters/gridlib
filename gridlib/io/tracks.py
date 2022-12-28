@@ -1,9 +1,9 @@
 """
 Module with functions to read and write tracking data
 """
-import pathlib
-from typing import Tuple, Union, List
 import csv
+import pathlib
+from typing import List, Tuple, Union
 
 # TODO: update this to make it more general
 

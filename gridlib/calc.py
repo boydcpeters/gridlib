@@ -5,6 +5,7 @@ calculations.
 from typing import Dict, Tuple, Union
 
 import numpy as np
+
 from . import data_utils
 
 # TODO: Make lsq_obj_multi_exp() (with n being the number of exponents in the wrapper function)

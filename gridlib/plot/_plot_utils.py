@@ -3,8 +3,8 @@ Module with utility functions required for the plotting.
 """
 from typing import Dict
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.colors import ListedColormap
 
 from .. import data_utils

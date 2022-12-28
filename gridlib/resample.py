@@ -1,16 +1,14 @@
-from typing import Tuple, Dict, Union, List
+import concurrent.futures
 import math
 import time
-import concurrent.futures
 from concurrent.futures import ProcessPoolExecutor
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
 import psutil
 from tqdm import tqdm
 
-from . import compute
-from . import data_utils
-from . import fit
+from . import compute, data_utils, fit
 
 
 def _resample_data(data, perc: float = 0.8):

@@ -1,13 +1,13 @@
 """
 Module with functions to plot event heatmap and state heatmap.
 """
-from typing import Tuple, Union, List, Dict
+from typing import Dict, List, Tuple, Union
 
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+import numpy as np
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from . import _plot_utils
