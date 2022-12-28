@@ -26,17 +26,23 @@ def write_fit_results(
     path : Union[str, pathlib.Path]
         The file path to write the fit results to.
     fit_results : Dict[str, Dict[str, Union[np.ndarray, float]]]
-        A dictionary containing the fit results, where the keys are the names of the fit results and the values are
-        dictionaries. The dictionaries have keys 'grid' or f"{n}-exp", where n is the number of exponentials, and
-        values that are either numpy arrays or floats.
+        A dictionary containing the fit results, where the keys are the names of the fit
+        results and the values are dictionaries. The dictionaries have keys 'grid' or
+        f"{n}-exp", where n is the number of exponentials, and values that are either
+        numpy arrays or floats.
 
     Returns
     -------
+    None
 
     Examples
     --------
-    >>> fit_results = {'grid': {'k': np.array([1.0e-03, ..., 10.0]), 's': np.array([1.000e-03, ..., 2.500e-03]), 'a': 0.022, 'loss': 0.0047}, '1-exp': {'k': array([0.02563639]), 's': array([1.]), 'a': 0.08514936433699753, 'loss': 1.2825570522448484}}
+    >>> fit_results = {'grid': {'k': np.array([1.0e-03, ..., 10.0]),
+    ... 's': np.array([1.000e-03, ..., 2.500e-03]), 'a': 0.022, 'loss': 0.0047},
+    ... '1-exp': {'k': array([0.02563639]), 's': array([1.]), 'a': 0.08514936433699753,
+    ... 'loss': 1.2825570522448484}}
     >>> write_fit_results("/path/to/file.mat", fit_results)
+
     Fit results are saved in "/path/to/file.mat".
     """
 
