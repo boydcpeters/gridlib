@@ -4,6 +4,7 @@
 Installation
 ============
 
+It is currently only possible to install gridlib through PyPI with the help of pip.
 
 Stable release
 --------------
