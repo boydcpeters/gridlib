@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docstrings for multiple functions.
 - Option to set the maximum number of workers for the resampling_grid function.
 - Updated the README.md file.
+- Documentation for readthedocs.
 
 ## [0.4.1] - 2022-12-03
 
