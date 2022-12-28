@@ -104,9 +104,9 @@ def format_(c, check=False):
 
 
 @task()
-def flake8(c):
+def flakeheaven(c):
     # type: (Context) -> None
-    """Run flake8."""
+    """Run flakeheaven."""
     _run(c, f"poetry run flakeheaven lint {PYTHON_TARGETS_STR}")
 
 
@@ -121,7 +121,7 @@ def safety(c):
     )
 
 
-@task(pre=[flake8, safety, call(format_, check=True)])
+@task(pre=[flakeheaven, safety, call(format_, check=True)])
 def lint(c):
     # type: (Context) -> None
     """Run all linting."""
