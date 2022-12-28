@@ -14,7 +14,7 @@ def approx_nested_dict_data(
         Survival function data for time-lapse conditions with the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },

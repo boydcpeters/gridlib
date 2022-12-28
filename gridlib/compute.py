@@ -267,7 +267,7 @@ def compute_multi_exp_for_data(
         Survival function data for time-lapse conditions with the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },
@@ -281,7 +281,7 @@ def compute_multi_exp_for_data(
         for every time-lapse conditions in data. The object has the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 }
@@ -330,7 +330,7 @@ def compute_grid_curves_for_data(
         Survival function data for time-lapse conditions with the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },
@@ -343,7 +343,7 @@ def compute_grid_curves_for_data(
         Survival function data computed with the provided GRID fit values for every
         time-lapse conditions in data. The object has the following data structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },

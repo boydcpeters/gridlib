@@ -42,7 +42,7 @@ def tl_simulation_single(
         Survival function data for specified time-lapse condition with the following
         data structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 }
@@ -143,7 +143,7 @@ def tl_simulation(
         Survival function data for specified time-lapse conditions with the following
         data structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },

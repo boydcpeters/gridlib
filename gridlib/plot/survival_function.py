@@ -189,7 +189,7 @@ def data_vs_multi_exp(
     figsize: Tuple[float, float] = (6, 4),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
-):
+) -> Tuple:
     """Function plots the survival function of the true data and the multi-exponential curves.
 
     Parameters
@@ -197,7 +197,7 @@ def data_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
-            "t_tl": {
+            f"{t_tl}": {
                 "time": np.ndarray with all the time values,
                 "value": np.ndarray with all the survival function values corresponding to the
                     respective time value
@@ -207,7 +207,7 @@ def data_vs_multi_exp(
         Survival function data for time-lapse conditions with the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 },
@@ -280,7 +280,7 @@ def data_vs_grid(
         Survival function data for every time-lapse condition with the following data
         structure:
             {
-                "t_tl": {
+                f"{t_tl}": {
                     "time": np.ndarray with the time points,
                     "value": np.ndarray with the survival function values,
                 }

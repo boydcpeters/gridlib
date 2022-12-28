@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the README.md file.
 - Documentation for readthedocs.
 
+### Fixed
+
+- Fixed a lot of docstrings where the structure was incorrectly given.
+
 ## [0.4.1] - 2022-12-03
 
 ### Fixed

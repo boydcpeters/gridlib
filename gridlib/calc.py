@@ -161,7 +161,7 @@ def lsqobj_grid(
     data : Dict[str, Dict[str, np.ndarray]]
         Data of the survival function from real data with the following data structure:
         {
-            "t_tl": {
+            f"{t_tl}": {
                 "time": np.ndarray with the time points,
                 "value": np.ndarray with the survival function values,
             }

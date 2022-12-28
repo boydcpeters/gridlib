@@ -21,7 +21,7 @@ def write_data_survival_function(
         Data of the survival function to write to a csv file. The dictionary structure
         is as follows:
         {
-            "t_tl": {
+            f"{t_tl}": {
                 "time": np.ndarray with the time points,
                 "value": np.ndarray with the survival function values,
             }
@@ -104,7 +104,7 @@ def read_data_survival_function(
         Data of the survival function to write to a csv file. The dictionary structure
         is as follows:
         {
-            "t_tl": {
+            f"{t_tl}": {
                 "time": np.ndarray with the time points,
                 "value": np.ndarray with the survival function values,
             }
