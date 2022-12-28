@@ -22,7 +22,7 @@ def _base_heatmap(
     threshold: float = 0.0001,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     add_legend: bool = True,
 ):
     """weights can be either event weights or state weights, arrays should be flattened"""
@@ -149,7 +149,7 @@ def event_spectrum_heatmap(
     threshold: float = 0.0001,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     add_legend: bool = True,
 ):
 
@@ -202,7 +202,7 @@ def state_spectrum_heatmap(
     threshold: float = 0.0001,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     add_legend: bool = True,
 ):
 

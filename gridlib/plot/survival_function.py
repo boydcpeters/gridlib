@@ -18,7 +18,7 @@ def _base_data_multiple(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
 ):
@@ -35,7 +35,7 @@ def _base_data_multiple(
     ylim : Tuple[float, float], optional
         _description_, by default None
     figsize : Tuple[float, float], optional
-        _description_, by default (8, 5)
+        _description_, by default (6, 4)
     kwargs_plot : Dict, optional
         _description_, by default None
     kwargs_text : Dict, optional
@@ -136,7 +136,7 @@ def data_multiple(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
 ):
@@ -186,7 +186,7 @@ def data_vs_multi_exp(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
 ):
@@ -268,7 +268,7 @@ def data_vs_grid(
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
-    figsize: Tuple[float, float] = (8, 5),
+    figsize: Tuple[float, float] = (6, 4),
     kwargs_plot: Dict = None,
     kwargs_text: Dict = None,
 ):
