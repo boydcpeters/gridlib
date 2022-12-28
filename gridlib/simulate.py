@@ -17,8 +17,10 @@ def tl_simulation_single(
     t_tl: float,
     N: int = 10000,
 ):
-    """Function simulates the dissociation of molecules and calculates the resulting
-    survival time distribution.
+    """Function simulates the fluorescence survival time distributions of a molecule for
+    one time-lapse conditions. Dissociation and photobleaching of molecules with
+    user-defined parameters is simulated and the resulting fluorescence survival time
+    distribution is calculated.
 
     Parameters
     ----------
@@ -47,19 +49,42 @@ def tl_simulation_single(
                     "value": np.ndarray with the survival function values,
                 }
             }
+
+    Raises
+    ------
+    ValueError
+        If kb, t_int, t_tl or N is incorrectly set. They should all atleast be larger
+        than 0.
+
+    Examples
+    --------
+    >>> data_sim = tl_simulation_single(np.array([0.005, 0.48, 5.2]),
+    ... np.array([0.05, 0.25, 0.7]), 0.03, 0.05, 0.5, N=10000)
+
+    The above function call simulates fluorescence survival time distributions of a
+    type of molecule with three different dissociation rates, and a photobleaching
+    rate of 0.03 s^-1. The integration time is set to 50 ms and the time-lapse time
+    is set to 500 ms. For the survival time distribution 10000 observed molecules are
+    simulated.
     """
 
     if not math.isclose(1.0, np.sum(s)):
         raise ValueError(f"Sum of amplitudes should be equal to 1, but is {np.sum(s)}.")
 
     if kb <= 0:
-        raise ValueError("'kb' argument should be larger than zero")
+        raise ValueError(
+            "Photobleaching rate ('kb' argument) should be larger than zero"
+        )
     if t_int <= 0:
-        raise ValueError("'t_int' argument should be larger than zero")
+        raise ValueError(
+            "Integration time ('t_int' argument) should be larger than zero"
+        )
     if t_tl <= 0:
-        raise ValueError("'t_tl' argument should be larger than zero")
+        raise ValueError("Time-lapse time ('t_tl' argument) should be larger than zero")
     if N <= 0:
-        raise ValueError("'N' argument should be larger than zero.")
+        raise ValueError(
+            "Number of simulated molecules ('N' argument) should be larger than zero."
+        )
 
     p = s / np.sum(s)
 
@@ -113,9 +138,11 @@ def tl_simulation(
     t_tl_all: Sequence[Union[float, str]],
     N: Union[int, Sequence[int]] = 10000,
 ):
-    """Function simulates the dissociation and photobleaching of molecules and
-    computes the resulting survival time distribution. The simulations can be performed
-    for multiple time-lapse conditions.
+    """Function simulates the fluorescence survival time distributions of a molecule for
+    different time-lapse conditions. Dissociation and photobleaching of molecules with
+    user-defined parameters is simulated and the resulting fluorescence survival time
+    distribution is calculated. This is done for all the different user-specified
+    time-lapse conditions.
 
     Parameters
     ----------
