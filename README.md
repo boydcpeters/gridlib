@@ -16,7 +16,7 @@
 
 </div>
 
-Python package to perform GRID analysis on fluorescence survival time distributions.
+Python package to perform GRID analysis on fluorescence survival time distributions. Genuine Rate IDentification (GRID) analysis can be used to infer the dissociation rates of molecules from fluorescence survival time distributions retrieved with single-molecule tracking [[1]](#1). This package is based on work and research performed during my Bachelor end project in the [Ihor Smal lab](https://smal.ws) under the supervision of Ihor Smal and Maarten W. Paul.
 
 * GitHub repo: <https://github.com/boydcpeters/gridlib.git>
 * Documentation: <https://gridlib.readthedocs.io>
@@ -24,15 +24,31 @@ Python package to perform GRID analysis on fluorescence survival time distributi
 
 ## Features
 
-* TODO
+* Simulate fluorescence survival time distributions with user-defined parameters.
+* Perform GRID analysis on fluorescence survival time distributions.
+* Plot analysis results with matplotlib.
+* Perfrom GRID resampling on fluorescence survival time distributions.
+* Plot resampling results with matplotlib.
+* Load and save fluorescence survival time distributions and analysis and resampling results.
 
 ## Quickstart
 
-TODO
+Install the package:
+
+```bash
+pip install gridlib
+```
+
+There are a number of example scripts to perform some analyses in the `examples` folder.
 
 ## References
 
 The GRID fitting procedure implemented in this package is based on the following paper:
+
+<a id="1">[1]</a>
+Reisser, M., Hettich, J., Kuhn, T., Popp, A.P., Große-Berkenbusch, A. and Gebhardt, J.C.M. (2020). Inferring quantity and qualities of superimposed reaction rates from single molecule survival time distributions. Scientific Reports, 10(1). doi:10.1038/s41598-020-58634-y.
+
+BibTex entry for the paper:
 
 ```latex
 @article{reisser2020inferring,
