@@ -4,7 +4,9 @@
 Installation
 ============
 
-It is currently only possible to install gridlib through PyPI with the help of pip.
+It is currently only possible to install gridlib through PyPI with the help of pip. We advise you to install
+gridlib in a virtual environment so the dependencies will not interfere with the packages in your main Python
+environment.
 
 Stable release
 --------------
