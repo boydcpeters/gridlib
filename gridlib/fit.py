@@ -454,7 +454,72 @@ def fit_multi_exp(parameters, data, disp: bool = True):
 
 
 def fit_all(parameters, data, disp: bool = True):
-    """Function to fit both with GRID and with multi-exponentials."""
+    """
+    Function performs GRID fitting procedure and fits one or more n-exponentials to the
+    provided data and returns the fit results.
+
+    Parameters
+    ----------
+    parameters : Dict
+        Dictionary containing all the parameters needed to perform the GRID fitting
+        procedure and perform the multi-exponential fitting.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
+
+    disp : bool, optional
+        If True, then messages and final minimization results are printed out, otherwise
+        the there are no messages printed, by default True.
+
+    Returns
+    -------
+    fit_results: Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, 1.09698580e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, 0.00000000e+00, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                },
+                "1-exp": {
+                    "k": array([0.02563639]),
+                    "s": array([1.]),
+                    "a": 0.08514936433699753,
+                    "loss": 1.2825570522448484
+                },
+                "2-exp": {
+                    "k": array([0.03715506, 1.7248619]),
+                    "s": array([0.17296989, 0.82703011]),
+                    "a": 0.011938572088673213,
+                    "loss": 0.2868809590425386
+                },
+                "3-exp": {
+                    "k": array([0.0137423 , 0.27889073, 3.6560956]),
+                    "s": array([0.06850312, 0.23560175, 0.69589513]),
+                    "a": 0.011125323730424764,
+                    "loss": 0.0379697542735324
+                },
+            }
+
+    Raises
+    ------
+    ValueError
+        If an incorrect parameter value is provided or a value is missing.
+    """
 
     parameters_grid, parameters_n_exp = data_utils.split_parameters(parameters)
 
