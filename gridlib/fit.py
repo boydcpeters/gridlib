@@ -3,7 +3,7 @@ Module for GRID and multi-exponential fitting.
 """
 
 import math
-from typing import Tuple
+from typing import Tuple, Dict, Union
 
 import numpy as np
 import scipy.optimize
@@ -15,21 +15,21 @@ import gridlib.data_utils as data_utils
 def create_fixed_grid(
     k_min: float, k_max: float, n: int, scale: str
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Function creates the fixed grid based on the provided parameters.
+    """
+    Function creates the fixed grid based on the provided parameters.
 
     Parameters
     ----------
-    k_min: float
+    k_min : float
         Minimum decay rate value.
-    k_max: float
+    k_max : float
         Maximum decay rate value.
-    n: int
+    n : int
         Number of positions in the grid.
-    scale: str
-        The scale to be applied for the creation of the grid.
-        Options:
-            "log": logarithmic scale
-            "linear": linear scale
+    scale : {"log", "linear"}
+        The scale to be applied for the creation of the grid. "log" will create a fixed
+        grid with a logarithmic scale, while "linear" will create a fixed grid with a
+        linear scale.
 
     Returns
     -------
@@ -56,7 +56,78 @@ def con_eq(x0: np.ndarray):
     return np.sum(s) - 1
 
 
-def fit_grid(parameters, data, disp: bool = True):
+def fit_grid(
+    parameters: Dict,
+    data: Dict[str, Dict[str, np.ndarray]],
+    disp: bool = True,
+) -> Dict[str, Dict[str, Union[np.ndarray, float]]]:
+    """
+    Functions performs the complete GRID fitting procedure on the provided survival time
+    distribution data and returns the fit results.
+
+    Parameters
+    ----------
+    parameters : Dict
+        Dictionary containing all the parameters needed to perform the GRID fitting.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
+
+    disp : bool, optional
+        If True, then messages and final minimization results are printed out, otherwise
+        the there are no messages printed, by default True.
+
+    Returns
+    -------
+    fit_results: Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, 1.09698580e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, 0.00000000e+00, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                    },
+            }
+
+    Raises
+    ------
+    ValueError
+        If an incorrect parameter value is provided or a value is missing.
+
+    Examples
+    --------
+    Assume that the survival function is loaded into the variable `data`, so::
+
+        data = ...
+        parameters = {
+            "k_min": 10 ** (-3),
+            "k_max": 10**1,
+            "N": 200,
+            "scale": "log",
+            "reg_weight": 0.01,
+            "fit_a": True,
+            "a_fixed": None,
+        }
+        fit_results = fit_grid(parameters, data, disp=True)
+
+    """
+
+    if disp:
+        print("Start GRID fitting...")
 
     data_processed = data_utils.process_data(data)
 
@@ -123,12 +194,69 @@ def fit_grid(parameters, data, disp: bool = True):
 
     fit_results = {"grid": grid_results}
 
+    if disp:
+        print("GRID fitting finished.")
+
     return fit_results
 
 
-def _fit_n_exp(parameters, data, n: int = 2):
-    """Function to fit an n-exponential to the provided data and returns the fitted
-    parameter results."""
+def _fit_n_exp(
+    parameters: Dict,
+    data: Dict[str, Dict[str, np.ndarray]],
+    n: int = 2,
+    disp: bool = True,
+):
+    """
+    Function to fit an n-exponential to the provided data and returns the fit results.
+
+    Parameters
+    ----------
+    parameters : Dict
+        Dictionary containing all the parameters needed to perform the multi-exponential
+        fitting.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
+    n : int, optional
+        Sets the number of exponentials to fit to the data, by default 2.
+    disp : bool, optional
+        If True, then messages and final minimization results are printed out, otherwise
+        the there are no messages printed, by default True.
+
+    Returns
+    -------
+    fit_results: Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results.
+        For example::
+
+            {
+                "2-exp": {
+                    "k": array([0.03715506, 1.7248619 ]),
+                    "s": array([0.17296989, 0.82703011]),
+                    "a": 0.011938572088673213,
+                    "loss": 0.2868809590425386
+                    },
+            }
+
+    Raises
+    ------
+    ValueError
+        If an incorrect parameter value is provided or a value is missing.
+    """
+
+    if disp:
+        print(f"Start {n}-exp fitting...")
 
     data_processed = data_utils.process_data(data)
 
@@ -185,7 +313,8 @@ def _fit_n_exp(parameters, data, n: int = 2):
 
     bnds = (lb, ub)
 
-    print(f"Total fits: {x0_k.shape[0]}")
+    if disp:
+        print(f"Total fits: {x0_k.shape[0]}")
 
     fit_results_all = []
 
@@ -232,10 +361,13 @@ def _fit_n_exp(parameters, data, n: int = 2):
     # number of decay rates
     fit_results = {f"{n}-exp": multi_exp_results}
 
+    if disp:
+        print(f"Finished {n}-exp fitting.")
+
     return fit_results
 
 
-def fit_multi_exp(parameters, data):
+def fit_multi_exp(parameters, data, disp: bool = True):
 
     if not data_utils.isvalid_parameters_n_exp(parameters):
         raise ValueError("parameters does not contain a valid value")
@@ -245,23 +377,23 @@ def fit_multi_exp(parameters, data):
     fit_results = dict()
 
     if isinstance(n, int):
-        fit_result_n_exp = _fit_n_exp(parameters, data, n=n)
+        fit_result_n_exp = _fit_n_exp(parameters, data, n=n, disp=disp)
         fit_results = {**fit_results, **fit_result_n_exp}
     else:
         for n_value in n:
-            fit_result_n_exp = _fit_n_exp(parameters, data, n=n_value)
+            fit_result_n_exp = _fit_n_exp(parameters, data, n=n_value, disp=disp)
             fit_results = {**fit_results, **fit_result_n_exp}
 
     return fit_results
 
 
-def fit_all(parameters, data):
+def fit_all(parameters, data, disp: bool = True):
     """Function to fit both with GRID and with multi-exponentials."""
 
     parameters_grid, parameters_n_exp = data_utils.split_parameters(parameters)
 
-    fit_results_grid = fit_grid(parameters_grid, data)
-    fit_results_multi_exp = fit_multi_exp(parameters_n_exp, data)
+    fit_results_grid = fit_grid(parameters_grid, data, disp=disp)
+    fit_results_multi_exp = fit_multi_exp(parameters_n_exp, data, disp=disp)
 
     fit_results = {**fit_results_grid, **fit_results_multi_exp}
 
