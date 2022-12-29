@@ -2,7 +2,7 @@
 Module with function to sample from a provided GRID spectrum or multi-exponential.
 """
 import math
-from typing import Sequence, Union
+from typing import Sequence, Union, Dict
 
 import numpy as np
 
@@ -16,7 +16,7 @@ def tl_simulation_single(
     t_int: float,
     t_tl: float,
     N: int = 10000,
-):
+) -> Dict[str, Dict[str, np.ndarray]]:
     """Function simulates the fluorescence survival time distributions of a molecule for
     one time-lapse conditions. Dissociation and photobleaching of molecules with
     user-defined parameters is simulated and the resulting fluorescence survival time
@@ -138,7 +138,7 @@ def tl_simulation(
     t_int: float,
     t_tl_all: Sequence[Union[float, str]],
     N: Union[int, Sequence[int]] = 10000,
-):
+) -> Dict[str, Dict[str, np.ndarray]]:
     """Function simulates the fluorescence survival time distributions of a molecule for
     different time-lapse conditions. Dissociation and photobleaching of molecules with
     user-defined parameters is simulated and the resulting fluorescence survival time
