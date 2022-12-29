@@ -201,12 +201,12 @@ def read_data_grid_resampling_trackit(
 ]:
     """Function loads and parses the resampling data from GRID.
 
-    Parameters:
+    Parameters
     ----------
     path: str
         Path to the file with all the resampling data
 
-    Returns:
+    Returns
     -------
     fit_result_full: Dict[str, Union[np.array, float]]
         Dictionary with the following key-value pairs:
