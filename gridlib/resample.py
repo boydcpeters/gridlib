@@ -11,26 +11,39 @@ from tqdm import tqdm
 from . import compute, data_utils, fit
 
 
-def _resample_data(data, perc: float = 0.8):
+def _resample_data(
+    data: Dict[str, Dict[str, np.ndarray]], perc: float = 0.8
+) -> Dict[str, Dict[str, np.ndarray]]:
     """
-    Resample the data for a given dataset, with a given percentage of data points.
+    Function resamples from the provided dataset with a given percentage of data points.
 
     Parameters
     ----------
-    data : dict
-        A dictionary containing survival time and value data. The dictionary should have keys
-        corresponding to different time-to-event values, and values that are dictionaries themselves,
-        containing "time" and "value" keys. The "time" and "value" keys should contain arrays of
-        equal length with the corresponding data.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
+
     perc : float, optional
-        The percentage of data points to include in the resampled dataset. Defaults to 0.8.
+        The percentage of data points to include in the resampled dataset. Defaults to
+        0.8.
 
     Returns
     -------
-    dict
-        A dictionary containing the resampled time and value data. The structure of the returned
-        dictionary is the same as the input data dictionary, with the exception that only the
-        specified percentage of data points will be included.
+    Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the resampled survival functions. The structure is the same
+        as the structure of the input data, just with resampled data values.
     """
     rng = np.random.default_rng()
 
@@ -92,23 +105,56 @@ def _resample_data(data, perc: float = 0.8):
 
 
 def _resample_and_fit(parameters, data, perc: float = 0.8):
-    """Function that can be easily run with multiprocessing."""
+    """
+    Function resamples from the provided dataset with a given percentage of data points
+    and then perform GRID and/or multi-exponential fitting on the resampled data and
+    returns the results.
+
+    Parameters
+    ----------
+    parameters: Dict
+
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
+
+    perc : float, optional
+        The percentage of data points to include in the resampled dataset. Defaults to
+        0.8.
+
+    Returns
+    -------
+    fit_results_temp: Dict[str, Dict[str, Union[np.ndarray, float]]]
+        #TODO: write text
+    """
     data_resampled = _resample_data(data, perc=perc)
 
-    fit_results_temp = fit.fit_grid(parameters, data_resampled, disp=False)
+    fit_results_temp = fit.fit_all(parameters, data_resampled, disp=False)
 
     return fit_results_temp
 
 
-def resampling_grid(
-    parameters,
-    data,
+def fit_all_resampling(
+    parameters: Dict,
+    data: Dict[str, Dict[str, np.ndarray]],
     n: int = 10,
     perc: float = 0.8,
     multiprocess_flag: bool = True,
     max_workers: int = None,
 ) -> Tuple[
-    Dict[str, Union[np.ndarray, float]], List[Dict[str, Union[np.ndarray, float]]]
+    Dict[str, Dict[str, Union[np.ndarray, float]]],
+    List[Dict[str, Union[np.ndarray, float]]],
 ]:
     """
     Fit survival time and value data with a given set of parameters, using a resampling procedure.
@@ -180,7 +226,7 @@ def resampling_grid(
 
         data_resampled = _resample_data(data, perc=perc)
 
-        fit_results_temp = fit.fit_grid(parameters, data_resampled, disp=False)
+        fit_results_temp = fit.fit_all(parameters, data_resampled, disp=False)
 
         fit_results_resampled.append(fit_results_temp)
 
