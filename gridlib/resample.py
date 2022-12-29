@@ -136,7 +136,36 @@ def _resample_and_fit(parameters, data, perc: float = 0.8):
     Returns
     -------
     fit_results_temp: Dict[str, Dict[str, Union[np.ndarray, float]]]
-        #TODO: write text
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, 1.09698580e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, 0.00000000e+00, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                },
+                "1-exp": {
+                    "k": array([0.02563639]),
+                    "s": array([1.]),
+                    "a": 0.08514936433699753,
+                    "loss": 1.2825570522448484
+                },
+                "2-exp": {
+                    "k": array([0.03715506, 1.7248619]),
+                    "s": array([0.17296989, 0.82703011]),
+                    "a": 0.011938572088673213,
+                    "loss": 0.2868809590425386
+                },
+                "3-exp": {
+                    "k": array([0.0137423 , 0.27889073, 3.6560956]),
+                    "s": array([0.06850312, 0.23560175, 0.69589513]),
+                    "a": 0.011125323730424764,
+                    "loss": 0.0379697542735324
+                },
+            }
+
     """
     data_resampled = _resample_data(data, perc=perc)
 
