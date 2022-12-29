@@ -41,13 +41,14 @@ def tl_simulation_single(
     Returns
     -------
     Dict[str, Dict[str, np.ndarray]]
-        Survival function data for specified time-lapse condition with the following
-        data structure:
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
             {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
-                }
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                },
             }
 
     Raises
@@ -168,14 +169,18 @@ def tl_simulation(
     Returns
     -------
     Dict[str, Dict[str, np.ndarray]]
-        Survival function data for specified time-lapse conditions with the following
-        data structure:
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
             {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
                 },
-                ...
+                "1s": {
+                    "time": array([1., 2., 3., 4., ...])
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
             }
 
     Raises
