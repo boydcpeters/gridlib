@@ -27,6 +27,12 @@ parameters_grid = {
 # Perform GRID fitting
 fit_results_grid = gridlib.fit_grid(parameters_grid, data)
 
+print(fit_results_grid)
+
+peaks = gridlib.find_peaks(fit_results_grid)
+
+print(peaks)
+
 
 # Perform multi-exponential fitting
 # Set the parameters
