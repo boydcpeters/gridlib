@@ -48,6 +48,6 @@ four simulated survival time distributions for the time-lapse conditions 50 ms, 
     ,,107.8,1.0,,,,
 
 An example dataset is provided in the `examples` folder on the GitHub repository,
-see `examples/data/example1.csv`_.
+see `gridlib/examples/data/example1.csv`_.
 
-.. _examples/data/example1.csv: https://github.com/boydcpeters/gridlib/blob/master/examples/data/example1.csv
+.. _gridlib/examples/data/example1.csv: https://github.com/boydcpeters/gridlib/blob/master/examples/data/example1.csv
