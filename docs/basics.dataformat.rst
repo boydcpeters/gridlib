@@ -3,8 +3,11 @@
 Data format
 ===========
 All the fitting procedures require the survival time distributions. This package
-provides functions to be able to read in this data. The data should be formatted in the
-following way without the header in a `.csv` file.:
+provides functions to be able to read in this data. The data should be stored into a
+`.csv` file with two columns for every survival time distribution. The first of these
+two columns should contain the time points and the column next to it should contain
+either the number of molecules still surviving at that point. The structure should be as
+follows without the header in a `.csv` file.:
 
 .. code-block:: text
 
@@ -16,7 +19,9 @@ following way without the header in a `.csv` file.:
     ...
 
 If the survival time distribution value is zero at a certain time point than the
-position should be empty. An example of how such a .csv file should like:
+position should be empty. An example of how such a .csv file would look like for
+four simulated survival time distributions for the time-lapse conditions 50 ms, 200 ms,
+1 s, and 5 s, all starting with 10000 molecules:
 
 .. code-block:: text
 
@@ -42,5 +47,7 @@ position should be empty. An example of how such a .csv file should like:
     ,,107.6,1.0,,,,
     ,,107.8,1.0,,,,
 
-An example dataset is also provided in the `examples` folder on the GitHub repository,
-see `examples/data/example1.csv`.
+An example dataset is provided in the `examples` folder on the GitHub repository,
+see `examples/data/example1.csv`_.
+
+.. _examples/data/example1.csv: https://github.com/boydcpeters/gridlib/blob/master/examples/data/example1.csv
