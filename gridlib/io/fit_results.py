@@ -172,13 +172,13 @@ def read_data_grid_resampling(
 
     Returns
     -------
-    fit_result_full: Dict[str, Union[np.array, float]]
+    fit_result_full: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
             "loss": final cost value
-    fit_results_resampled: List[Dict[str, Union[np.array, float]]]
+    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
@@ -208,13 +208,13 @@ def read_data_grid_resampling_trackit(
 
     Returns
     -------
-    fit_result_full: Dict[str, Union[np.array, float]]
+    fit_result_full: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
             "a": bleaching number (a = kb * t_int)
             "loss": np.NaN (since this is not provided by TrackIt resampling data)
-    fit_results_resampled: List[Dict[str, Union[np.array, float]]]
+    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]]
         List of dictionaries with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights

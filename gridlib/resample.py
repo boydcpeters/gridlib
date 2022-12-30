@@ -141,8 +141,8 @@ def _resample_and_fit(parameters, data, perc: float = 0.8):
 
             {
                 "grid": {
-                    "k": array([1.00000000e-03, 1.04737090e-03, 1.09698580e-03, ...]),
-                    "s": array([3.85818587e-17, 6.42847878e-18, 0.00000000e+00, ...]),
+                    "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, ...]),
                     "a": 0.010564217803906671,
                     "loss": 0.004705659331508584,
                 },
@@ -174,6 +174,7 @@ def _resample_and_fit(parameters, data, perc: float = 0.8):
     return fit_results_temp
 
 
+# TODO: update docstring
 def fit_all_resampling(
     parameters: Dict,
     data: Dict[str, Dict[str, np.ndarray]],

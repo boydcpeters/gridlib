@@ -204,8 +204,8 @@ def _base_heatmap(
 
 
 def event_spectrum_heatmap(
-    fit_result_full: Dict[str, Union[np.ndarray, float]],
-    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]],
+    fit_result_full: Dict[str, Dict[str, Union[np.ndarray, float]]],
+    fit_results_resampled: List[Dict[str, Dict[str, Union[np.ndarray, float]]]],
     fit_key: str = "grid",
     scale: str = "log",
     threshold: float = 10e-6,
@@ -221,12 +221,39 @@ def event_spectrum_heatmap(
 
     Parameters
     ----------
-    fit_result_full : Dict[str, Union[np.ndarray, float]]
-        _description_
-    fit_results_resampled : List[Dict[str, Union[np.ndarray, float]]]
-        _description_
+    fit_result_full : Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results
+        for the full data.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                },
+            }
+
+    fit_results_resampled : List[Dict[str, Dict[str, Union[np.ndarray, float]]]]
+        A list consisting of dictionaries mapping keys (fitting procedure) to the
+        corresponding fit results for the resampled data.
+        For example::
+
+            [
+                {
+                    "grid": {
+                        "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                        "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                        "a": 0.010564217803906671,
+                        "loss": 0.004705659331508584,
+                    },
+                },
+                ...
+            ]
     fit_key : str, optional
-        _description_, by default "grid"
+        The mapping key (fitting procedure) used to plot the resampling results from,
+        by default "grid".
     scale : {"log", "linear"}, optional
         The scale of the x-axis. If scale is set to "log" than the x-axis will be
         logarithmic. If scale is set to "linear", the x-axis will be linear, by default

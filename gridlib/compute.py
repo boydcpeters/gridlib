@@ -246,14 +246,14 @@ def compute_grid_curve(
 
 
 def compute_multi_exp_for_data(
-    fit_values_multi_exp: Dict[str, Union[np.array, float]],
+    fit_values_multi_exp: Dict[str, Union[np.ndarray, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
     """Function computes the multi-exponential curves given the required parameters.
 
     Parameters
     ----------
-    fit_values_multi_exp: Dict[str, Union[np.array, float]]
+    fit_values_multi_exp: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
@@ -310,7 +310,7 @@ def compute_multi_exp_for_data(
 
 
 def compute_grid_curves_for_data(
-    fit_values_grid: Dict[str, Union[np.array, float]],
+    fit_values_grid: Dict[str, Union[np.ndarray, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
     """Function computes the GRID curves for the given fit_values_grid parameters.
@@ -319,7 +319,7 @@ def compute_grid_curves_for_data(
 
     Parameters
     ----------
-    fit_values_grid: Dict[str, Union[np.array, float]]
+    fit_values_grid: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
             "k": np.ndarray with the dissociation rates
             "s": np.ndarray with the corresponding weights
