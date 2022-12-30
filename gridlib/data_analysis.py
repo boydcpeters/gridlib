@@ -53,7 +53,7 @@ def find_peaks(
     Raises
     ------
     ValueError
-        If no GRID results are provided in the fit results.
+        If no GRID fit results are provided in the fit results.
     """
 
     if "grid" not in fit_results:
