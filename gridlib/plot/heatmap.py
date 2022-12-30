@@ -69,11 +69,11 @@ def _base_heatmap(
 
     Returns
     -------
-    fig: :py:meth:`matplotlib.figure.Figure`
+    fig: :py:class:`matplotlib.figure.Figure`
         The top level container for all the plot elements.
 
-    ax: :py:meth:`matplotlib.axes.Axes` or array of Axes
-        A single :py:meth:`matplotlib.axes.Axes` object.
+    ax: :py:class:`matplotlib.axes.Axes`
+        A single :py:class:`matplotlib.axes.Axes` object.
 
     Raises
     ------
@@ -204,16 +204,58 @@ def _base_heatmap(
 
 
 def event_spectrum_heatmap(
-    fit_result_full: Dict[str, Union[np.array, float]],
-    fit_results_resampled: List[Dict[str, Union[np.array, float]]],
+    fit_result_full: Dict[str, Union[np.ndarray, float]],
+    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]],
     fit_key: str = "grid",
     scale: str = "log",
     threshold: float = 10e-6,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (6, 4),
+    cm_max: int = 20,
+    cm_step: int = 2,
     add_legend: bool = True,
 ):
+    """
+    _summary_
+
+    Parameters
+    ----------
+    fit_result_full : Dict[str, Union[np.ndarray, float]]
+        _description_
+    fit_results_resampled : List[Dict[str, Union[np.ndarray, float]]]
+        _description_
+    fit_key : str, optional
+        _description_, by default "grid"
+    scale : {"log", "linear"}, optional
+        The scale of the x-axis. If scale is set to "log" than the x-axis will be
+        logarithmic. If scale is set to "linear", the x-axis will be linear, by default
+        "log".
+    threshold : float, optional
+        Minimum weight value that is shown, by default 10e-6.
+    xlim : Tuple[float, float], optional
+        A tuple setting the x-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple setting the y-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    figsize : Tuple[float, float], optional
+        Width, height of the figure in inches, default is (6, 4).
+    cm_max : int, optional
+        Maximum value of the colormap/colorbar, by default 20.
+    cm_step : int, optional
+        Step size of the colormap, by default 2.
+    add_legend : bool, optional
+        If True, a legend is added to the figure, by default True.
+
+    Returns
+    -------
+    fig: :py:class:`matplotlib.figure.Figure`
+        The top level container for all the plot elements.
+
+    ax: :py:class:`matplotlib.axes.Axes`
+        A single :py:class:`matplotlib.axes.Axes` object.
+    """
 
     # Full data results
     k_full = fit_result_full[fit_key]["k"]
@@ -246,6 +288,8 @@ def event_spectrum_heatmap(
         xlim=xlim,
         ylim=ylim,
         figsize=figsize,
+        cm_max=cm_max,
+        cm_step=cm_step,
         add_legend=add_legend,
     )
 
@@ -257,14 +301,16 @@ def event_spectrum_heatmap(
 
 
 def state_spectrum_heatmap(
-    fit_result_full: Dict[str, Union[np.array, float]],
-    fit_results_resampled: List[Dict[str, Union[np.array, float]]],
+    fit_result_full: Dict[str, Union[np.ndarray, float]],
+    fit_results_resampled: List[Dict[str, Union[np.ndarray, float]]],
     fit_key: str = "grid",
     scale: str = "log",
     threshold: float = 10e-6,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (6, 4),
+    cm_max: int = 20,
+    cm_step: int = 2,
     add_legend: bool = True,
 ):
 
@@ -306,6 +352,8 @@ def state_spectrum_heatmap(
         xlim=xlim,
         ylim=ylim,
         figsize=figsize,
+        cm_max=cm_max,
+        cm_step=cm_step,
         add_legend=add_legend,
     )
 
