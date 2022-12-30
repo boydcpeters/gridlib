@@ -13,5 +13,5 @@ you to go over all the pages from top to bottom.
 
     basics.introduction
     basics.dataformat
-    basics.analysis
+    basics.fit
 
