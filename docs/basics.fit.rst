@@ -12,7 +12,7 @@ Import libraries
 Before we can do anything, we need to import the required modules.
 
 .. code-block:: python
-    
+
     import numpy as np
     import matplotlib.pyplot as plt
     import gridlib
@@ -81,7 +81,7 @@ need to be provided:
   * ``"log"``: logarithmic scale
   * ``"linear"``: linear scale
 * ``"reg_weight"``: (float) regularization weight, advised is **0.01**.
-* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if it is set to ``False`` than a photobleaching number needs to be provided.
+* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if set to ``False`` than a photobleaching number needs to be provided.
 * ``"a_fixed"``: (float) photobleaching number used during fitting if ``parameters["fit_a"] = False``
 
 For example:
@@ -103,7 +103,7 @@ required:
 
 * ``"k"``: (np.ndarray) array with the decay-rates
 * ``"reg_weight"``: (float) regularization weight, advised is **0.01**.
-* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if it is set to ``False`` than a photobleaching number needs to be provided.
+* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if set to ``False`` than a photobleaching number needs to be provided.
 * ``"a_fixed"``: (float) photobleaching number used during fitting if ``parameters["fit_a"] = False``
 
 For example:
