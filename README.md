@@ -39,7 +39,8 @@ Install the package:
 pip install gridlib
 ```
 
-There are a number of example scripts to perform some analyses in the `examples` folder.
+There are a number of example scripts to perform some analyses in the `examples` folder with more
+extensive explanations provided in the [documentation](https://gridlib.readthedocs.io/).
 
 ## References
 
@@ -52,16 +53,33 @@ BibTex entry for the paper:
 
 ```latex
 @article{reisser2020inferring,
-  title={Inferring quantity and qualities of superimposed reaction rates from single molecule survival time distributions},
-  author={Reisser, Matthias and Hettich, Johannes and Kuhn, Timo and Popp, Achim P and Gro{\ss}e-Berkenbusch, Andreas and Gebhardt, J Christof M},
-  journal={Scientific reports},
-  volume={10},
-  number={1},
-  pages={1--13},
-  year={2020},
-  publisher={Nature Publishing Group}
+  title = {Inferring quantity and qualities of superimposed reaction rates from single molecule survival time distributions},
+  author = {Reisser, Matthias and Hettich, Johannes and Kuhn, Timo and Popp, Achim P and Gro{\ss}e-Berkenbusch, Andreas and Gebhardt, J Christof M},
+  journal = {Scientific reports},
+  volume = {10},
+  number = {1},
+  pages = {1--13},
+  year = {2020},
+  publisher = {Nature Publishing Group}
 }
 ```
+
+## Citing GRIDLib
+
+To cite this repository:
+
+```latex
+@article{gridlib2022github,
+  title = {GRIDLib: Python package to perform GRID analysis on fluorescence survival time distributions.},
+  author = {Boyd Peters},
+  url = {https://github.com/boydcpeters/gridlib},
+  version = {0.4.1},
+  year={2022},
+}
+```
+
+In the above BibTex entry, the version number is the current version number and the year corresponds to the
+project's open-source release.
 
 ## Credits
 
