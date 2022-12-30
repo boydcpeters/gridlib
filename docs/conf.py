@@ -74,3 +74,10 @@ html_theme = "sphinx_rtd_theme"  # "alabaster"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+
+# Add links to modules and objects in external documentation
+intersphinx_mapping = {
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+}
