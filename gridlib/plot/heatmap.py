@@ -51,7 +51,7 @@ def _base_heatmap(
         logarithmic. If scale is set to "linear", the x-axis will be linear, by default
         "log".
     threshold : float, optional
-        Minimum weight value that is shown, by default 10e-6.
+        Minimum weight value that is shown for full data spectrum, by default 10e-6.
     xlim : Tuple[float, float], optional
         A tuple setting the x-axis limits. If the value is set to None, there are no
         limits, by default None.
@@ -217,7 +217,8 @@ def event_spectrum_heatmap(
     add_legend: bool = True,
 ):
     """
-    _summary_
+    Function plots the event spectrum heatmap for resampled data and plots the full
+    data points as circles.
 
     Parameters
     ----------
@@ -259,7 +260,7 @@ def event_spectrum_heatmap(
         logarithmic. If scale is set to "linear", the x-axis will be linear, by default
         "log".
     threshold : float, optional
-        Minimum weight value that is shown, by default 10e-6.
+        Minimum weight value that is shown for full data spectrum, by default 10e-6.
     xlim : Tuple[float, float], optional
         A tuple setting the x-axis limits. If the value is set to None, there are no
         limits, by default None.
@@ -340,6 +341,74 @@ def state_spectrum_heatmap(
     cm_step: int = 2,
     add_legend: bool = True,
 ):
+    """
+    Function plots the state spectrum heatmap for resampled data and plots the full
+    data points as circles.
+
+    Parameters
+    ----------
+    fit_result_full : Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results
+        for the full data.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                },
+            }
+
+    fit_results_resampled : List[Dict[str, Dict[str, Union[np.ndarray, float]]]]
+        A list consisting of dictionaries mapping keys (fitting procedure) to the
+        corresponding fit results for the resampled data.
+        For example::
+
+            [
+                {
+                    "grid": {
+                        "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                        "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                        "a": 0.010564217803906671,
+                        "loss": 0.004705659331508584,
+                    },
+                },
+                ...
+            ]
+    fit_key : str, optional
+        The mapping key (fitting procedure) used to plot the resampling results from,
+        by default "grid".
+    scale : {"log", "linear"}, optional
+        The scale of the x-axis. If scale is set to "log" than the x-axis will be
+        logarithmic. If scale is set to "linear", the x-axis will be linear, by default
+        "log".
+    threshold : float, optional
+        Minimum weight value that is shown for full data spectrum, by default 10e-6.
+    xlim : Tuple[float, float], optional
+        A tuple setting the x-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple setting the y-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    figsize : Tuple[float, float], optional
+        Width, height of the figure in inches, default is (6, 4).
+    cm_max : int, optional
+        Maximum value of the colormap/colorbar, by default 20.
+    cm_step : int, optional
+        Step size of the colormap, by default 2.
+    add_legend : bool, optional
+        If True, a legend is added to the figure, by default True.
+
+    Returns
+    -------
+    fig: :py:class:`matplotlib.figure.Figure`
+        The top level container for all the plot elements.
+
+    ax: :py:class:`matplotlib.axes.Axes`
+        A single :py:class:`matplotlib.axes.Axes` object.
+    """
 
     # Full data results
     k_full = fit_result_full[fit_key]["k"]
