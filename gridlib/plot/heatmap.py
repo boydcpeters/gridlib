@@ -12,6 +12,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from . import _plot_utils
 
+"""weights can be either event weights or state weights, arrays should be flattened"""
+
 
 def _base_heatmap(
     k_full: np.ndarray,
@@ -19,13 +21,72 @@ def _base_heatmap(
     k_resampled: np.ndarray,
     weight_resampled: np.ndarray,
     scale: str = "log",
-    threshold: float = 0.0001,
+    threshold: float = 10e-6,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (6, 4),
+    cm_max: int = 20,
+    cm_step: int = 2,
     add_legend: bool = True,
 ):
-    """weights can be either event weights or state weights, arrays should be flattened"""
+    """
+    Function creates the base heatmap plot required for resampling results plotting.
+
+    Parameters
+    ----------
+    k_full : np.ndarray
+        Decay-rates for the full fit results.
+    weight_full : np.ndarray
+        Amplitudes for the corresponding decay-rates. The amplitudes can be either
+        event weights or state weights.
+    k_resampled : np.ndarray
+        Decay-rates for the resampled fit results. The array should be flattened, so
+        it is a 1D array.
+    weight_resampled : np.ndarray
+        Amplitudes for the corresponding resampled decay-rates. The amplitudes can be
+        either event weights or state weights. The array should be flattened, so
+        it is a 1D array.
+    scale : {"log", "linear"}, optional
+        The scale of the x-axis. If scale is set to "log" than the x-axis will be
+        logarithmic. If scale is set to "linear", the x-axis will be linear, by default
+        "log".
+    threshold : float, optional
+        Minimum weight value that is shown, by default 10e-6.
+    xlim : Tuple[float, float], optional
+        A tuple setting the x-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    ylim : Tuple[float, float], optional
+        A tuple setting the y-axis limits. If the value is set to None, there are no
+        limits, by default None.
+    figsize : Tuple[float, float], optional
+        Width, height of the figure in inches, default is (6, 4).
+    cm_max : int, optional
+        Maximum value of the colormap/colorbar, by default 20.
+    cm_step : int, optional
+        Step size of the colormap, by default 2.
+    add_legend : bool, optional
+        If True, a legend is added to the figure, by default True.
+
+    Returns
+    -------
+    fig: :py:meth:`matplotlib.figure.Figure`
+        The top level container for all the plot elements.
+
+    ax: :py:meth:`matplotlib.axes.Axes` or array of Axes
+        A single :py:meth:`matplotlib.axes.Axes` object.
+
+    Raises
+    ------
+    ValueError
+        cm_max value should be an integer.
+    ValueError
+        cm_step value should be an integer.
+    """
+
+    if not isinstance(cm_max, int):
+        raise ValueError("cm_max value should be an integer.")
+    if not isinstance(cm_step, int):
+        raise ValueError("cm_step value should be an integer.")
 
     def _fmt_ticks(x, int_max):
         """Function to format the integers at the side of the colormap"""
@@ -116,10 +177,11 @@ def _base_heatmap(
 
     # Create the side colorbar
     # 0 - 20 integers, steps of 2
-    int_max_cm = 20
-    ticks = np.arange(0, int_max_cm + 0.1, step=2)
+    # cm_max = 20
+    # cm_step = 2
+    ticks = np.arange(0, cm_max + 0.1, step=cm_step)
     cbar = fig.colorbar(sm, cax=cax, ticks=ticks)
-    cbar.ax.set_yticklabels([_fmt_ticks(i, int_max_cm) for i in ticks])
+    cbar.ax.set_yticklabels([_fmt_ticks(i, cm_max) for i in ticks])
 
     if add_legend:
         # Legend
@@ -146,7 +208,7 @@ def event_spectrum_heatmap(
     fit_results_resampled: List[Dict[str, Union[np.array, float]]],
     fit_key: str = "grid",
     scale: str = "log",
-    threshold: float = 0.0001,
+    threshold: float = 10e-6,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (6, 4),
@@ -199,7 +261,7 @@ def state_spectrum_heatmap(
     fit_results_resampled: List[Dict[str, Union[np.array, float]]],
     fit_key: str = "grid",
     scale: str = "log",
-    threshold: float = 0.0001,
+    threshold: float = 10e-6,
     xlim: Tuple[float, float] = None,
     ylim: Tuple[float, float] = None,
     figsize: Tuple[float, float] = (6, 4),
