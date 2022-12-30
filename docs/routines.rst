@@ -12,4 +12,5 @@ of the routine. For every routine it will be mentioned how GRIDLib needs to be i
    :maxdepth: 2
 
    routines.io
+   routines.plot
    routines.simulate
