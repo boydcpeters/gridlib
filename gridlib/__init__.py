@@ -10,3 +10,4 @@ from .data_utils import *
 from .fit import *
 from .resample import *
 from .simulate import *
+from .data_analysis import *
