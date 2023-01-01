@@ -2,16 +2,16 @@
 
 Data format
 ===========
-All the fitting procedures require the survival time distributions. This package
-provides functions to be able to read in this data. The data should be stored into a
-`.csv` file with two columns for every survival time distribution. The first of these
-two columns should contain the time points and the column next to it should contain
-either the number of molecules still surviving at that point. The structure should be as
-follows without the header in a `.csv` file.:
+The data analysed during either GRID analysis or multi-exponential analysis are
+:term:`survival time distributions<Survival time distribution>`, which should be stored
+in a specific way for this package to be able to read in this data. The data should be
+stored into a ``.csv`` file with two columns for every survival time distribution. The
+first of these two columns should contain the time points and the column next to it
+should contain the number of molecules still surviving at that point. So the structure
+should be as follows in a ``.csv`` file.:
 
 .. code-block:: text
 
-    Δt_1,value,Δt_2,value,... (header)
     Δt_1,f(Δt_1),Δt_2,f(Δt_2),...
     2Δt_1,f(2Δt_1),2Δt_2,f(2Δt_2),...
     3Δt_1,f(3Δt_1),3Δt_2,f(3Δt_2),...
@@ -19,9 +19,9 @@ follows without the header in a `.csv` file.:
     ...
 
 If the survival time distribution value is zero at a certain time point than the
-position should be empty. An example of how such a .csv file would look like for
-four simulated survival time distributions for the time-lapse conditions 50 ms, 200 ms,
-1 s, and 5 s, all starting with 10000 molecules:
+position for the time and the value should be empty. An example of how a ``.csv``file
+would look like for four simulated survival time distributions for the time-lapse
+conditions 50 ms, 200 ms, 1 s, and 5 s, all starting with 10000 molecules:
 
 .. code-block:: text
 
@@ -47,7 +47,10 @@ four simulated survival time distributions for the time-lapse conditions 50 ms, 
     ,,107.6,1.0,,,,
     ,,107.8,1.0,,,,
 
-An example dataset is provided in the `examples` folder on the GitHub repository,
-see `gridlib/examples/data/example1.csv`_.
 
-.. _gridlib/examples/data/example1.csv: https://github.com/boydcpeters/gridlib/blob/master/examples/data/example1.csv
+So here it can be seen that for the first survival time distribution only 8512 molecules
+are still surviving after 0.1 seconds.
+
+An example dataset is provided at ``gridlib/examples/data/example1.csv`` on the GitHub
+repository, `go to example dataset
+<https://github.com/boydcpeters/gridlib/blob/master/examples/data/example1.csv>`_.
