@@ -134,7 +134,11 @@ values need to be provided:
   ``parameters["fit_a"] = False``
 
 
-For example:
+For example, if we would want to perform GRID fitting with the decay-rates:
+:math:`0.005\,\mathrm{s}^{-1}`, :math:`0.03\,\mathrm{s}^{-1}`,
+:math:`0.25\,\mathrm{s}^{-1}`, :math:`1.4\,\mathrm{s}^{-1}`, and
+:math:`6.1\,\mathrm{s}^{-1}` and we would want the photobleaching number to be fitted
+as well then the parameter dictionary would look as follows:
 
 .. code-block:: python
 
