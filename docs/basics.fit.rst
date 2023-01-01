@@ -85,22 +85,22 @@ perform the GRID fitting procedure *(original GRID paper method)*.
 For option 1, the GRID fitting procedure as described in the paper, the following
 parameter values need to be provided:
 
-* ``"k_min"``: (float) minimum decay-rate
-* ``"k_max"``: (float) maximum decay-rate
-* ``"N"``: (int) number of decay-rates of which the grid should consist
-* ``"scale"``: (str) scale of the fixed grid, two options:
+* ``"k_min"``: (*float*) minimum decay-rate
+* ``"k_max"``: (*float*) maximum decay-rate
+* ``"N"``: (*int*) number of decay-rates of which the grid should consist
+* ``"scale"``: (*str*) scale of the fixed grid, two options:
 
   * ``"log"``: logarithmic scale
   * ``"linear"``: linear scale
 
-* ``"reg_weight"``: (float) regularization weight, advised value is **0.01** *(as in the original paper)*
-* ``"fit_a"``: (bool) determines whether the :term:`photobleaching number` should be fitted:
+* ``"reg_weight"``: (*float*) regularization weight, advised value is **0.01** *(as in the original paper)*
+* ``"fit_a"``: (*bool*) determines whether the :term:`photobleaching number` should be fitted:
 
   * ``True``: photobleaching number is varied during the fitting
   * ``False``: photobleaching number needs to be provided and is fixed during fitting
 
-* ``"a_fixed"``: (float) :term:`photobleaching number` used during fitting if
-  ``parameters["fit_a"] = False``
+* ``"a_fixed"``: (*float*) :term:`photobleaching number` used during fitting if
+  ``parameters["fit_a"] = False`` otherwise set to ``None``
 
 For example, if we would want to create a grid of :math:`200` decay-rates with a minimum
 decay-rate of :math:`10^{-3}\,\mathrm{s}^{-1}`, and a maximum decay-rate of
@@ -123,15 +123,15 @@ For option 2, when the user provides a set of decay-rates, the grid does not hav
 created anymore so the number of parameters is lower. For option 2, the following parameter
 values need to be provided:
 
-* ``"k"``: (np.ndarray) array with the decay-rates
-* ``"reg_weight"``: (float) regularization weight, advised value is **0.01** *(as in the original paper)*
-* ``"fit_a"``: (bool) determines whether the :term:`photobleaching number` should be fitted:
+* ``"k"``: (*np.ndarray*) array with the decay-rates
+* ``"reg_weight"``: (*float*) regularization weight, advised value is **0.01** *(as in the original paper)*
+* ``"fit_a"``: (*bool*) determines whether the :term:`photobleaching number` should be fitted:
 
   * ``True``: photobleaching number is varied during the fitting
   * ``False``: photobleaching number needs to be provided and is fixed during fitting
 
-* ``"a_fixed"``: (float) :term:`photobleaching number` used during fitting if
-  ``parameters["fit_a"] = False``
+* ``"a_fixed"``: (*float*) :term:`photobleaching number` used during fitting if
+  ``parameters["fit_a"] = False`` otherwise set to ``None``
 
 
 For example, if we would want to perform GRID fitting with the decay-rates:
