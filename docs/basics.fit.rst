@@ -1,15 +1,14 @@
-.. _basics.fit:
-
 Data fitting
 ============
 
-Currently, it is possible to perform GRID fitting and multi-exponential fitting.
-
+Here it is explained how the GRID fitting and multi-exponential fitting can be performed
+with GRIDLib. However, to access all the required fitting routines the required packages
+need to be imported.
 
 Import libraries
 ----------------
 
-Before we can do anything, we need to import the required modules.
+Import the required packages as follows:
 
 .. code-block:: python
 
@@ -19,8 +18,9 @@ Before we can do anything, we need to import the required modules.
     import gridlib.io
     import gridlib.plot
 
-We can see that we need the :py:mod:`gridlib`, :py:mod:`gridlib.io`, and the
-:py:mod:`gridlib.plot` module.
+We see that we shorten ``numpy`` to ``np`` and ``matplotlib.pyplot`` to ``plt`` since
+this is convention. However, :py:mod:`gridlib`, :py:mod:`gridlib.io`, and
+:py:mod:`gridlib.plot` are not shortened.
 
 
 Data loading
@@ -31,10 +31,11 @@ Once the packages are imported, the data can be loaded in:
 .. code-block:: python
 
     # Load the data
-    data = gridlib.io.read_data_survival_function("/path/to/file.csv")
+    >>> data = gridlib.io.read_data_survival_function("/path/to/file.csv")
 
-The survival time distributions are now stored in the ``data`` variable with the following
-structure:
+The survival time distributions are now stored in the ``data`` variable. If we would use
+the example data provided in ``gridlib/examples/data/example1.csv``, which had four
+simulated survival time distributions than we get the following structure:
 
 .. code-block:: python
 
@@ -57,39 +58,59 @@ structure:
         },
     }
 
+Now that the data is loaded in, you can decide whether you want to perform GRID fitting
+and/or multi-exponential fitting. However, before you do this you need to specify the
+fitting parameters.
+
 
 Parameters
 ----------
 
-Whether we want to perform GRID fitting or multi-exponential, we need to define the 
-parameters used for the fitting procedure. The GRID fitting and multi-exponential
-fitting require some different variables.
+Both the GRID fitting and the multi-exponential fitting require the user to specify
+fitting parameters. Here we show the all the possible parameter options. Since GRID
+fitting and multi-exponential fitting require some different variables, we will first
+introduce the GRID parameters.
 
 GRID parameters
 ^^^^^^^^^^^^^^^
-Parameters need to be provided in a dictionary. There are two different ways we can
-perform the GRID fitting. Either use a grid as described in the paper, most often used,
-or we can fixate the decay-rates and only let the amplitudes of them vary.
+The fitting parameters need to be provided in a dictionary. There are two possible GRID
+fitting options:
 
-For the GRID fitting procedure as described in the paper, the following values
-need to be provided:
+1. Define a fixed grid between a minimum and maximum decay-rate and
+perform the GRID fitting procedure *(original GRID paper method)*.
+
+2. Provide a set of decay-rates and perform the GRID fitting procedure
+*(newly added, not in original GRID paper)*.
+
+For option 1, the GRID fitting procedure as described in the paper, the following
+parameter values need to be provided:
 
 * ``"k_min"``: (float) minimum decay-rate
 * ``"k_max"``: (float) maximum decay-rate
 * ``"N"``: (int) number of decay-rates of which the grid should consist
-* ``"scale"``: (str) scale of the created grid, two options:
+* ``"scale"``: (str) scale of the fixed grid, two options:
+
   * ``"log"``: logarithmic scale
   * ``"linear"``: linear scale
-* ``"reg_weight"``: (float) regularization weight, advised is **0.01**.
-* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if set to ``False`` than a photobleaching number needs to be provided.
-* ``"a_fixed"``: (float) photobleaching number used during fitting if ``parameters["fit_a"] = False``
 
-For example:
+* ``"reg_weight"``: (float) regularization weight, advised value is **0.01** *(as in the original paper)*
+* ``"fit_a"``: (bool) determines whether the :term:`photobleaching number` should be fitted:
+
+  * ``True``: photobleaching number is varied during the fitting
+  * ``False``: photobleaching number needs to be provided and is fixed during fitting
+
+* ``"a_fixed"``: (float) :term:`photobleaching number` used during fitting if
+  ``parameters["fit_a"] = False``
+
+For example, if we would want to create a grid of :math:`200` decay-rates with a minimum
+decay-rate of :math:`10^{-3}\,\mathrm{s}^{-1}`, and a maximum decay-rate of
+:math:`10\,\mathrm{s}^{-1}` at a logarithmic scale and we would want the photobleaching
+number to be fitted as well then the parameter dictionary would look as follows:
 
 .. code-block:: python
 
     parameters = {
-        "k_min": 10 ** (-3),
+        "k_min": 10**(-3),
         "k_max": 10**1,
         "N": 200,
         "scale": "log",
@@ -98,13 +119,20 @@ For example:
         "a_fixed": None,
     }
 
-However, if you want to fixate the decay-rates then the following parameter values are
-required:
+For option 2, when the user provides a set of decay-rates, the grid does not have to be
+created anymore so the number of parameters is lower. For option 2, the following parameter
+values need to be provided:
 
 * ``"k"``: (np.ndarray) array with the decay-rates
-* ``"reg_weight"``: (float) regularization weight, advised is **0.01**.
-* ``"fit_a"``: (bool) indicates whether the photobleaching number should be fitted, if set to ``False`` than a photobleaching number needs to be provided.
-* ``"a_fixed"``: (float) photobleaching number used during fitting if ``parameters["fit_a"] = False``
+* ``"reg_weight"``: (float) regularization weight, advised value is **0.01** *(as in the original paper)*
+* ``"fit_a"``: (bool) determines whether the :term:`photobleaching number` should be fitted:
+
+  * ``True``: photobleaching number is varied during the fitting
+  * ``False``: photobleaching number needs to be provided and is fixed during fitting
+
+* ``"a_fixed"``: (float) :term:`photobleaching number` used during fitting if
+  ``parameters["fit_a"] = False``
+
 
 For example:
 
