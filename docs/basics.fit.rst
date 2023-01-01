@@ -1,5 +1,5 @@
-Data fitting
-============
+Fitting
+=======
 
 Here it is explained how the GRID fitting and multi-exponential fitting can be performed
 with GRIDLib. However, to access all the required fitting routines the required packages
