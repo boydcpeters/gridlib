@@ -16,5 +16,6 @@ sure you have installed GRIDLib, as described in the
 
     basics.introduction
     basics.dataformat
+    basics.parameters
     basics.fit
 
