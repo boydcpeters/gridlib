@@ -1,8 +1,10 @@
+import multiprocessing as mp
 import concurrent.futures
+from itertools import chain
+import signal
 import math
 import time
-from concurrent.futures import ProcessPoolExecutor
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Callable
 
 import numpy as np
 import psutil
@@ -104,7 +106,16 @@ def _resample_data(
     return data_sampled
 
 
-def _resample_and_fit(parameters, data, perc: float = 0.8):
+# TODO: update docstring
+def _resample_data_and_fit_worker(
+    fn: Callable[
+        [Dict, Dict[str, Dict[str, np.ndarray]], bool],
+        Dict[str, Dict[str, Union[np.ndarray, float]]],
+    ],
+    parameters,
+    data,
+    perc: float = 0.8,
+):
     """
     Function resamples from the provided dataset with a given percentage of data points
     and then perform GRID and/or multi-exponential fitting on the resampled data and
@@ -112,6 +123,8 @@ def _resample_and_fit(parameters, data, perc: float = 0.8):
 
     Parameters
     ----------
+    fn: function
+
     parameters: Dict
 
     data : Dict[str, Dict[str, np.ndarray]]
@@ -169,23 +182,156 @@ def _resample_and_fit(parameters, data, perc: float = 0.8):
     """
     data_resampled = _resample_data(data, perc=perc)
 
-    fit_results_temp = fit.fit_all(parameters, data_resampled, disp=False)
+    fit_results_temp = fn(parameters, data_resampled, disp=False)
 
     return fit_results_temp
 
 
-# TODO: update docstring
-def fit_all_resampling(
+# TODO: add docstring
+def _resample_and_fit_sequential(fn, parameters, data, n, perc):
+
+    t0 = time.time()
+
+    # Then perform fitting on the full dataset
+    # ----------------------------------------
+    print("----------------------------------------")
+    print("Fitting of all data starts now...")
+    # Determine the full fit results based on all the data.
+    t1 = time.time()
+    fit_results_full = fn(parameters, data, disp=False)
+    t2 = time.time()
+    print("Fitting of all data finished now.")
+    print("----------------------------------------")
+
+    print(f"Estimated time for resampling: ~{((t2-t1)*n)/60.0:.0f} min")
+
+    print("Start resampling...")
+    print("----------------------------------------")
+
+    # Determine the GRID fit results for the resampled data
+    fit_results_resampled = []
+    with tqdm(total=n) as pbar:
+        # Just start at 1 for the print statement later
+        for i in range(1, n + 1):
+            fit_results_temp = _resample_data_and_fit_worker(
+                parameters, data, perc=perc
+            )
+            fit_results_resampled.append(fit_results_temp)
+            pbar.update(1)
+            print()
+            print(f"{i}-th resampling is finished.")
+
+    t3 = time.time()
+    print("Resampling is finished.")
+    print(f"Total time: {(t3-t0)/60.0:.0f} min")
+    print("----------------------------------------")
+
+    return fit_results_full, fit_results_resampled
+
+
+def init_pool():
+    """Ignore CTRL+C in the worker process."""
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+
+# TODO: add docstring
+def _resample_and_fit_multiprocess(
+    fn: Callable[
+        [Dict, Dict[str, Dict[str, np.ndarray]], bool],
+        Dict[str, Dict[str, Union[np.ndarray, float]]],
+    ],
     parameters: Dict,
     data: Dict[str, Dict[str, np.ndarray]],
     n: int = 10,
     perc: float = 0.8,
+    max_workers: int = None,
+):
+
+    # First determine the max number of workers
+    # -----------------------------------------
+    # The limit for the max number of workers is number of logical cores minus 1 (there
+    # needs to be one logical core for the background tasks)
+    max_workers_limit = psutil.cpu_count(logical=False) - 1
+
+    if max_workers is None:
+        max_workers = max_workers_limit
+    elif max_workers < 1:
+        raise ValueError("max_workers should be >=1")
+    elif max_workers > max_workers_limit:
+        max_workers = max_workers_limit
+        print(
+            f"WARNING: max_workers is set to {max_workers}, since initial value",
+            "was set higher than the allowed number of workers ({max_workers_limit}).",
+        )
+
+    t0 = time.time()
+
+    # Then perform fitting on the full dataset
+    # ----------------------------------------
+    print("----------------------------------------")
+    print("Fitting of all data starts now...")
+    # Determine the full fit results based on all the data.
+    t1 = time.time()
+    fit_results_full = fn(parameters, data, disp=False)
+    t2 = time.time()
+    print("Fitting of all data finished now.")
+    print("----------------------------------------")
+
+    print(f"Estimated time for resampling: ~{((t2-t1)*n)/60.0/max_workers:.0f} min")
+
+    print("Start resampling...")
+    print("----------------------------------------")
+
+    # Determine the GRID fit results for the resampled data
+    fit_results_resampled = []
+    i = 1
+    with tqdm(total=n) as pbar:
+        # Parallelization
+        with concurrent.futures.ProcessPoolExecutor(
+            max_workers=max_workers, initializer=init_pool
+        ) as executor:
+            try:
+
+                # Submit the tasks
+                futures = [
+                    executor.submit(
+                        _resample_data_and_fit_worker,
+                        fn,
+                        parameters,
+                        data,
+                        perc,
+                    )
+                    for _ in range(n)
+                ]
+                # Check if a task is finished
+                for future in concurrent.futures.as_completed(futures):
+                    fit_results_temp = future.result()
+                    fit_results_resampled.append(fit_results_temp)
+                    pbar.update(1)
+                    print()
+                    print(f"{i}-th resampling is finished.")
+                    i += 1
+            except KeyboardInterrupt:
+                print("Caught keyboardinterrupt")
+
+    t3 = time.time()
+    print("Resampling is finished.")
+    print(f"Total time: {(t3-t0)/60.0:.0f} min")
+    print("----------------------------------------")
+
+    return fit_results_full, fit_results_resampled
+
+
+# TODO: update docstring
+def resample_and_fit(
+    parameters: Dict,
+    data: Dict[str, Dict[str, np.ndarray]],
+    n: int = 10,
+    perc: float = 0.8,
+    fit_mode: str = "grid",
     multiprocess_flag: bool = True,
     max_workers: int = None,
-) -> Tuple[
-    Dict[str, Dict[str, Union[np.ndarray, float]]],
-    List[Dict[str, Union[np.ndarray, float]]],
-]:
+):
     """
     Fit survival time and value data with a given set of parameters, using a resampling procedure.
 
@@ -207,6 +353,8 @@ def fit_all_resampling(
         The number of resampled datasets to create. Defaults to 10.
     perc : float, optional
         The percentage of data points to include in each resampled dataset. Defaults to 0.8.
+    fit_mode : {"grid", "multi-exp", "all"}, optional
+        Write some text here
     multiprocess_flag : bool, optional
         A flag indicating whether to use parallel processing when fitting the resampled datasets.
         Defaults to True.
@@ -224,77 +372,25 @@ def fit_all_resampling(
         the names of the fitted parameters, and values that are either arrays or floats, depending on the
         parameter.
     """
-    print("----------------------------------")
-    print("Fitting of all data starts now...")
-    # Determine the full GRID fit results based on all the data.
-    fit_result_full = fit.fit_grid(parameters, data, disp=False)
-    print("Fitting of all data finished now.")
-    print("----------------------------------")
-    print("Start resampling...")
+
+    if fit_mode not in {"grid", "multi-exp", "all"}:
+        raise ValueError("fit_mode is not a valid, see docstring for valid modes.")
+
+    # Set the correct function for the fitting
+    if fit_mode == "grid":
+        fn = fit.fit_grid
+    elif fit_mode == "multi-exp":
+        fn = fit.fit_multi_exp
+    elif fit_mode == "all":
+        fn = fit.fit_all
 
     if multiprocess_flag:
-        # The number of logical cores minus 1, for the background tasks
-        max_workers_limit = psutil.cpu_count(logical=False) - 1
+        fit_results_full, fit_results_resampled = _resample_and_fit_multiprocess(
+            fn, parameters, data, n=n, perc=perc, max_workers=max_workers
+        )
+    else:
+        fit_results_full, fit_results_resampled = _resample_and_fit_sequential(
+            fn, parameters, data, n=n, perc=perc
+        )
 
-        if max_workers is None:
-            max_workers = max_workers_limit
-        elif max_workers < 1:
-            raise ValueError("max_workers should be >=1")
-        elif max_workers > max_workers_limit:
-            max_workers = max_workers_limit
-            print(
-                f"WARNING: max_workers is set to {max_workers}, since initial value",
-                "was set higher than the allowed number of workers.",
-            )
-
-    # Determine the GRID fit results for the resampled data
-    fit_results_resampled = []
-
-    with tqdm(total=n) as pbar:
-
-        t0 = time.time()
-
-        data_resampled = _resample_data(data, perc=perc)
-
-        fit_results_temp = fit.fit_all(parameters, data_resampled, disp=False)
-
-        fit_results_resampled.append(fit_results_temp)
-
-        t1 = time.time()
-
-        print(f"Estimated time: {((t1-t0)*n)/60.0/max_workers:.0f} min")
-
-        pbar.update(1)
-        print()
-        print(f"1-th resampling is finished.")
-
-        if multiprocess_flag:
-            i = 2
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-
-                # Submit the tasks
-                futures = [
-                    executor.submit(_resample_and_fit, parameters, data, perc)
-                    for _ in range(n - 1)
-                ]
-
-                # Check if a task is finished
-                for future in concurrent.futures.as_completed(futures):
-                    fit_results_temp = future.result()
-                    fit_results_resampled.append(fit_results_temp)
-                    pbar.update(1)
-                    print()
-                    print(f"{i}-th resampling is finished.")
-                    i += 1
-        else:
-            for i in range(2, n + 1):
-                fit_results_temp = _resample_and_fit(parameters, data, perc=perc)
-                fit_results_resampled.append(fit_results_temp)
-                pbar.update(1)
-                print()
-                print(f"{i}-th resampling is finished.")
-
-    print("Resampling is completely finished.")
-    print("----------------------------------")
-
-    return fit_result_full, fit_results_resampled
+    return fit_results_full, fit_results_resampled
