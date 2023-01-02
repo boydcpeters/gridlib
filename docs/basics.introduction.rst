@@ -35,7 +35,7 @@ glossary of some of those terms:
         (:math:`\tau_{\mathrm{int}}`) 
 
     Dark time
-        Time that the laser and camera are turned off between acquisitions.
+        The time that the laser and camera are turned off between acquisitions.
         (:math:`\tau_{\mathrm{d}}`) 
 
     Time-lapse time
