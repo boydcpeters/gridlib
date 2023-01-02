@@ -17,4 +17,6 @@ print(data_simulated.keys())
 # print(data_simulated["5s"]["time"])
 
 # Save the simulated data in csv file
-gridlib.io.write_data_survival_function("examples\data\example1.csv", data_simulated)
+gridlib.io.write_data_survival_function(
+    "examples\data\example_simulation.csv", data_simulated
+)
