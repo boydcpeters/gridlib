@@ -13,6 +13,7 @@ J.C.M. (2020). Inferring quantity and qualities of superimposed reaction rates f
 single molecule survival time distributions. Scientific Reports, 10(1).
 doi:10.1038/s41598-020-58634-y.
 
+.. _glossary:
 
 Glossary
 --------

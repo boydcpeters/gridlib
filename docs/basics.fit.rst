@@ -161,9 +161,55 @@ as well then the parameter dictionary would look as follows:
 
 Multi-exponential parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-pass
+The fitting parameters need to be provided in a dictionary. There is only one
+multi-exponential fitting option. The following parameter values need to be provided:
 
+* ``"n_exp"``: (*int | List[int]*) number of exponentials to fit
+* ``"k_min"``: (*float*) minimum decay-rate
+* ``"k_max"``: (*float*) maximum decay-rate
+* ``"N"``: (*int*) number of decay-rates of which the grid should consist
+* ``"fit_a"``: (*bool*) determines whether the :term:`photobleaching number` should be fitted:
 
+  * ``True``: photobleaching number is varied during the fitting
+  * ``False``: photobleaching number needs to be provided and is fixed during fitting
 
-The complete example:
-pass
+* ``"a_fixed"``: (*float*) :term:`photobleaching number` used during fitting if
+  ``parameters["fit_a"] = False`` otherwise set to ``None``
+
+For example, if you would want to fit a double-exponential (two decay-rates) to the
+survival time distributions with a minimum decay-rate of
+:math:`10^{-3}\,\mathrm{s}^{-1}`, and a maximum decay-rate of
+:math:`10\,\mathrm{s}^{-1}` and if you would want the photobleaching number to be fitted
+as well then the parameter dictionary would look as follows:
+
+.. code-block:: python
+    
+    parameters = {
+        "n_exp": 2
+        "k_min": 10**(-3),
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+.. note::
+    Note that the ``"n_exp"`` value is now an integer value, since we are only fitting
+    a double-exponential function.
+
+However, if you would want to fit a single-, double-, and triple-exponential function
+then the parameters dictionary would look as follows:
+
+.. code-block:: python
+
+    parameters = {
+        "n_exp": [1, 2, 3],  # fit a 1-, 2- and 3- exponential
+        "k_min": 10**(-3),
+        "k_max": 10**1,
+        "fit_a": True,
+        "a_fixed": None,
+    }
+
+.. note::
+    Note that the ``"n_exp"`` value is now a list with integer values indicating the
+    number of exponentials to fit, namely a single-, double- and triple-exponential.
+
