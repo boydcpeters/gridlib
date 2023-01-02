@@ -22,6 +22,10 @@ def retrieve_track_lifes(data, filtered: bool = True) -> Dict:
         after the imaging stops, so these particle residence frame length are not really
         trustworthy.
 
+        .. warning::
+            currently not implemented!!
+
+
     Returns
     -------
     track_lifes: np.array
@@ -133,26 +137,37 @@ def compute_survival_function(
     return time, value
 
 
-def threshold_survival_function(data, prob_min: float = 10 ** (-2)):
+def threshold_survival_function(
+    data: Dict[str, Dict[str, np.ndarray]], prob_min: float = 10 ** (-2)
+) -> Dict[str, Dict[str, np.ndarray]]:
     """
     Calculate the survival function for a given dataset, with a probability threshold.
 
     Parameters
     ----------
-    data : dict
-        A dictionary containing survival time and value data. The dictionary should have keys
-        corresponding to different time-to-event values, and values that are dictionaries themselves,
-        containing "time" and "value" keys. The "time" and "value" keys should contain arrays of
-        equal length with the corresponding data.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...]) "value":
+                    array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]) "value": array([1.000e+04,
+                    6.925e+03, 5.541e+03, 4.756e+03, ...])
+                },
+            }
     prob_min : float, optional
-        The minimum probability threshold. Only data with probabilities greater than this threshold
-        will be included in the returned dataset. Defaults to 10 ** (-2).
+        The minimum probability threshold. Only data with probabilities greater than
+        this threshold will be included in the returned dataset. Defaults to 10 ** (-2).
 
     Returns
     -------
-    dict
-        A dictionary containing the processed time and value data. The structure of the returned
-        dictionary is the same as the input data dictionary, with the exception that only the data
+    Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. The structure of the returned dictionary
+        is the same as the input data dictionary, with the exception that only the data
         that meets the probability threshold will be included.
     """
 
@@ -195,6 +210,11 @@ def compute_multi_exp(
     -------
     value : np.ndarray
         The resulting normalized multi-exponential values at the given time points.
+
+    Raises
+    ------
+    ValueError
+        If the sum of the amplitudes is not equal to 1.
     """
 
     if not math.isclose(1.0, np.sum(s)):
@@ -218,8 +238,9 @@ def compute_multi_exp(
 def compute_grid_curve(
     k: np.ndarray, s: np.ndarray, a: float, time: np.ndarray
 ) -> np.ndarray:
-    """Function computes the GRID curve for the given time points. This is just a
-    wrapper function for :func:`compute_multi_exp`, since the GRID curve is just a
+    """
+    Function computes the GRID curve for the given time points. This is just a
+    wrapper function for :py:func:`compute_multi_exp`, since the GRID curve is just a
     multi-exponential curve.
 
     Parameters
@@ -228,9 +249,9 @@ def compute_grid_curve(
         Decay rates
     s : np.ndarray
         Amplitudes of the respective decay rates. The sum of the amplitudes should
-        be equal to zero.
+        be equal to 1.
     a : float
-        Photobleaching number (a * t_int)
+        Photobleaching number (a x t_int)
     time : np.ndarray
         Time points for which the multi-exponential needs to be determined.
 
@@ -249,43 +270,48 @@ def compute_multi_exp_for_data(
     fit_values_multi_exp: Dict[str, Union[np.ndarray, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
-    """Function computes the multi-exponential curves given the required parameters.
+    """
+    Function computes the multi-exponential curves given the required parameters.
 
     Parameters
     ----------
     fit_values_multi_exp: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
-            "k": np.ndarray with the dissociation rates
-            "s": np.ndarray with the corresponding weights
-            "a": bleaching number (a = k_b * t_int)
-            Optional:
-                if GRID fit:
-                "fit_error": error of the fit
-                if multi-exponential fit:
-                "Adj_R_squared": adjusted R squared for every k and S
-    data: Dict[str, Dict[str, np.ndarray]]
-        Survival function data for time-lapse conditions with the following data
-        structure:
+
+        - "k": np.ndarray with the decay rates
+        - "s": np.ndarray with the corresponding weights
+        - "a": bleaching number (a = k_b * t_int)
+        - "loss": error of the fit
+
+        For example, a double-exponential::
+
+        {
+            "k": array([0.03715506, 1.7248619]),
+            "s": array([0.17296989, 0.82703011]),
+            "a": 0.011938572088673213,
+            "loss": 0.2868809590425386
+        }
+
+     data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
             {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...]) "value":
+                    array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]) "value": array([1.000e+04,
+                    6.925e+03, 5.541e+03, 4.756e+03, ...])
                 },
-                ...
             }
 
     Returns
     -------
-    data_multi_exp: Dict[str, Dict[str, np.ndarray]]
+    Dict[str, Dict[str, np.ndarray]]
         Survival function data computed with the provided multi-exponential fit values
-        for every time-lapse conditions in data. The object has the following data
-        structure:
-            {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
-                }
-            }
+        for every time-lapse conditions in data. The object has the same data structure
+        as the `data` variable, but now with different arrays.
     """
     k = fit_values_multi_exp["k"]
     s = fit_values_multi_exp["s"]
@@ -313,42 +339,50 @@ def compute_grid_curves_for_data(
     fit_values_grid: Dict[str, Union[np.ndarray, float]],
     data: Dict[str, Dict[str, np.ndarray]],
 ):
-    """Function computes the GRID curves for the given fit_values_grid parameters.
-    This is a convenience function and is just a wrapper around the function
-    :func:`calc_multi_exp`.
+    """
+    Function computes the GRID curves for the given fit_values_grid parameters. This is
+    a convenience function and is just a wrapper around the function
+    :py:func:`compute_multi_exp_for_data`.
 
     Parameters
     ----------
     fit_values_grid: Dict[str, Union[np.ndarray, float]]
         Dictionary with the following key-value pairs:
-            "k": np.ndarray with the dissociation rates
-            "s": np.ndarray with the corresponding weights
-            "a": bleaching number (a = k_b * t_int)
-            Optional:
-                "fit_error": error of the fit
-    data: Dict[str, Dict[str, np.ndarray]]
-        Survival function data for time-lapse conditions with the following data
-        structure:
+
+        - "k": np.ndarray with the decay rates
+        - "s": np.ndarray with the corresponding weights
+        - "a": bleaching number (a = k_b * t_int)
+        - "loss": error of the fit
+
+        For example::
+
+        {
+            "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+            "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+            "a": 0.010564217803906671,
+            "loss": 0.004705659331508584,
+        }
+
+     data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
             {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, 0.2, ...]) "value":
+                    array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]) "value": array([1.000e+04,
+                    6.925e+03, 5.541e+03, 4.756e+03, ...])
                 },
-                ...
             }
 
     Returns
     -------
-    data_grid: Dict[str, Dict[str, np.ndarray]]
+    Dict[str, Dict[str, np.ndarray]]
         Survival function data computed with the provided GRID fit values for every
-        time-lapse conditions in data. The object has the following data structure:
-            {
-                f"{t_tl}": {
-                    "time": np.ndarray with the time points,
-                    "value": np.ndarray with the survival function values,
-                },
-                ...
-            }
+        time-lapse conditions in data. The object has the same data structure as the
+        `data` variable, but now with different arrays.
     """
 
     data_grid = compute_multi_exp_for_data(fit_values_grid, data)
