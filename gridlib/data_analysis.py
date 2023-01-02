@@ -59,7 +59,7 @@ def find_peaks(
     if "grid" not in fit_results:
         raise ValueError("There are no grid results in the provided fit results.")
 
-    # Extract the decay-rates and their respective weight values
+    # Extract the decay rates and their respective weight values
     k = fit_results["grid"]["k"]
     s = fit_results["grid"]["s"]
     # state = (1 / k) * s

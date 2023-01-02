@@ -106,3 +106,5 @@ provides methods to read fit and resampling results stored by GRID toolbox (MATL
 created by the orginal authors. However, it is currently not possible to write the fit
 results and resampling results to a file that can be opened with methods in the GRID
 toolbox. The methods to read and write results can be found :ref:`here <routines.io>`.
+
+WRITE HERE SOMETHING ABOUT THE FIT_RESULTS STRUCTURE.

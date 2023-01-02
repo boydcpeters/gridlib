@@ -35,15 +35,15 @@ def _base_heatmap(
     Parameters
     ----------
     k_full : np.ndarray
-        Decay-rates for the full fit results.
+        Decay rates for the full fit results.
     weight_full : np.ndarray
-        Amplitudes for the corresponding decay-rates. The amplitudes can be either
+        Amplitudes for the corresponding decay rates. The amplitudes can be either
         event weights or state weights.
     k_resampled : np.ndarray
-        Decay-rates for the resampled fit results. The array should be flattened, so
+        decay rates for the resampled fit results. The array should be flattened, so
         it is a 1D array.
     weight_resampled : np.ndarray
-        Amplitudes for the corresponding resampled decay-rates. The amplitudes can be
+        Amplitudes for the corresponding resampled decay rates. The amplitudes can be
         either event weights or state weights. The array should be flattened, so
         it is a 1D array.
     scale : {"log", "linear"}, optional
