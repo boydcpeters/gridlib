@@ -11,10 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Docstrings for multiple functions.
-- Option to set the maximum number of workers for the resampling_grid function.
 - Updated the README.md file.
 - Documentation for readthedocs.
 - Function to find the peaks in a GRID spectrum.
+
+### Changed
+
+- Removed the function `grid_resampling` and made a new more general function called `resample_and_fit` which is also able to perform multi-exponential fitting.
 
 ### Fixed
 
