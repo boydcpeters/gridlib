@@ -27,12 +27,12 @@ def _resample_data(
 
             {
                 "0.05s": {
-                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
-                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                    "time": array([0.05, 0.1, 0.15, ...]),
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, ...]),
                 },
                 "1s": {
-                    "time": array([1., 2., 3., 4., ...])
-                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                    "time": array([1., 2., 3., 4., ...]),
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...]),
                 },
             }
 
@@ -133,12 +133,12 @@ def _resample_data_and_fit_worker(
 
             {
                 "0.05s": {
-                    "time": array([0.05, 0.1, 0.15, 0.2, ...])
-                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, 6.527e+03, ...])
+                    "time": array([0.05, 0.1, 0.15, ...]),
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, ...]),
                 },
                 "1s": {
-                    "time": array([1., 2., 3., 4., ...])
-                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...])
+                    "time": array([1., 2., 3., 4., ...]),
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...]),
                 },
             }
 
@@ -322,55 +322,105 @@ def _resample_and_fit_multiprocess(
     return fit_results_full, fit_results_resampled
 
 
-# TODO: update docstring
 def resample_and_fit(
     parameters: Dict,
     data: Dict[str, Dict[str, np.ndarray]],
-    n: int = 10,
+    n: int = 200,
     perc: float = 0.8,
     fit_mode: str = "grid",
     multiprocess_flag: bool = True,
     max_workers: int = None,
-):
+) -> Tuple[
+    Dict[str, Dict[str, Union[np.ndarray, float]]],
+    List[Dict[str, Dict[str, Union[np.ndarray, float]]]],
+]:
     """
-    Fit survival time and value data with a given set of parameters, using a resampling procedure.
-
-    This function performs a resampling procedure to fit survival time and value data with a given set
-    of parameters. It first fits the full dataset with the parameters, then resamples the data and fits
-    the resampled datasets with the parameters. The function returns the fit results for the full dataset
-    and the resampled datasets.
+    This function performs a resampling procedure to fit survival time and value data
+    with a given set of parameters. It first fits the full dataset with the parameters,
+    then resamples the data and fits the resampled datasets with the parameters. The
+    function returns the fit results for the full dataset and the resampled datasets.
 
     Parameters
     ----------
-    parameters : dict
-        A dictionary containing the parameters to use for fitting the data. UPDATE THIS TEXT
-    data : dict
-        A dictionary containing survival time and value data. The dictionary should have keys corresponding to
-        different time-to-event values, and values that are dictionaries themselves, containing "time" and
-        "value" keys. The "time" and "value" keys should contain arrays of equal length with the
-        corresponding data.
+    parameters : Dict
+        Dictionary containing all the parameters needed to perform the GRID and/or
+        multi-exponential fitting.
+    data : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, ...]),
+                    "value": array([1.000e+04, 8.464e+03, 7.396e+03, ...]),
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]),
+                    "value": array([1.000e+04, 6.925e+03, 5.541e+03, 4.756e+03, ...]),
+                },
+            }
+
     n : int, optional
-        The number of resampled datasets to create. Defaults to 10.
+        The number of times you want to resample from the full dataset. Defaults to 200.
     perc : float, optional
-        The percentage of data points to include in each resampled dataset. Defaults to 0.8.
+        The percentage of data points to include in each resampled dataset. Defaults to
+        0.8.
     fit_mode : {"grid", "multi-exp", "all"}, optional
-        Write some text here
+        The fitting procedure to perform:
+
+        * "grid": perform GRID fitting procedure on the data.
+        * "multi-exp": perform multi-exponential fitting procedure on the data.
+        * "all": perform both GRID fitting and multi-exponential fitting procedure
+            on the data.
+
     multiprocess_flag : bool, optional
-        A flag indicating whether to use parallel processing when fitting the resampled datasets.
-        Defaults to True.
+        A flag indicating whether to use parallel processing when fitting the resampled
+        datasets. Defaults to True.
     max_workers: int, optional
         The maximum number of logical cores to use for the multiprocessing. This number
         is only used if multiprocess_flag is set to True and the value has to be between
-        1 and the maximum # logical cores - 1. If value is set to None, than it will
-        be set to # logical cores - 1. Default is None.
+        1 and the maximum # logical cores - 1. If value is set to None, than it will be
+        set to # logical cores - 1. Default is None.
 
     Returns
     -------
-    tuple
-        A tuple containing the fit results for the full dataset, and a list of fit results for the
-        resampled datasets. The fit results are dictionaries themselves, with keys corresponding to
-        the names of the fitted parameters, and values that are either arrays or floats, depending on the
-        parameter.
+    Tuple consisting of the following two objects:
+
+    fit_results_full: Dict[str, Dict[str, Union[np.ndarray, float]]]
+        A dictionary mapping keys (fitting procedure) to the corresponding fit results.
+        For example::
+
+            {
+                "grid": {
+                    "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                    "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                    "a": 0.010564217803906671,
+                    "loss": 0.004705659331508584,
+                },
+            }
+
+    fit_results_resampled: List[Dict[str, Dict[str, Union[np.ndarray, float]]]]
+        A list of dictionaries, each a dictionary mapping keys (fitting procedure) to
+        the corresponding fit results. For example::
+
+            [
+                {
+                    "grid": {
+                        "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                        "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                        "a": 0.010564217803906671,
+                        "loss": 0.004705659331508584,
+                    },
+                },
+                {
+                    "grid": {
+                        "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                        "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                        "a": 0.010564217803906671,
+                        "loss": 0.004705659331508584,
+                    },
+                },
+                ...
+            ]
     """
 
     if fit_mode not in {"grid", "multi-exp", "all"}:
