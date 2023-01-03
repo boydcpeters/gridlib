@@ -1,7 +1,7 @@
 .. _routines.fit:
 
-Plot
-====
+Fit
+===
 
 Here you can find the functions that can be used for fitting
 
