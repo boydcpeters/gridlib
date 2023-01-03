@@ -23,8 +23,8 @@ if __name__ == "__main__":
     }
 
     # Perform the resampling
-    fit_result_full, fit_results_resampled = gridlib.resampling_grid(
-        parameters, data, n=10, perc=0.8
+    fit_result_full, fit_results_resampled = gridlib.resample_and_fit(
+        parameters, data, n=200, perc=0.8, fit_mode="grid"
     )
 
     print(len(fit_result_full), len(fit_results_resampled))
