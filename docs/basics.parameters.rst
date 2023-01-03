@@ -95,6 +95,13 @@ as well then the parameter dictionary would look as follows:
         "a_fixed": None,
     }
 
+The GRID fitting procedure can be performed with :py:func:`~gridlib.fit_grid`. For example:
+
+.. code-block:: python
+  
+  import gridlib
+  fit_results = gridlib.fit_grid(parameters, data)
+
 
 Multi-exponential parameters
 ----------------------------
@@ -150,3 +157,41 @@ then the parameters dictionary would look as follows:
 .. note::
     Note that the ``"n_exp"`` value is now a list with integer values indicating the
     number of exponentials to fit, namely a single-, double- and triple-exponential.
+  
+
+The multi-exponential fitting procedure can be performed with
+:py:func:`~gridlib.fit_multi_exp`. For example:
+
+.. code-block:: python
+  
+  import gridlib
+  fit_results = gridlib.fit_multi_exp(parameters, data)
+
+
+Both
+----
+
+Option 1 of the GRID fitting procedure and the multi-exponential fitting procedure can
+be combined into one function call. In this case, the parameters dictionary needs all the
+required parameters for both, for example:
+
+.. code-block:: python
+
+  parameters = {
+        "k_min": 10**(-3),      # required for: GRID and multi-exp
+        "k_max": 10**1,         # required for: GRID and multi-exp
+        "N": 200,               # required for: GRID
+        "scale": "log",         # required for: GRID
+        "reg_weight": 0.01,     # required for: GRID
+        "fit_a": True,          # required for: GRID and multi-exp
+        "a_fixed": None,        # required for: GRID and multi-exp
+        "n_exp": [1, 2, 3],     # required for: multi-exp
+    }
+  
+The combination of the GRID fitting procedure and multi-exponential fitting procedure
+can be performed with :py:func:`~gridlib.fit_all`. For example:
+
+.. code-block:: python
+  
+  import gridlib
+  fit_results = gridlib.fit_all(parameters, data)
