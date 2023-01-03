@@ -115,9 +115,9 @@ def fit_grid(
 
     Examples
     --------
-    Assume that the survival function is loaded into the variable `data`, so::
+    Assume that the survival time distributions are stored in the variable ``data``, so::
 
-        data = ...
+        data = {...}
         parameters = {
             "k_min": 10 ** (-3),
             "k_max": 10**1,
