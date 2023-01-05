@@ -87,13 +87,14 @@ def tl_simulation_single(
             "Number of simulated molecules ('N' argument) should be larger than zero."
         )
 
+    BUFFER_SIZE_DEFAULT = 1000
+
     p = s / np.sum(s)
 
     # Can also change kb * t_int to a
     keff = (kb * t_int) / t_tl + k
 
-    count = 0
-    time = np.linspace(t_tl, 1000 * t_tl, num=1000, endpoint=True)
+    time = np.linspace(0, 1500 * t_tl, num=1501, endpoint=True)
 
     binding = np.zeros(time.shape[0])
     binding_sum = 0
@@ -104,17 +105,39 @@ def tl_simulation_single(
 
     # Simulate until enough points have been captured or the computation time is
     # exceeded
-    while binding_sum < N and count < (N * 10):
+    buffer_size = min(BUFFER_SIZE_DEFAULT, N)
 
-        keff_state = rng.choice(keff, p=p)
+    count = 0
+    max_count = 1000 * N
+    while binding_sum < N and count < max_count:
+
+        keff_state = rng.choice(keff, size=(buffer_size,), p=p)
         lifetime = rng.exponential(scale=1 / keff_state)
 
-        if lifetime > time[0]:
-            idx = np.sum(lifetime > time) - 1  # - 1 because indexing starts at 0
-            binding[idx] = binding[idx] + 1
-            binding_sum = binding_sum + 1
-        else:
-            count = count + 1
+        idx = lifetime // t_tl
+        idx = idx.astype(np.int16)
+
+        binding[idx] = binding[idx] + 1
+
+        # Only count the molecules that are bound for at least one delta t
+        binding_sum = np.sum(binding) - binding[0]
+
+        # Keep track of the number of simulations ran
+        count = count + buffer_size
+
+        # Reset the buffer size if required
+        buffer_size = min(BUFFER_SIZE_DEFAULT, int(round(N - binding_sum, 0)))
+
+    if count >= max_count:
+        print(
+            "The simulation was finished pre-emptively because max_count",
+            "(1000*N) value was reached.",
+        )
+
+    # Remove the the molecules that are bound for 0 frames
+    binding = binding[1:]
+    # Remove the first time point as well
+    time = time[1:]
 
     # Calculate the survival function values with cumulative summing
     value = np.cumsum(binding[::-1])[::-1]
