@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the function `grid_resampling` and made a new more general function called `resample_and_fit` which is also able to perform multi-exponential fitting.
+- Added vectorization to the simulation of the survival distributions, which speeds
+up the simulation with a factor of ~10-100x.
 
 ### Fixed
 
