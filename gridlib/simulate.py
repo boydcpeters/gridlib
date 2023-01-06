@@ -115,9 +115,11 @@ def tl_simulation_single(
         lifetime = rng.exponential(scale=1 / keff_state)
 
         idx = lifetime // t_tl
-        idx = idx.astype(np.int16)
+        idx = idx.astype(np.int32)
 
-        binding[idx] = binding[idx] + 1
+        idx_uniq, idx_count = np.unique(idx, return_counts=True)
+
+        binding[idx_uniq] = binding[idx_uniq] + idx_count
 
         # Only count the molecules that are bound for at least one delta t
         binding_sum = np.sum(binding) - binding[0]
