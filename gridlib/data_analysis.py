@@ -38,17 +38,17 @@ def find_peaks(
 
     Returns
     -------
-    peaks: Dict[int, Dict[str, float]]
-        Dictionary mapping the peak number to the corresponding peak values. For
-        example::
+    Tuple[np.ndarray, np.ndarray]
+    k_peaks: np.ndarray
+        The decay rates of the peaks. The total number of peaks is equal to the size of
+        the array.
+    s_peaks: np.ndarray
+        The event amplitudes of the peaks. The total number of peaks is equal to the
+        size of the array.
 
-            {
-                1: {"k": 0.004777406500406388,"s": 0.01913411845411184},
-                2: {"k": 0.028005038941836313, "s": 0.049437255750847335},
-                3: {"k": 0.18991111645029066, "s": 0.11870356923055253},
-                4: {"k": 1.216802975611107, "s": 0.26403855056602654},
-                5: {"k": 6.387479711796379, "s": 0.5486865059984619}
-            }
+    Example of a resulting tuple::
+
+        (array([0.00478, 0.0280, 0.190, 1.22, 6.39]), array([0.0191, 0.0494, 0.119, 0.264, 0.549]))
 
     Raises
     ------
@@ -89,8 +89,11 @@ def find_peaks(
                 cluster_num += 1
                 prev_flag = False
 
-    # Create the final peaks dictionary
-    peaks = dict()
+    # Create the arrays to store the peak values
+    n = max(clusters_temp.keys())
+    k_peaks = np.zeros(n, dtype=np.float64)
+    s_peaks = np.zeros(n, dtype=np.float64)
+
     for cluster_num, data_points in clusters_temp.items():
 
         # Calculate the weighted values of the cluster
@@ -103,9 +106,7 @@ def find_peaks(
 
         k_weighted = k_weighted / s_total
 
-        # Store all the data in the newly created dictionary
-        peaks[cluster_num] = dict()
-        peaks[cluster_num]["k"] = k_weighted
-        peaks[cluster_num]["s"] = s_total
+        k_peaks[cluster_num - 1] = k_weighted
+        s_peaks[cluster_num - 1] = s_total
 
-    return peaks
+    return k_peaks, s_peaks
