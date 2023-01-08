@@ -154,13 +154,13 @@ def data_multiple(
 
     # Set the default settings if they are not provided
     if "label" not in kwargs_plot:
-        kwargs_plot["label"] = ["data1", "data2"]
+        kwargs_plot["label"] = ["data1", "data2", "data3"]
     if "color" not in kwargs_plot:
-        kwargs_plot["color"] = ["#007972", "#fe9901"]
+        kwargs_plot["color"] = ["#007972", "#fe9901", "#63cabc"]
     if "linewidth" not in kwargs_plot:
         kwargs_plot["linewidth"] = 1
     if "linestyle" not in kwargs_plot:
-        kwargs_plot["linestyle"] = ["solid", "dashed"]
+        kwargs_plot["linestyle"] = ["solid", "dashed", "dotted"]
 
     fig, ax = _base_data_multiple(
         data,
