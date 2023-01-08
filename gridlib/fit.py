@@ -169,8 +169,8 @@ def fit_grid(
 
     elif not parameters["fit_a"]:
         a = parameters["a_fixed"]
-        x0 = np.concatenate((x0, np.array([a])))
-        bnds[-1] = (a, a)  # Fix the photobleaching number
+        x0 = np.concatenate((x0, np.array([a], dtype=np.float64)))
+        bnds[-1] = (a - 10e-6, a + 10e-6)  # Fix the photobleaching number
 
     # print(x0.shape)
     # print(bnds)
@@ -314,8 +314,8 @@ def _fit_n_exp(
         ub[-1] = ubq
     elif not parameters["fit_a"]:
         a = parameters["a_fixed"]
-        lb[-1] = parameters["a_fixed"]
-        ub[-1] = parameters["a_fixed"]
+        lb[-1] = a - 10e-6
+        ub[-1] = a + 10e-6
 
     bnds = (lb, ub)
 
