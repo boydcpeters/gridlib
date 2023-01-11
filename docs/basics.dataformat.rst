@@ -100,11 +100,88 @@ So dictionary maps the time-lapse condition to the time and value arrays.
 Fit and resampling results
 --------------------------
 
-Fit results and resampling results can be stored in ``.mat`` files. GRIDLib provides
-methods to read and write fit results and resampling results. Furthermore, GRIDLib
-provides methods to read fit and resampling results stored by GRID toolbox (MATLAB)
-created by the orginal authors. However, it is currently not possible to write the fit
-results and resampling results to a file that can be opened with methods in the GRID
-toolbox. The methods to read and write results can be found :ref:`here <routines.io>`.
+Fit results and resampling results are stored as dictionaries in Python. ``.mat`` files.
+GRIDLib has routines to read and write this data into ``.mat`` files. Furthermore,
+GRIDLib provides methods to read fit and resampling results stored by GRID toolbox
+(MATLAB) created by the orginal authors. However, it is currently not possible to write
+the fit results and resampling results to a file that can be opened with methods in the
+GRID toolbox. The methods to read and write results can be found :ref:`here
+<routines.io>`. which can be found :ref:`here <routines.io>`. In the next two
+sections we show you some examples of you the fit results and resampling results look
+like.
 
-WRITE HERE SOMETHING ABOUT THE FIT_RESULTS STRUCTURE.
+Fit results
+^^^^^^^^^^^
+Fit results are stored in dictionaries, where the type of fitting maps to the fit
+results for that type of fitting. For example, if you would perform the GRID fitting,
+single-, double- and triple-exponential fitting then the fit results could look as
+follows:
+
+.. code-block:: python
+
+    {
+        "grid": {
+            "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+            "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+            "a": 0.010564217803906671,
+            "loss": 0.004705659331508584,
+        },
+        "1-exp": {
+            "k": array([0.02563639]),
+            "s": array([1.]),
+            "a": 0.08514936433699753,
+            "loss": 1.2825570522448484
+        },
+        "2-exp": {
+            "k": array([0.03715506, 1.7248619]),
+            "s": array([0.17296989, 0.82703011]),
+            "a": 0.011938572088673213,
+            "loss": 0.2868809590425386
+        },
+        "3-exp": {
+            "k": array([0.0137423 , 0.27889073, 3.6560956]),
+            "s": array([0.06850312, 0.23560175, 0.69589513]),
+            "a": 0.011125323730424764,
+            "loss": 0.0379697542735324
+        },
+    }
+
+Resampling results
+^^^^^^^^^^^^^^^^^^
+Resampling results are stored as dictionaries in a list. So it is a list where every
+element is a dictionary such as in :ref:`fit results <basics.dataformt.fit_results>`.
+For example, if you would perform the GRID fitting, single-, double- and
+triple-exponential fitting with 500 resamplings then the resampling results could look
+as follows:
+
+.. code-block:: python
+
+    [   
+        {
+            "grid": {
+                "k": array([1.00000000e-03, 1.04737090e-03, ...]),
+                "s": array([3.85818587e-17, 6.42847878e-18, ...]),
+                "a": 0.010564217803906671,
+                "loss": 0.004705659331508584,
+            },
+            "1-exp": {
+                "k": array([0.02563639]),
+                "s": array([1.]),
+                "a": 0.08514936433699753,
+                "loss": 1.2825570522448484
+            },
+            "2-exp": {
+                "k": array([0.03715506, 1.7248619]),
+                "s": array([0.17296989, 0.82703011]),
+                "a": 0.011938572088673213,
+                "loss": 0.2868809590425386
+            },
+            "3-exp": {
+                "k": array([0.0137423 , 0.27889073, 3.6560956]),
+                "s": array([0.06850312, 0.23560175, 0.69589513]),
+                "a": 0.011125323730424764,
+                "loss": 0.0379697542735324
+            },
+        },
+        ... # 499 other dictionaries
+    ]
