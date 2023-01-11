@@ -8,8 +8,8 @@ fitting parameters. Here we show the all the possible parameter options. Since G
 fitting and multi-exponential fitting require some different variables, we will first
 introduce the GRID parameters.
 
-GRID parameters
----------------
+GRID
+----
 The fitting parameters need to be provided in a dictionary. There are two possible GRID
 fitting options:
 
@@ -103,8 +103,8 @@ The GRID fitting procedure can be performed with :py:func:`~gridlib.fit_grid`. F
   fit_results = gridlib.fit_grid(parameters, data)
 
 
-Multi-exponential parameters
-----------------------------
+Multi-exponential
+-----------------
 
 The fitting parameters need to be provided in a dictionary. There is only one
 multi-exponential fitting option. The following parameter values need to be provided:
