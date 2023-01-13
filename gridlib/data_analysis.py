@@ -11,7 +11,7 @@ def find_peaks(
     threshold: float = 10e-6,
 ) -> Dict[int, Dict[str, float]]:
     """
-    "Function finds the peaks in a GRID spectrum in a basic way. It loops over the
+    Function finds the peaks in a GRID spectrum in a basic way. It loops over the
     amplitude array and if an amplitude value is higher than the set threshold than
     it is included into a cluster. Amplitudes above the threshold next to eachother
     belong to the same cluster. For each cluster is then the weighted decay-rate and
