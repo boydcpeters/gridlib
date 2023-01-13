@@ -245,6 +245,164 @@ def process_data(
     return data_processed
 
 
+def combine_data(
+    data1: Dict[str, Dict[str, np.ndarray]],
+    data2: Dict[str, Dict[str, np.ndarray]],
+    both: bool = True,
+) -> Dict[str, Dict[str, np.ndarray]]:
+    """
+    Function combines two datasets into one dataset. The data of the different
+    time-lapse times is combined to get a new dataset where every time-lapse time key
+    has only one time and one value array. The data of time-lapse times will be added up
+    if the original two datasets have the same time-lapse time key. However, if both is
+    set to True then also time-lapse time keys which are only present in one of the
+    datasets are added with its corresponding time and value array.
+
+    Parameters
+    ----------
+    data1 : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, ...]), "value": array([1.000e+04,
+                    8.464e+03, 7.396e+03, ...]),
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]), "value": array([1.000e+04,
+                    6.925e+03, 5.541e+03, 4.756e+03, ...]),
+                },
+            }
+
+    data2 : Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding time and
+        value arrays of the survival functions. Same structure as data1.
+    both : bool, optional
+        Indicates whether only time-lapse times that are present in both datasets
+        should be combined and put into the combined dataset, by default True.
+
+    Returns
+    -------
+    Dict[str, Dict[str, np.ndarray]]
+        A dictionary mapping keys (time-lapse conditions) to the corresponding combined
+        time and value arrays of the survival functions. For example::
+
+            {
+                "0.05s": {
+                    "time": array([0.05, 0.1, 0.15, ...]), "value": array([1.000e+04,
+                    8.464e+03, 7.396e+03, ...]),
+                }, "1s": {
+                    "time": array([1., 2., 3., 4., ...]), "value": array([1.000e+04,
+                    6.925e+03, 5.541e+03, 4.756e+03, ...]),
+                },
+            }
+
+    Raises
+    ------
+    RuntimeWarning
+        If something unexpected happens which should not happen.
+
+    Examples
+    --------
+    >>> data1 = {"0.05s": {...}, "0.2s": {...}, "1s": {...}, "5s": {...}}
+    >>> data2 = {"0.05s": {...}, "0.4s": {...}, "1s": {...}, "5s": {...}}
+    >>> data_combined_both = combine_data(data1, data2, both = True)
+    >>> data_combined_both
+    {"0.05s": {...}, "1s": {...}, "5s": {...}}
+
+    >>> data_combined = combine_data(data1, data2, both = False)
+    >>> data_combined
+    {"0.05s": {...}, "0.2s": {...}, "0.4": {...}, "1s": {...}, "5s": {...}}
+
+    """
+
+    # Format the time-lapse time of both datasets, to make sure they are equally
+    # formatted.
+    data1 = fmt_t_str_data(data1)
+    data2 = fmt_t_str_data(data2)
+
+    # Distinguish between time-lapse time keys that are in both datasets, and those
+    # that are not in both datasets
+    keys1 = set(data1.keys())
+    keys2 = set(data2.keys())
+
+    keys_both = keys1.intersection(keys2)
+    keys1_only = keys1.difference(keys_both)
+    keys2_only = keys2.difference(keys_both)
+
+    # Convert all the keys to lists and sort them
+    keys_both = sorted(list(keys_both))
+    keys1_only = sorted(list(keys1_only))
+    keys2_only = sorted(list(keys2_only))
+
+    # Create the combined dataset dict and fill it
+    data_combined = dict()
+
+    for key in keys_both:
+
+        data_combined[key] = dict()
+
+        time1 = data1[key]["time"]
+        time2 = data2[key]["time"]
+
+        dt1 = time1[1] - time1[0]
+        dt2 = time2[1] - time2[0]
+
+        if not math.isclose(dt1, dt2):
+            raise RuntimeWarning("Something went wrong with dt1 and dt2")
+
+        time1_min = np.amin(time1)
+        time1_max = np.amax(time1)
+
+        time2_min = np.amin(time2)
+        time2_max = np.amax(time2)
+
+        time_min = min(time1_min, time2_min)
+        time_max = max(time1_max, time2_max)
+
+        n = int(round(((time_max - time_min) / dt1) + 1, 0))
+        time = np.linspace(time_min, time_max + dt1, num=n + 1, endpoint=True)
+        value = np.zeros(time.shape[0])
+
+        idx1_start = int(round(((time1_min - time_min) / dt1), 0))
+        idx1_end = int(round(((time1_max - time_max) / dt1), 0)) - 1
+
+        idx2_start = int(round(((time2_min - time_min) / dt2), 0))
+        idx2_end = int(round(((time2_max - time_max) / dt2), 0)) - 1
+
+        value[idx1_start:idx1_end] = data1[key]["value"]
+        value[idx2_start:idx2_end] += data2[key]["value"]
+
+        time = time[:-1]
+        value = value[:-1]
+
+        data_combined[key]["time"] = time
+        data_combined[key]["value"] = value
+
+    if not both:
+        for key in keys1_only:
+
+            data_combined[key] = dict()
+
+            data_combined[key]["time"] = data1[key]["time"]
+            data_combined[key]["value"] = data1[key]["value"]
+
+        for key in keys2_only:
+
+            data_combined[key] = dict()
+
+            data_combined[key]["time"] = data2[key]["time"]
+            data_combined[key]["value"] = data2[key]["value"]
+    else:
+        print(
+            "WARNING!! (Set both to True to include all the data)\n"
+            f"Data of dataset 1 with time-lapse time {keys1_only} not used.\n"
+            f"Data of dataset 2 with time-lapse time {keys2_only} not used."
+        )
+
+    return data_combined
+
+
 def isvalid_parameters_grid(parameters: Dict) -> bool:
     """Function checks whether the provided parameters are valid for GRID fitting.
 
