@@ -7,7 +7,7 @@ import gridlib.plot
 
 # if __name__ == "__main__" is required for the multiprocessing in the
 # resampling_grid function to work.
-if __name__ == "__main__":
+if __name__ == "__main__":  # required for multiprocessing, not required for sequential
 
     # Load the data
     data = gridlib.io.read_data_survival_function("examples/data/example1.csv")
