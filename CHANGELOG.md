@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2023-01-15
+
 ### Added
 
 - Docstrings for multiple functions.
@@ -100,7 +102,8 @@ up the simulation with a factor of ~10-100x.
 
 - First release on PyPI.
 
-[Unreleased]: https://github.com/boydcpeters/gridlib/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/boydcpeters/gridlib/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/boydcpeters/gridlib/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/boydcpeters/gridlib/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/boydcpeters/gridlib/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/boydcpeters/gridlib/compare/v0.3.5...v0.3.6
