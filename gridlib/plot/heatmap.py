@@ -14,7 +14,8 @@ from . import _plot_utils
 
 """weights can be either event weights or state weights, arrays should be flattened"""
 
-
+# TODO: if a spectral value is obtained less than two times, it should be omitted according
+# to the original paper
 def _base_heatmap(
     k_full: np.ndarray,
     weight_full: np.ndarray,
