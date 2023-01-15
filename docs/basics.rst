@@ -18,4 +18,6 @@ sure you have installed GRIDLib, as described in the
     basics.dataformat
     basics.parameters
     basics.fit
+    basics.resampling
+    basics.examples
 
