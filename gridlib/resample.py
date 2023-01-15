@@ -369,8 +369,8 @@ def resample_and_fit(
 
         * "grid": perform GRID fitting procedure on the data.
         * "multi-exp": perform multi-exponential fitting procedure on the data.
-        * "all": perform both GRID fitting and multi-exponential fitting procedure
-            on the data.
+        * "all": perform both GRID fitting and multi-exponential fitting procedure on
+          the data.
 
     multiprocess_flag : bool, optional
         A flag indicating whether to use parallel processing when fitting the resampled
@@ -383,8 +383,6 @@ def resample_and_fit(
 
     Returns
     -------
-    Tuple consisting of the following two objects:
-
     fit_results_full: Dict[str, Dict[str, Union[np.ndarray, float]]]
         A dictionary mapping keys (fitting procedure) to the corresponding fit results.
         For example::
