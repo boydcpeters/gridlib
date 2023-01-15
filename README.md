@@ -76,10 +76,9 @@ To cite this repository:
   version = {0.4.1},
   year={2022},
 }
-``` -->
+```
 
-In the above BibTex entry, the version number is the current version number and the year corresponds to the
-project's open-source release.
+In the above BibTex entry, the version number is the current version number and the year corresponds to the project's open-source release. -->
 
 ## Credits
 
