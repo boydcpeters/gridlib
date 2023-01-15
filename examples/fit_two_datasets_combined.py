@@ -10,15 +10,14 @@ When using real data, you should load in the the data with
 gridlib.io.read_data_survival_function() instead of performing the simulations.
 """
 
+# Import the required libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import gridlib
+import gridlib.io
+import gridlib.plot
 
-if __name__ == "__main__":
-
-    # Import the required libraries
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import gridlib
-    import gridlib.io
-    import gridlib.plot
+if __name__ == "__main__":  # not required, but recommended
 
     # Define the values required for the simulations
     k = np.array([0.005, 0.03, 0.2, 1.2, 5.9])

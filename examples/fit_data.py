@@ -1,3 +1,4 @@
+# Load the packages
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -5,8 +6,7 @@ import gridlib
 import gridlib.io
 import gridlib.plot
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":  # not required, but recommended
 
     # Load the data
     data = gridlib.io.read_data_survival_function("examples/data/example1.csv")
