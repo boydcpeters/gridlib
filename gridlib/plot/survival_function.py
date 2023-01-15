@@ -13,7 +13,7 @@ from . import _plot_utils
 
 
 # TODO: UPDATE DOCSTRING
-def _base_data_multiple(
+def _base_data_sf_multiple(
     data,
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
@@ -131,7 +131,7 @@ def _base_data_multiple(
     return fig, ax
 
 
-def data_multiple(
+def data_sf_multiple(
     data: Dict[str, Dict[str, np.ndarray]],
     process_data_flag: bool = True,
     xlim: Tuple[float, float] = None,
@@ -162,7 +162,31 @@ def data_multiple(
     if "linestyle" not in kwargs_plot:
         kwargs_plot["linestyle"] = ["solid", "dashed", "dotted"]
 
-    fig, ax = _base_data_multiple(
+    fig, ax = _base_data_sf_multiple(
+        data,
+        process_data_flag=process_data_flag,
+        xlim=xlim,
+        ylim=ylim,
+        figsize=figsize,
+        kwargs_plot=kwargs_plot,
+        kwargs_text=kwargs_text,
+    )
+
+    return fig, ax
+
+
+def data_sf(
+    data: Dict[str, Dict[str, np.ndarray]],
+    process_data_flag: bool = True,
+    xlim: Tuple[float, float] = None,
+    ylim: Tuple[float, float] = None,
+    figsize: Tuple[float, float] = (6, 4),
+    kwargs_plot: Dict = None,
+    kwargs_text: Dict = None,
+):
+    """Function plots a single data dictionary"""
+
+    fig, ax = data_sf_multiple(
         data,
         process_data_flag=process_data_flag,
         xlim=xlim,
@@ -180,7 +204,7 @@ def data_multiple(
 # TODO: check how .plot() function shows kwargs, it puts it under "Other parameters"
 # although we know have it as a keyword argument with a default value, so we should
 # likely just put it under "Parameters"
-def data_vs_multi_exp(
+def data_sf_vs_multi_exp(
     data: Dict[str, Dict[str, np.ndarray]],
     fit_values_multi_exp: Dict[str, Dict[str, np.ndarray]],
     process_data_flag: bool = True,
@@ -246,7 +270,7 @@ def data_vs_multi_exp(
         fit_values_multi_exp[n_exp_key], data
     )
 
-    fig, ax = _base_data_multiple(
+    fig, ax = _base_data_sf_multiple(
         [data, data_multi_exp],
         process_data_flag=process_data_flag,
         xlim=xlim,
@@ -262,7 +286,7 @@ def data_vs_multi_exp(
 # TODO: UPDATE DOCSTRING
 
 
-def data_vs_grid(
+def data_sf_vs_grid(
     data: Dict[str, Dict[str, np.ndarray]],
     fit_values_grid: Dict[str, Dict[str, np.ndarray]],
     process_data_flag: bool = True,
@@ -320,7 +344,7 @@ def data_vs_grid(
 
     data_grid = compute.compute_grid_curves_for_data(fit_values_grid["grid"], data)
 
-    fig, ax = _base_data_multiple(
+    fig, ax = _base_data_sf_multiple(
         [data, data_grid],
         process_data_flag=process_data_flag,
         xlim=xlim,
